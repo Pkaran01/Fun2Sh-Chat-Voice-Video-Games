@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\Users\Karan\Desktop\TBW\Fun2Sh\fun2sh\Demo\Q-municate_db\src\main\shaders"/></dataSet><dataSet config="release"><source path="C:\Users\Karan\Desktop\TBW\Fun2Sh\fun2sh\Demo\Q-municate_db\src\release\shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\Chat\Fun2Chat\Fun2Sh\Q-municate_db\src\main\shaders"/></dataSet><dataSet config="release"><source path="E:\Chat\Fun2Chat\Fun2Sh\Q-municate_db\src\release\shaders"/></dataSet></merger>

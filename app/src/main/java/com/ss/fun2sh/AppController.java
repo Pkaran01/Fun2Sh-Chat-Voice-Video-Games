@@ -36,7 +36,7 @@ public class AppController extends Application {
     }
     private void initApplication() {
         mInstance = this;
-
+        // initilize qb and database here
         initQb();
         initDb();
         initImageLoader(this);
