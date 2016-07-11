@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="4"
+        android:padding="10dp"
+        android:background="@color/color_black">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2">
+                <TextView
+                    android:id="@+id/txt_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Notification # ddmmyy4862"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/color_white"
+                    android:gravity="left|center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8">
+                <TextView
+                    android:id="@+id/backtolistbtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Back to List"
+                    android:textColor="@color/color_white"
+                    android:gravity="center"
+                    android:background="@color/color_less_blue"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                   android:layout_marginLeft="15dp"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2">
+                <TextView
+                    android:id="@+id/txt_issuecode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Issue code"
+                    android:textStyle="bold"
+                    android:gravity="left|center"
+                    android:textColor="@color/color_white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8">
+                <TextView
+                    android:id="@+id/txt_issuedate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Issue date"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_white"
+                    android:gravity="right|center"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4">
+            <TextView
+                android:id="@+id/txt_sub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Subject:As entered by admin issuer"
+                android:textColor="@color/color_white"
+                android:gravity="left|center"
+                android:background="@color/color_less_blue"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="2dp"
+                android:paddingLeft="5dp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.6">
+            <TextView
+                android:id="@+id/txt_msg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="The Notification will be displayed here"
+                android:textStyle="bold"
+                android:gravity="left"
+                android:background="@drawable/two_color_mix"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

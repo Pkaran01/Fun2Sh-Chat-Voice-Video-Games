@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.ss.fun2sh">
+
+    <permission
+        android:name="com.ss.fun2sh.Activity.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="tbw.fun2sh.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!--QB-->
+    <uses-permission android:name="android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
+    <application
+        android:name=".AppController"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <activity
+            android:name=".Activity.DashBoardActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.WebsiteLandScap"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"/>
+        <activity
+            android:name=".Activity.SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.GCMMessageView"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".Activity.GCMIntentService"/>
+        <service android:name=".Activity.GCMNotifService"/>
+
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="crud.fun2sh.Activity"/>
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".Activity.PaymentActivity"/>
+        <activity
+            android:name=".Activity.SupportTicketActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.ReplyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activity.NotificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.TermsActivity"/>
+        <activity android:name=".Activity.LogoutActivity"/>
+        <activity android:name=".Activity.SecondTimeLoginActivity"></activity>
+
+        <!--QB-->
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.authorization.SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.authorization.LandingActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.authorization.LoginActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.authorization.SignUpActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.main.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.settings.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.invitefriends.InviteFriendsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.feedback.FeedbackActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.profile.UserProfileActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.call.CallActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            />
+        <activity
+            android:name="com.ss.fun2sh.ui.fragments.search.SearchFragment"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.NewGroupDialogActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustNothing"></activity>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.CreateGroupDialogActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.GroupDialogActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.GroupDialogDetailsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.profile.MyProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.chats.AddFriendsToGroupActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.changepassword.ChangePasswordActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.forgotpassword.ForgotPasswordActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.agreements.UserAgreementActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.about.AboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.others.PreviewImageActivity"
+            >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <receiver
+            android:name="com.ss.fun2sh.gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="com.ss.fun2sh"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.ss.fun2sh.utils.broadcasts.NetworkChangeReceiver"
+            android:label="NetworkChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.ss.fun2sh.utils.broadcasts.ChatMessageReceiver"
+            android:label="ChatMessageReceiver">
+            <intent-filter>
+                <action android:name="q_municate.got_chat_message"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.ss.fun2sh.gcm.GCMIntentService"/>
+
+        <service
+            android:name="com.quickblox.q_municate_core.service.QBService"
+            android:icon="@drawable/ic_launcher"/>
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="1a8a9dd386ec38825bd39eee5822683318106c09"/>
+
+        <activity
+            android:name="com.ss.fun2sh.ui.activities.profile.FirstTimeUserProfileActivity"
+            android:label="@string/title_activity_first_time_user_profile"></activity>
+    </application>
+
+</manifest>

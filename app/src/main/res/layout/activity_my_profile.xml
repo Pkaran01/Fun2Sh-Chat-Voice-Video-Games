@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/loginbg"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_view"
+        layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/funchatlogo"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_below="@id/toolbar_view"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="193dp"
+            android:layout_height="76dp"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/funchatloginlogo"/>
+
+    </LinearLayout>
+
+
+    <com.github.siyamed.shapeimageview.CircularImageView
+        android:id="@+id/avatar_imageview"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_below="@id/funchatlogo"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="top|center"
+        android:layout_margin="@dimen/padding_large"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/avatarprofile"
+        app:siBorderColor="@color/colorPrimary"
+        app:siBorderWidth="2dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:paddingLeft="10dp"
+            android:textColor="@color/textColorRember"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            />
+
+        <EditText
+            android:id="@+id/full_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_circulerlogin"
+            android:hint="@string/profile_full_name"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Status"
+            android:paddingLeft="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorRember"
+            android:textSize="17dp"
+            />
+
+        <EditText
+            android:id="@+id/status_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_circulerlogin"
+            android:hint="@string/profile_staus"
+            android:imeOptions="actionDone"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+</LinearLayout>

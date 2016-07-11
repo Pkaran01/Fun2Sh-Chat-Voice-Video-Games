@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="fill_parent"
+    android:layout_height="70dp"
+    android:layout_alignParentTop="true"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginTop="10dp">
+
+    <ImageView
+        android:id="@+id/topImage"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/logo_top" />
+
+    <ImageView
+        android:id="@+id/navigationDrawer"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_menu_white_24dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/navigationDrawer"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dashBordUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User name"
+                android:textColor="#fff"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/dashBordDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11/09/2015 10:15 AM"
+                android:textColor="#fff"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/dashBordPkgImage"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:src="@drawable/cardfree" />
+    </LinearLayout>
+</RelativeLayout>

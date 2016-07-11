@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorAccent">#03A9F4</color>
+
+    <color name="primary_light">#3896B4</color>
+    <color name="textColorRember">#B93739</color>
+    <color name="color_green">#89A749</color>
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_begini">#9C6CFC</color>
+    <color name="color_brauin">#984907</color>
+    <color name="color_less_brauin">#FAD1AC</color>
+    <color name="color_dark_brauin">#4D433A</color>
+    <color name="color_less_green">#E3FCBA</color>
+    <color name="color_less_blue">#3894B2</color>
+    <color name="color_light_blue">#BFF0FF</color>
+    <color name="color_light_yello">#F58531</color>
+    <color name="color_blue">#765196</color>
+    <color name="color_less_white">#CFCFCF</color>
+
+    <color name="openticket">#769B43</color>
+
+    <!--QB-->
+    <color name="bg_main">#fff</color>
+
+    <color name="primary">#fff</color>
+    <color name="primary_dark">@color/dark_gray</color>
+    <color name="accent">@color/green</color>
+    <color name="action_mode_background">@color/light_gray</color>
+    <color name="toolbar_shadow">#c0c0c0</color>
+
+    <color name="white">#fff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#999999</color>
+    <color name="light_gray">#ffefefef</color>
+    <color name="dark_gray">#6c6c6c</color>
+    <color name="red">#ff0000</color>
+    <color name="pink">#ed1e6e</color>
+    <color name="light_pink">#FFB6C1</color>
+    <color name="green">#1cba48</color>
+    <color name="white_green">#A9FF80</color>
+    <color name="blue">#0d70b3</color>
+    <color name="white_blue">#00BFFF</color>
+    <color name="dark_blue">#0c4d81</color>
+    <color name="light_blue">#ff0d8cd1</color>
+    <color name="text_white">@color/white</color>
+    <color name="text_light_dark">#ff6c6c6c</color>
+    <color name="text_dark">#343434</color>
+    <color name="text_red">#d00e2b</color>
+
+    <color name="link_text_color">#0d70b3</color>
+
+    <color name="badge_unread_messages_counter">#d20000</color>
+    <color name="badge_online">#1cba48</color>
+
+    <color name="button_general_pressed">#dddddd</color>
+
+    <color name="button_facebook_normal">#3d5b94</color>
+    <color name="button_facebook_pressed">#436baa</color>
+    <color name="button_light_gray_normal">#f2f2f2</color>
+    <color name="button_light_gray_pressed">#e2e2e2</color>
+    <color name="button_green_normal">#00bf28</color>
+    <color name="button_green_pressed">#00851c</color>
+
+    <color name="button_end_call_normal">#FC2644</color>
+    <color name="button_end_call_pressed">#FC5876</color>
+    <color name="toggle_button_background_normal">#cc212121</color>
+    <color name="toggle_button_background_checked">#ccffffff</color>
+
+    <color name="chat_header_date_background">#ffd5d5d5</color>
+    <color name="chat_background">#f5f5f5</color>
+    <color name="chat_emoji_panel">#ff303030</color>
+    <color name="chat_emoji_tabs">#ff202020</color>
+    <color name="chat_attach_background">#ffd9d9d9</color>
+
+    <color name="call_background">#333333</color>
+    <color name="call_timer_text">#999999</color>
+
+    <color name="invite_friends_item">#f8f8f8</color>
+
+    <color name="about_version_text">#757575</color>
+
+
+    //from rahul
+    <color name="qbcolorPrimary">#FDE999</color>
+    <color name="qbcolorPrimaryDark">#EF9D09</color>
+    <color name="qbcolorAccent">#f19b08</color>
+
+    <color name="bgColor">#FFF2D8</color>
+    <color name="textColor">#EF9D09</color>
+    <color name="qbprimary_light">#B3E5FC</color>
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="qbtextColorRember">#C9891D</color>
+    <color name="greencolor">#72BB33</color>
+    <color name="homescreenBgcolor">#fff2d8</color>
+    <color name="greencolorInner">#59Ab2E</color>
+    <color name="devidecolor">#4c9126</color>
+    <color name="callingborder">#fbdd63</color>
+    <color name="pinkColor">#e11f7f</color>
+    <color name="brownColor">#984907</color>
+    <color name="toolbartransparent">#CCFDE999</color>
+</resources>

@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundforall_screens"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:orientation="vertical">
+
+
+        <include
+            android:id="@+id/tolbr"
+            layout="@layout/toolbar" />
+
+        <RelativeLayout
+            android:id="@+id/reltiv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/greencolorInner"
+            android:padding="16dp"
+            android:visibility="visible">
+
+            <com.ss.fun2sh.ui.views.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/photo_imageview"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_logo"
+                android:visibility="gone"
+                app:border_color="#fbdd63"
+                app:border_width="3dp"
+                app:oval="true" />
+
+            <EditText
+                android:id="@+id/groupname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/photo_imageview"
+                android:background="@drawable/glasseffect"
+                android:drawableRight="@drawable/editiconcreategroup"
+                android:visibility="gone"
+                android:textColorHint="#a9c781"
+                android:hint="Group Name" />
+
+            <EditText
+                android:id="@+id/edittextsearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/groupname"
+                android:layout_marginTop="1dp"
+                android:textColorHint="#a9c781"
+                android:background="@drawable/glasseffect"
+                android:drawableRight="@drawable/searchiconcreategroup"
+                android:hint="Search Participant" />
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/members_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tolbr"
+            android:layout_margin="10dp"
+            android:editable="false"
+            android:hint="@string/new_group_add_people"
+            android:maxLines="3"
+            android:visibility="gone"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_size" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/friends_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/members_edittext"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+</RelativeLayout>

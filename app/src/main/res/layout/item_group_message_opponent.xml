@@ -1,0 +1,94 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/avatar_imageview"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.github.siyamed.shapeimageview.HexagonImageView
+                android:id="@+id/avatar_imageview"
+                style="@style/AvatarImageViewStyle"
+                android:layout_width="@dimen/image_view_small_avatar_layout_width"
+                android:layout_height="@dimen/image_view_small_avatar_layout_height"
+                app:siBorderColor="@color/greencolorInner"
+                app:siBorderWidth="2dp" />
+
+            <TextView
+                android:id="@+id/time_text_message_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="05:05AM"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <include layout="@layout/view_chat_progress_bars" />
+
+            <GridLayout
+                android:id="@+id/text_message_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/chat_babble_margin"
+                android:background="@drawable/chat_b"
+                android:columnCount="1"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/name_textview"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="left"
+                        android:singleLine="true"
+                        android:text="Karan"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/text_size"
+                        android:textStyle="bold" />
+
+
+                    <com.rockerhieu.emojicon.EmojiconTextView
+                        android:id="@+id/message_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|left"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="5dp"
+                        android:text="this is dummy"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small"
+                        emojicon:emojiconSize="@dimen/chat_emoji_item_preview_size" />
+
+                </LinearLayout>
+            </GridLayout>
+        </LinearLayout>
+
+        <include layout="@layout/view_chat_attach_message_opponent" />
+    </LinearLayout>
+
+</LinearLayout>

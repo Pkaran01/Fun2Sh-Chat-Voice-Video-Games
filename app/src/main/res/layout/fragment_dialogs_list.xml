@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/backgroundforall_screens"
+        android:scaleType="centerCrop"/>
+
+    <ListView
+        android:id="@+id/chats_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"/>
+
+
+    <TextView
+        android:id="@+id/empty_list_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/dialog_no_chats"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_size"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_head"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/color_brauin"
+            android:gravity="left|center"
+            android:paddingLeft="5dp"
+            android:text="HelpDisk-dd/mm/yy 00:00:00"
+            android:textColor="@color/color_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@color/color_less_brauin"
+            android:gravity="left"
+            android:padding="5dp"
+            android:text="The complete thread of whole........"
+            android:textColor="@color/color_dark_brauin" />
+        <TextView
+            android:id="@+id/txt_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_less_brauin"
+            android:gravity="center_horizontal|right"
+            android:padding="5dp"
+            android:text="View Attachment"
+            android:textColor="@color/color_dark_brauin" />
+
+    </LinearLayout>
+
+</LinearLayout>

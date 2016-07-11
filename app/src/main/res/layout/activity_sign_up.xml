@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context="com.ss.fun2sh.Activity.SignUpActivity">
+
+    <ImageView
+        android:id="@+id/topImage"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:padding="5dp"
+        android:src="@drawable/logo_top" />
+
+    <TextView
+        android:id="@+id/registerd"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/topImage"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#5DB530"
+        android:gravity="center"
+        android:text="Register a free account and be our guest"
+        android:textColor="#000"
+        android:textSize="17dp"
+        android:textStyle="bold"></TextView>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomSection"
+        android:layout_below="@id/registerd">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <EditText
+                android:id="@+id/invitationKey"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="Insert the invitation key"
+                android:textColor="#fff"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textColorHint="#363535" />
+
+            <Spinner
+                android:id="@+id/country"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg" />
+
+            <Spinner
+                android:id="@+id/state"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg" />
+
+            <Spinner
+                android:id="@+id/city"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg" />
+
+            <EditText
+                android:id="@+id/firstName"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:hint="First Name"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <EditText
+                android:id="@+id/middleName"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:hint="Middle Name"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <EditText
+                android:id="@+id/lastName"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:hint="Last Name"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/dob"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_bg"
+                    android:entries="@array/day_of_birth" />
+
+
+                <Spinner
+                    android:id="@+id/mob"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_bg"
+                    android:entries="@array/month_of_birth" />
+
+
+
+                <Spinner
+                    android:id="@+id/yob"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_bg"
+                    android:entries="@array/test" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/emailId"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="Personal E-mail"
+                android:textColor="#fff"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textColorHint="#363535" />
+
+            <EditText
+                android:id="@+id/userName"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:hint="Desired Username"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:background="@drawable/edittext_bg"
+                android:hint="Desired Password"
+                android:inputType="textPassword"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <EditText
+                android:id="@+id/accessCode"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="Set a 4-digit access code"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textColor="#fff"
+                android:textColorHint="#363535" />
+
+            <CheckBox
+                android:id="@+id/termsCheckBox"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="#9D9D9D"
+                android:text="I hereby agree all the terms &amp; Conditions."
+                android:textColor="#9D9D9D" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_tc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/round_button_pink"
+            android:text="T &amp; C"
+            android:textColor="#fff"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:src="@drawable/company_bottom" />
+
+        <Button
+            android:id="@+id/signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/round_button"
+            android:text="SIGN UP"
+            android:textColor="#000"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</RelativeLayout>

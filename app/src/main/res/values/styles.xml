@@ -1,0 +1,192 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+  <!--  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>-->
+
+    <style name="ToolbarStyle">
+        <item name="android:minHeight">?actionBarSize</item>
+        <item name="android:background">@color/qbcolorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ToolbarTheme</item>
+    </style>
+
+    <style name="ToolbarStyleCall">
+        <item name="android:minHeight">?actionBarSize</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
+        <item name="theme">@style/ToolbarThemeCall</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/selector_button_general</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColorHint">@color/text_light_dark</item>
+    </style>
+
+    <style name="AvatarImageViewStyle">
+        <item name="android:layout_width">@dimen/image_view_big_avatar_layout_width</item>
+        <item name="android:layout_height">@dimen/image_view_big_avatar_layout_height</item>
+        <item name="android:layout_gravity">center|top</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/placeholder_user</item>
+    </style>
+
+    <style name="SearchRadioButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/contact_item_header_height</item>
+        <item name="android:textColor">@drawable/selector_contacts_tab_text</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/selector_contacts_mode_tab</item>
+    </style>
+
+    <style name="TextViewDrawableStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:background">@drawable/selector_button_general</item>
+    </style>
+
+    <style name="TextViewDrawableStyle.White">
+        <item name="android:textColor">@color/text_white</item>
+    </style>
+
+    <style name="TextViewDrawableStyle.Dark">
+        <item name="android:textColor">@color/text_dark</item>
+    </style>
+
+    <style name="TextViewLinkStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/selector_button_general</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <style name="TextViewLinkStyle.Dark">
+        <item name="android:textColor">@color/text_light_dark</item>
+    </style>
+    <style name="Color1SwitchStyle">
+        <item name="colorControlActivated">@color/greencolor</item>
+    </style>
+    <style name="TextViewLinkStyle.Red">
+        <item name="android:textColor">@color/text_red</item>
+    </style>
+
+    <style name="TextViewLinkStyle.Green">
+        <item name="android:textColor">@color/green</item>
+    </style>
+
+    <style name="ChatActionButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/chat_input_message_height</item>
+        <item name="android:background">@drawable/selector_button_general</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textSize">@dimen/text_size</item>
+    </style>
+
+    <style name="SettingsButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/selector_button_general</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">@dimen/padding_large</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <style name="MaterialDialogSttusSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">
+            @style/MaterialDialogSheetAnimation1
+        </item>
+    </style>
+
+    <style name="MaterialDialogSheetAnimation1">
+        <item name="android:windowEnterAnimation">@anim/popup_show_status</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide_status</item>
+
+    </style>
+
+    // About Properties
+    // https://gist.github.com/seanKenkeremath/c945c39cdf92af138395
+
+    <style name="Base.AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:windowBackground">@color/bg_main</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/green</item>
+        <!-- Inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/colorPrimaryDark</item>
+        <!-- Inactive track color(30% transparency) -->
+        <item name="android:colorForeground">@color/green</item>
+
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:colorControlNormal" tools:ignore="NewApi">@color/colorPrimary</item>
+
+        <item name="android:textColorPrimary">@color/black</item>
+
+        <item name="actionModeBackground">@color/action_mode_background</item>
+
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="editTextStyle">@style/EditTextStyle</item>
+
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+
+        <!-- Material Dialog theme -->
+        <item name="md_dark_theme">false</item>
+
+    </style>
+
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="ToolbarTheme">
+        <item name="colorControlNormal">@color/dark_gray</item>
+        <item name="android:colorControlNormal" tools:ignore="NewApi">@color/dark_gray</item>
+
+        <!-- Hack! -->
+        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_material</item>
+        <!-- ! -->
+    </style>
+
+    <style name="ToolbarThemeCall" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/light_gray</item>
+        <item name="android:colorControlNormal" tools:ignore="NewApi">@color/light_gray</item>
+
+        <!-- Hack! -->
+        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_material</item>
+        <!-- ! -->
+    </style>
+</resources>

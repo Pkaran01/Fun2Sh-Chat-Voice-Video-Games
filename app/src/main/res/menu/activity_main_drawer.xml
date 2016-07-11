@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single" android:menuCategory="secondary">
+        <item
+            android:id="@+id/nav_remove"
+            android:title="Remove" />
+        <item
+            android:id="@+id/nav_announcement"
+            android:title="Announcement" />
+        <item
+            android:id="@+id/nav_setting"
+            android:title="Settings" />
+
+    </group>
+
+
+</menu>

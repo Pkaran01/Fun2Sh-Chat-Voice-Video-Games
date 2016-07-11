@@ -1,0 +1,92 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundforall_screens"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/reltiv2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/greencolorInner"
+            android:padding="16dp"
+            android:visibility="visible">
+
+            <com.ss.fun2sh.ui.views.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/photo_imageview"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_logo"
+                app:border_color="#fbdd63"
+                app:border_width="3dp"
+                app:oval="true" />
+
+            <EditText
+                android:id="@+id/group_name_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/photo_imageview"
+                android:background="@drawable/glasseffect"
+                android:drawableRight="@drawable/editiconcreategroup"
+                android:hint="Group Name"
+                android:textColorHint="#a9c781" />
+
+
+        </RelativeLayout>
+        <!--   <com.ss.fun2sh.ui.views.roundedimageview.RoundedImageView
+               style="@style/AvatarImageViewStyle"
+               android:id="@+id/photo_imageview"
+               android:layout_width="@dimen/image_view_small_avatar_layout_width"
+               android:layout_height="@dimen/image_view_small_avatar_layout_height"
+               android:layout_gravity="top"
+               android:background="@drawable/selector_button_general"
+               android:src="@drawable/add_photo"
+               app:border_color="@color/dark_gray"
+               app:border_width="@dimen/avatar_border_width"
+               app:oval="true" />
+
+           <EditText
+               android:id="@+id/group_name_edittext"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_marginLeft="5dp"
+               android:hint="@string/create_group_group_name"
+               android:maxLines="3"
+               android:textColor="@color/text_dark"
+               android:textSize="@dimen/text_size"
+               tools:text="Lyiu hh  yiu hh L n n huuh uho upi yuh h yh yiu hh L n n huuh uho upi yuh h yh yiu hh " />
+   -->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/participants_count_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/create_group_participants"
+        android:textColor="@color/text_light_dark"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="bold" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friends_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

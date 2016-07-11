@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_audio_call"
+        android:icon="@drawable/ic_call_black_24dp"
+        android:title="@string/user_profile_audio_call"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/switch_camera_toggle"
+        android:icon="@drawable/ic_videocam_black_24dp"
+        android:title="@string/user_profile_video_call"
+        app:showAsAction="ifRoom" />
+
+</menu>

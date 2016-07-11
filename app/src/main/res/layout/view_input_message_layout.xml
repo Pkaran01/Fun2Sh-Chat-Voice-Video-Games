@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chat_input_message_height"
+   >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/action_buttons_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="2dp"
+
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/send_button"
+            style="@style/ChatActionButtonStyle"
+            android:onClick="sendMessage"
+            android:src="@drawable/send_brown"
+            android:background="@color/qbcolorPrimary"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            />
+
+        <ImageButton
+            android:id="@+id/attach_button"
+            style="@style/ChatActionButtonStyle"
+            android:background="@color/qbcolorPrimary"
+            android:src="@drawable/attachment_brown" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+           />
+
+        <ImageButton
+            android:id="@+id/camera_button"
+            style="@style/ChatActionButtonStyle"
+            android:background="@color/qbcolorPrimary"
+            android:src="@drawable/camera_brown" />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="1dp"
+        android:layout_toLeftOf="@id/action_buttons_view"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/smile_panel_imagebutton">
+
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/shimmer_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Text Here"
+            android:background="@color/qbcolorPrimary"
+            android:textColor="@color/pinkColor"
+            android:textSize="16sp" />
+
+        <com.rockerhieu.emojicon.EmojiconEditText
+            android:id="@+id/message_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autoLink="all"
+            android:background="@drawable/roundchated"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical|right|left"
+            android:hint="@string/dialog_hint_message"
+            android:maxLines="5"
+            android:paddingLeft="6dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:visibility="gone"
+            android:windowSoftInputMode="stateVisible"
+            emojicon:emojiconSize="@dimen/chat_emoji_item_preview_size" />
+
+    </RelativeLayout>
+
+
+    <ImageButton
+        android:id="@+id/smile_panel_imagebutton"
+        style="@style/ChatActionButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="2dp"
+        android:background="@color/qbcolorPrimary"
+        android:src="@drawable/ic_insert_emoticon_black_24dp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="fill_parent"
+        android:layout_toRightOf="@+id/smile_panel_imagebutton"
+        />
+
+</RelativeLayout>

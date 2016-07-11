@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/loginbg"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_view"
+        layout="@layout/toolbar"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="193dp"
+            android:layout_height="76dp"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/funchatloginlogo"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center|top"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/change_photo_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar_view"
+                android:layout_margin="@dimen/padding_large"
+                android:background="@drawable/selector_button_general"
+                android:gravity="center|top">
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:id="@+id/avatar_imageview"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/avatarprofile"
+                    app:siBorderColor="@color/colorPrimary"
+                    app:siBorderWidth="2dp"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/input_displaytx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:padding="5dp"
+                    android:text="Display Name"
+                    android:textColor="@color/textColorRember"
+                    android:textSize="17dp"
+                    android:textStyle="bold"
+                    />
+
+
+                <EditText
+                    android:id="@+id/full_name_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_circulerlogin"
+                    android:drawablePadding="5dp"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:hint="Set Your Display Name"
+                    android:inputType="text"
+                    android:padding="10dp"/>
+
+            </LinearLayout>
+            <!--  <EditText
+                  android:id="@+id/statue_ed"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="20dp"
+                  android:layout_marginRight="20dp"
+                  android:layout_marginTop="10dp"
+                  android:background="@drawable/rounded_circulerlogin"
+                  android:drawablePadding="5dp"
+                  android:gravity="center"
+                  android:hint="Status"
+                  android:inputType="text"
+                  android:padding="10dp" />-->
+
+            <TextView
+                android:id="@+id/input_statustx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rectanglexml"
+                android:drawableRight="@drawable/editiconcreategroup"
+                android:gravity="center"
+                android:hint="@string/dummy_status"
+                android:inputType="text"
+                android:padding="5dp"
+                android:shadowColor="@color/greencolor"
+                android:shadowDx="20"
+                android:shadowDy="20"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rounded_circulerloginbtn"
+                android:text="Next"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
