@@ -19,9 +19,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         this.videoView = (VideoView) findViewById(R.id.videoView);
+        new Splash(SplashActivity.this).isSplashScreen(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.isFirstTimeLogin, false) ? DashBoardActivity.class : (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.secondTimeLogin, false)) ? SecondTimeLoginActivity.class : LoginActivity.class);
         String path = "android.resource://" + getPackageName() + "/" + R.raw.funtwoshlogo;
         videoView.setVideoURI(Uri.parse(path));
         videoView.start();
-        new Splash(SplashActivity.this).isSplashScreen(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.isFirstTimeLogin, false) ? DashBoardActivity.class : (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.secondTimeLogin, false)) ? SecondTimeLoginActivity.class : LoginActivity.class);
     }
 }

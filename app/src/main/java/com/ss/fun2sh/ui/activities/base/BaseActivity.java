@@ -148,10 +148,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     @Override
     public void setActionBarSubtitle(String subtitle) {
         if (actionBar != null) {
-            if (subtitle.equals(getString(R.string.frl_online))) {
-                actionBar.setSubtitle(Html.fromHtml("<font color='#89A749'>" + subtitle + "</font>"));
-            } else {
-                actionBar.setSubtitle(subtitle);
+            if (subtitle != null) {
+                if (subtitle.equals(getString(R.string.frl_online))) {
+                    actionBar.setSubtitle(Html.fromHtml("<font color='#89A749'>" + subtitle + "</font>"));
+                } else {
+                    actionBar.setSubtitle(subtitle);
+                }
             }
         }
     }
@@ -479,9 +481,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         transaction.commit();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
     public void removeFragment() {
         getSupportFragmentManager().beginTransaction().remove(
-                getSupportFragmentManager().findFragmentById(R.id.container_fragment)).commit();
+                getSupportFragmentManager().findFragmentById(R.id.container_fragment)).commitAllowingStateLoss();
     }
 
     private FragmentTransaction buildTransaction() {

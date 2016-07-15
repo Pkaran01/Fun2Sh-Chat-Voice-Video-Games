@@ -11,6 +11,7 @@ import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -54,7 +55,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
             viewHolder.firstLatterTextView.setVisibility(View.GONE);
         }
 
-        viewHolder.nameTextView.setText(user.getFullName());
+        viewHolder.nameTextView.setText(Utility.capitalize(user.getFullName()));
 
         displayAvatarImage(user.getAvatar(), viewHolder.avatarImageView);
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseLoggableActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initFields(savedInstanceState);
+
         setUpActionBarWithUpButton();
         checkGCMRegistration();
         M.E("MainActivity pe" + CoreSharedHelper.getInstance().getPushRegistrationId());
@@ -380,7 +382,11 @@ public class MainActivity extends BaseLoggableActivity {
     }
 
     private void loadLogoActionBar(String logoUrl, String staus) {
-        textStatus.setText(staus);
+        if(staus !=null || staus.length()>0) {
+            textStatus.setText(staus);
+        }else {
+            textStatus.setText(getString(R.string.dummy_status));
+        }
         userName.setText(title);
         ImageLoader.getInstance().loadImage(logoUrl, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS,
                 new SimpleImageLoadingListener() {

@@ -1,6 +1,7 @@
 package com.ss.fun2sh.ui.adapters.chats;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -59,6 +60,7 @@ public abstract class BaseDialogMessagesAdapter
     protected QBUser currentUser;
 
     private FileUtils fileUtils;
+    public static Bitmap bitmap;
 
     public BaseDialogMessagesAdapter(BaseActivity baseActivity, List<CombinationMessage> objectsList) {
         super(baseActivity, objectsList);
@@ -282,6 +284,7 @@ public abstract class BaseDialogMessagesAdapter
                 @Override
                 public void onClick(View view) {
                     if (imageUrl != null) {
+                        bitmap = ((BitmapDrawable)viewHolder.attachImageView.getDrawable()).getBitmap();
                         view.startAnimation(AnimationUtils.loadAnimation(baseActivity, R.anim.chat_attached_file_click));
                         PreviewImageActivity.start(baseActivity, imageUrl);
                     }

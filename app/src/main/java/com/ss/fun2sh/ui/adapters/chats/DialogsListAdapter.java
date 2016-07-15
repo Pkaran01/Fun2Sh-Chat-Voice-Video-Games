@@ -15,6 +15,7 @@ import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.Message;
 import com.quickblox.q_municate_db.models.User;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseListAdapter;
@@ -59,7 +60,7 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
             User opponentUser = ChatUtils.getOpponentFromPrivateDialog(
                     UserFriendUtils.createLocalUser(currentUser), dialogOccupantsList);
             if (opponentUser.getFullName() != null) {
-                viewHolder.nameTextView.setText(opponentUser.getFullName());
+                viewHolder.nameTextView.setText(Utility.capitalize(opponentUser.getFullName()));
                 displayAvatarImage(opponentUser.getAvatar(), viewHolder.avatarImageView);
             } else {
                 viewHolder.nameTextView.setText(resources.getString(R.string.deleted_user));

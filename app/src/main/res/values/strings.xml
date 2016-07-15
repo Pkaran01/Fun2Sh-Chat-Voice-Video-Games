@@ -3,6 +3,10 @@
     <string name="dummy_text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. </string>
     <string name="sendclose"><![CDATA[Send & Close]]></string>
 
+    <string name="permission_rationale_title">We need this permission</string>
+    <string name="permission_rationale_message">This permission is needed for doing some fancy stuff so please, allow it!</string>
+    <string name="permission_rationale_settings_button_text">SETTINGS</string>
+
     <string-array name="test">
         <item>test1</item>
         <item>test2</item>
@@ -163,7 +167,7 @@
     <!-- User profile -->
     <string name="user_profile_title">Info</string>
     <string name="user_profile_mobile">Mobile</string>
-    <string name="user_profile_status">Status</string>
+    <string name="user_profile_status">Mood</string>
     <string name="user_profile_send_message">Send Message</string>
     <string name="user_profile_audio_call">Audio Call</string>
     <string name="user_profile_video_call">Video Call</string>
@@ -259,7 +263,7 @@
     <!-- Profile -->
     <string name="profile_title">Edit</string>
     <string name="profile_full_name">Full Name</string>
-    <string name="profile_staus">Status</string>
+    <string name="profile_staus">Mood</string>
     <string name="profile_change_photo">Change photo</string>
     <string name="profile_full_name_not_entered">Please enter Full Name</string>
     <string name="profile_status_not_entered">Please enter Status</string>
@@ -321,8 +325,8 @@
     <!-- Local/Global Search -->
     <string name="search_users_not_found">Sorry… no users</string>
     <string name="search_pending_request_status">Pending contact request</string>
-    <string name="search_local_list">Local</string>
-    <string name="search_global_list">Global</string>
+    <string name="search_local_list">Contacts</string>
+    <string name="search_global_list">Global DB</string>
 
 
     <!-- Others -->
@@ -395,8 +399,7 @@
         <item>Camera</item>
     </string-array>
     <string name="title_activity_first_time_user_profile">FirstTimeUserProfileActivity</string>
-    <string name="dummy_status">Hey,I am Using FunChat</string>
-
+    <string name="dummy_status">Hey,I am enjoying FunChat with Fun2Sh</string>
 
 
 </resources>

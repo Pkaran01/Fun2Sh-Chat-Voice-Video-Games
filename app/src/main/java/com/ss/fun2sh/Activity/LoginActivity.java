@@ -1,6 +1,9 @@
 package com.ss.fun2sh.Activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
@@ -18,6 +21,13 @@ import android.widget.VideoView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gcm.GCMRegistrar;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
@@ -36,7 +46,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity implements WebserviceCallback{
+import java.util.List;
+
+public class LoginActivity extends AppCompatActivity implements WebserviceCallback {
 
     private android.widget.VideoView videoView;
     private android.widget.TextView signIn;
@@ -44,9 +56,9 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
     private android.widget.EditText password;
     private android.widget.Button loginButton;
     private android.widget.TextView forgetPassword;
-    private String GCMRegId=null;
+    private String GCMRegId = null;
     String regType;
-    boolean isFirstLogin=false;
+    boolean isFirstLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +77,53 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
 //        userName.setText("a4abim");
 //        password.setText("1234");
 
+        //for marsmallow
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            // only for gingerbread and newer versions
+
+            Dexter.checkPermissions(new MultiplePermissionsListener() {
+                @Override
+                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                    for (PermissionGrantedResponse response : report.getGrantedPermissionResponses()) {
+                        showPermissionGranted(response.getPermissionName());
+                    }
+
+                    for (PermissionDeniedResponse response : report.getDeniedPermissionResponses()) {
+                        showPermissionDenied(response.getPermissionName(), response.isPermanentlyDenied());
+                    }
+                }
+
+                @Override
+                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                    showPermissionRationale(token);
+                }
+            }, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            elsePart();
+        }
+    }
+
+    public void showPermissionRationale(final PermissionToken token) {
+        new AlertDialog.Builder(this).setTitle(R.string.permission_rationale_title)
+                .setMessage(R.string.permission_rationale_message)
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        token.cancelPermissionRequest();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        token.continuePermissionRequest();
+                    }
+                })
+                .show();
+    }
+
+    private void elsePart() {
         GCMRegistrar.checkDevice(this);
         GCMRegistrar.checkManifest(this);
         GCMRegId = GCMRegistrar.getRegistrationId(this);
@@ -75,45 +134,55 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (UserAccount.isEmpty(userName, password)) {
-                    M.E(getParam().toString());
-
-                    new JSONParser(LoginActivity.this).parseVollyJSONObject(Const.URL.login, 1, getParam(), new Helper() {
-                        @Override
-                        public void backResponse(String response) {
-                            try {
-                                JSONObject data = new JSONObject(response);
+                    if (getParam() != null) {
+                        M.E(getParam().toString());
+                        new JSONParser(LoginActivity.this).parseVollyJSONObject(Const.URL.login, 1, getParam(), new Helper() {
+                            @Override
+                            public void backResponse(String response) {
+                                try {
+                                    JSONObject data = new JSONObject(response);
 //                                Log.e("responses",response.toString());
-                                if (data.getString("MSG").equals("SUCCESS")) {
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.userId, userName.getText().toString());
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.pwd, password.getText().toString());
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.isFirstTime, true);
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.isFirstTimeLogin, true);
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.userData, data.toString());
+                                    if (data.getString("MSG").equals("SUCCESS")) {
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.userId, userName.getText().toString());
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.pwd, password.getText().toString());
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.isFirstTime, true);
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.isFirstTimeLogin, true);
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.userData, data.toString());
 //                                    PrefsHelper.getPrefsHelper().savePref("REGID", data.get("REGID").toString());
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.reg_id, data.get(Const.App_Ver.reg_id).toString());
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.reg_id, data.get(Const.App_Ver.reg_id).toString());
 
-                                    regType=data.get("REGTYPE").toString();
-                                    PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.reg_type, data.get(Const.App_Ver.reg_type).toString());
-                                    M.I(LoginActivity.this, DashBoardActivity.class, null);
+                                        regType = data.get("REGTYPE").toString();
+                                        PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.reg_type, data.get(Const.App_Ver.reg_type).toString());
+                                        M.I(LoginActivity.this, DashBoardActivity.class, null);
 
-                                    LoginActivity.this.finish();
-                                } else {
-                                    M.dError(LoginActivity.this, data.getString("MESSAGE"));
+                                        LoginActivity.this.finish();
+                                    } else {
+                                        M.dError(LoginActivity.this, data.getString("MESSAGE"));
+                                    }
+                                } catch (JSONException e) {
+                                    M.E(e.getMessage());
                                 }
-                            } catch (JSONException e) {
-                                M.E(e.getMessage());
                             }
-                        }
-                    });
-                } else {
-                    UserAccount.EditTextPointer.requestFocus();
-                    UserAccount.EditTextPointer.setError("This can't be empty !");
+                        });
+                    } else {
+                        UserAccount.EditTextPointer.requestFocus();
+                        UserAccount.EditTextPointer.setError("This can't be empty !");
 
+                    }
+                } else {
+                    M.dError(LoginActivity.this, "Permissions denied");
                 }
             }
         });
+    }
+
+    public void showPermissionGranted(String permission) {
+        elsePart();
+    }
+
+    public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
+        M.dError(this, "Permission is denied");
     }
 
     public JSONObject getParam() {
@@ -143,8 +212,8 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
     public JSONObject getEncryptParam() {
         JSONObject parame = null;
 
-        JSONObject obj=getParam();
-        parame=Encrypt.encryptJsonObjectResponse(obj.toString());
+        JSONObject obj = getParam();
+        parame = Encrypt.encryptJsonObjectResponse(obj.toString());
         return parame;
 
     }
@@ -153,8 +222,8 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
 
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("IDNO","");
-            jsonObject.put("PWD","");
+            jsonObject.put("IDNO", "");
+            jsonObject.put("PWD", "");
 //            callWebservice(jsonObject, Constants.COUNTRY_POSTMTD);
 
             if (ConnectionDetector.isConnected(this)) {
@@ -204,7 +273,7 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
 //                                    M.dSuccess(LoginActivity.this, getString(R.string.app_name), data.getString("MESSAGE"));
 //                                    M.dSuccess(LoginActivity.this, "", data.getString("MESSAGE"));
 //                                    M.dSuccess(LoginActivity.this, "", "Your Login credentials are sent to the email you entered as your registered email with Fun2sh");
-                                    M.dSuccess(LoginActivity.this, "Fun2sh","Your Login credentials are sent to the email you entered as your registered email with Fun2sh");
+                                    M.dSuccess(LoginActivity.this, "Fun2sh", "Your Login credentials are sent to the email you entered as your registered email with Fun2sh");
                                     dialog.dismiss();
                                 } else {
 //                                    M.dError(LoginActivity.this, data.getString("MESSAGE"));
@@ -239,20 +308,20 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
     @Override
     public void postResult(String postResult, String postMethod) {
 
-        JSONArray jsonArray= null;
+        JSONArray jsonArray = null;
         try {
             jsonArray = new JSONArray(postResult);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if(jsonArray.length()>0){
+        if (jsonArray.length() > 0) {
             Intent intent = new Intent(this, SignUpActivity.class);
             intent.putExtra("postResult", postResult);
             startActivity(intent);
-        }else{
+        } else {
 //            showToastMsg(Constants.RECORDS_NOT_FOUND);
-            M.T(LoginActivity.this,Constants.RECORDS_NOT_FOUND);
+            M.T(LoginActivity.this, Constants.RECORDS_NOT_FOUND);
         }
 
     }

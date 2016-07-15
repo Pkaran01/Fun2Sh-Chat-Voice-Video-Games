@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.karumi.dexter.Dexter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBSettings;
@@ -30,9 +31,11 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        Dexter.initialize(this);
         initApplication();
         new PrefsHelper(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleHandler());
+
     }
     private void initApplication() {
         mInstance = this;
@@ -63,6 +66,7 @@ public class AppController extends Application {
                 ? appSharedHelper = new SharedHelper(this)
                 : appSharedHelper;
     }
+
     public static synchronized AppController getInstance() {
         return mInstance;
     }

@@ -52,9 +52,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * QuickBlox team
- */
 public class ConversationCallFragment extends Fragment implements Serializable, QBRTCClientVideoTracksCallbacks,
         QBRTCSessionConnectionCallbacks, CallActivity.QBRTCSessionUserCallback/*, OpponentsFromCallAdapter.OnAdapterEventListener*/ {
 
@@ -262,6 +259,20 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         callingToTextView = (TextView) avatarAndNameView.findViewById(R.id.calling_to_text_view);
 
         actionButtonsEnabled(false);
+
+     /*   new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                        elementSetVideoButtons.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+            }
+        }, 6000);*/
     }
 
     @Override
@@ -338,27 +349,43 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
             @Override
             public void onClick(View v) {
                 toggleFullScreen();
+                elementSetVideoButtons.setVisibility(View.VISIBLE);
+                setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("log1","handler value1-");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                                elementSetVideoButtons.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                }, 6000);
             }
         });
     }
 
     void toggleFullScreen(){
         if(isFullScreen){
-            setLocalVideoViewVisible(false);
+           // setLocalVideoViewVisible(false);
             showSystemUI();
             ((CallActivity)getActivity()).showCallActionBar();
-            elementSetVideoButtons.setVisibility(View.VISIBLE);
+            elementSetVideoButtons.setVisibility(View.INVISIBLE);
             isFullScreen = false;
         } else {
-            setLocalVideoViewVisible(true);
+         //   setLocalVideoViewVisible(true);
             hideSystemUI();
             ((CallActivity) getActivity()).hideCallActionBar();
-            elementSetVideoButtons.setVisibility(View.INVISIBLE);
+            elementSetVideoButtons.setVisibility(View.VISIBLE);
             isFullScreen = true;
         }
     }
 
-    private void setLocalVideoViewVisible(boolean visible){
+
+    private void setLocalVideoViewVisible(boolean visible,int s[]){
         if (remoteVideoView != null && localVideoTrack != null){
             if (visible) {
                 QBMediaStreamManager mediaStreamManager = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager();
@@ -366,7 +393,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
                 RTCGLVideoView.RendererConfig config = new RTCGLVideoView.RendererConfig();
                 config.mirror = CameraUtils.isCameraFront(currentCameraId);
-                config.coordinates = getResources().getIntArray(R.array.local_view_coordinates_full_screen);
+                config.coordinates = s;
 
                 localVideoTrack.addRenderer(new VideoRenderer(remoteVideoView.obtainVideoRenderer(RTCGLVideoView.RendererSurface.SECOND)));
 
@@ -379,6 +406,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
             }
         }
     }
+
 
     private void hideSystemUI() {
         getActivity().getWindow().getDecorView().setSystemUiVisibility(

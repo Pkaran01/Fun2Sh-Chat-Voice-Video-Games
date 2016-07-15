@@ -13,6 +13,7 @@ import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Friend;
 import com.quickblox.q_municate_db.models.User;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -53,9 +54,9 @@ public class GlobalSearchAdapter extends BaseFilterAdapter<User, BaseClickListen
         ViewHolder holder = (ViewHolder) baseClickListenerViewHolder;
 
         if (user.getFullName() != null) {
-            holder.fullNameTextView.setText(user.getFullName());
+            holder.fullNameTextView.setText(Utility.capitalize(user.getFullName()));
         } else {
-            holder.fullNameTextView.setText(user.getUserId());
+            holder.fullNameTextView.setText(Utility.capitalize(String.valueOf(user.getUserId())));
         }
 
         String avatarUrl = user.getAvatar();

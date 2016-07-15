@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.q_municate_core.core.command.Command;
 import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
@@ -169,7 +170,11 @@ public class DashBoardActivity extends BaseLoggableActivity {
                     }
                 } else if (position == 4) {
                     fragment = null;
-                    M.I(DashBoardActivity.this, com.ss.fun2sh.ui.activities.authorization.SplashActivity.class, null);
+                    if (NetworkUtil.getConnectivityStatus(DashBoardActivity.this)) {
+                        M.I(DashBoardActivity.this, com.ss.fun2sh.ui.activities.authorization.SplashActivity.class, null);
+                    } else {
+                        M.dError(DashBoardActivity.this, "Unable to connect internet !");
+                    }
                 } else if (position == 5) {
                     fragment = new FragHelp();
                     ft.addToBackStack("FragHelp");
@@ -196,18 +201,18 @@ public class DashBoardActivity extends BaseLoggableActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            M.E(param.toString());
                             new JSONParser(DashBoardActivity.this).parseVollyJSONObject(Const.URL.logout, 1, param, new Helper() {
                                 @Override
                                 public void backResponse(String response) {
                                     try {
                                         JSONObject res = new JSONObject(response);
                                         if (res.getString("MSG").equals("SUCCESS")) {
+                                            showProgress();
                                             QBLogoutCompositeCommand.start(DashBoardActivity.this);
                                             PrefsHelper.getPrefsHelper().delete(Const.App_Ver.isFirstTimeLogin);
                                             PrefsHelper.getPrefsHelper().delete(Const.App_Ver.firstTimeProfile);
                                             PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.secondTimeLogin, true);
-                                           // M.T(DashBoardActivity.this, res.getString("MESSAGE"));
+                                            // M.T(DashBoardActivity.this, res.getString("MESSAGE"));
                                             /*M.I(DashBoardActivity.this, LogoutActivity.class, null);
                                             DashBoardActivity.this.finish();*/
 
@@ -343,6 +348,7 @@ public class DashBoardActivity extends BaseLoggableActivity {
 
         @Override
         public void execute(Bundle bundle) {
+            hideProgress();
             startLandingScreen();
             M.T(DashBoardActivity.this, "Logout successfully");
         }

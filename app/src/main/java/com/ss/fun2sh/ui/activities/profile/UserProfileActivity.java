@@ -239,7 +239,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
 
     private void setPhone() {
         if (user.getPhone() != null) {
-            phoneView.setVisibility(View.VISIBLE);
+            phoneView.setVisibility(View.GONE);
         } else {
             phoneView.setVisibility(View.GONE);
         }

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_db.models.User;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.utils.SystemUtils;
 import com.ss.fun2sh.utils.helpers.notification.ChatNotificationHelper;
@@ -18,8 +19,8 @@ public class ChatMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.v(TAG, "--- onReceive() ---");
-
+        M.E("--- onReceive() ---");
+        M.E("crud");
         String activityOnTop = SystemUtils.getNameActivityOnTopStack();
 
         if (!SystemUtils.isAppRunningNow() && !callActivityName.equals(activityOnTop)) {

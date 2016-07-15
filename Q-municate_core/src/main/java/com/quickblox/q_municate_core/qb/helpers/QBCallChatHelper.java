@@ -48,7 +48,7 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     public void init(QBChatService qbChatService) {
-        Log.d(TAG, "init()");
+        Log.e(TAG, "init()");
 
         qbRtcClient = QBRTCClient.getInstance(context);
 
@@ -61,9 +61,9 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     public void initActivityClass(Class<? extends Activity> activityClass) {
-        Log.d(TAG, "initActivityClass()");
+        Log.e(TAG, "initActivityClass()");
         this.activityClass = activityClass;
-        Log.d("test_crash_1", "initActivityClass(), activityClass = " + activityClass);
+        Log.e("test_crash_1", "initActivityClass(), activityClass = " + activityClass);
     }
 
     public QBRTCSession getCurrentRtcSession() {
@@ -92,7 +92,7 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     private void setUpCallClient() {
-        Log.d(TAG, "setUpCallClient()");
+        Log.e(TAG, "setUpCallClient()");
 
         qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraErrorHandler() {
             @Override
@@ -114,10 +114,10 @@ public class QBCallChatHelper extends BaseHelper {
                 .get(qbRtcSession.getSessionDescription().getCallerID());
 
         if (user != null) {
-            Log.d(TAG, "startCallActivity(), user = " + user);
-            Log.d(TAG, "startCallActivity(), qbRtcSession.getConferenceType() = " + qbRtcSession
+            Log.e(TAG, "startCallActivity(), user = " + user);
+            Log.e(TAG, "startCallActivity(), qbRtcSession.getConferenceType() = " + qbRtcSession
                     .getConferenceType());
-            Log.d(TAG, "startCallActivity(), qbRtcSession.getSessionDescription() = " + qbRtcSession
+            Log.e(TAG, "startCallActivity(), qbRtcSession.getSessionDescription() = " + qbRtcSession
                     .getSessionDescription());
 
             List<QBUser> qbUsersList = new ArrayList<>(1);
@@ -161,14 +161,14 @@ public class QBCallChatHelper extends BaseHelper {
 
         @Override
         public void onReceiveNewSession(QBRTCSession qbRtcSession) {
-            Log.d(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
+            Log.e(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
             if (currentQbRtcSession != null) {
                 Log.d(TAG, "onReceiveNewSession(). Stop new session. Device now is busy");
                 if (!qbRtcSession.equals(currentQbRtcSession)) {
                     qbRtcSession.rejectCall(null);
                 }
             } else {
-                Log.d(TAG, "onReceiveNewSession(). init session.");
+                Log.e(TAG, "onReceiveNewSession(). init session.");
                 if (activityClass != null) {
                     startCallActivity(qbRtcSession);
                     currentQbRtcSession = qbRtcSession;
@@ -178,7 +178,7 @@ public class QBCallChatHelper extends BaseHelper {
 
         @Override
         public void onUserNotAnswer(QBRTCSession qbRtcSession, Integer integer) {
-            Log.d(TAG, "onUserNotAnswer(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
+            Log.e(TAG, "onUserNotAnswer(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
 
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onUserNotAnswer(qbRtcSession, integer);

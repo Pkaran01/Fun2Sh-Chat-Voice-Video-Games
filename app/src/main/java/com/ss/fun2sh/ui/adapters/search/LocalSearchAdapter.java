@@ -20,6 +20,7 @@ import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.Message;
 import com.quickblox.q_municate_db.models.User;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -83,7 +84,7 @@ public class LocalSearchAdapter extends BaseFilterAdapter<Dialog, BaseClickListe
             displayGroupPhotoImage(dialog.getPhoto(), viewHolder.avatarImageView);
         }
 
-        viewHolder.titleTextView.setText(dialog.getTitle());
+        viewHolder.titleTextView.setText(Utility.capitalize(dialog.getTitle()));
 
         if (!TextUtils.isEmpty(query)) {
             TextViewHelper.changeTextColorView(baseActivity, viewHolder.titleTextView, query);
@@ -102,7 +103,6 @@ public class LocalSearchAdapter extends BaseFilterAdapter<Dialog, BaseClickListe
             viewHolder.labelTextView.setText(OnlineStatusUtils.getOnlineStatus(online));
             viewHolder.labelTextView.setTextColor(resources.getColor(R.color.green));
         } else {
-            M.E(user.getLastLogin() + "");
             if (user.getLastLogin() > 0) {
                 viewHolder.labelTextView.setText(resources.getString(R.string.last_seen,
                         DateUtils.toTodayYesterdayShortDateWithoutYear2(user.getLastLogin()),

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
@@ -26,8 +25,16 @@ android {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
     }
     applicationVariants.all { variant ->
         changeApkFileName(variant)
@@ -36,16 +43,15 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/ftp4j-1.6.jar')
-
     //qb
     compile project(':Q-municate_core')
     compile project(':Q-municate_db')
     compile "com.android.support:multidex:${rootProject.multiDexVersion}"
     compile "com.android.support:design:${rootProject.supportVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.supportVersion}"
-    compile "com.google.android.gms:play-services:${rootProject.googlePlayServicesVersion}"
+    compile 'com.google.android.gms:play-services:9.2.0'
     compile "com.nostra13.universalimageloader:universal-image-loader:${rootProject.universalImageLoaderVersion}"
+    compile 'com.karumi:dexter:2.2.2'
     compile "com.jakewharton:butterknife:${rootProject.butterknifeVersion}"
     compile "com.github.orangegangsters:swipy:${rootProject.swipyRecyclerviewVersion}@aar"
     compile "com.timehop.stickyheadersrecyclerview:library:${rootProject.stickylistheadersRecyclerViewVersion}@aar"
@@ -62,9 +68,9 @@ dependencies {
     compile 'com.flurry.android:analytics:6.2.0'
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
     compile 'com.romainpiel.shimmer:library:1.4.0@aar'
-    compile 'com.google.android.gms:play-services-ads:9.0.1'
-    compile 'com.google.android.gms:play-services-auth:9.0.1'
-    compile 'com.google.android.gms:play-services-gcm:9.0.1'
+    compile 'com.google.android.gms:play-services-ads:9.2.0'
+    compile 'com.google.android.gms:play-services-auth:9.2.0'
+    compile 'com.google.android.gms:play-services-gcm:9.2.0'
 }
 repositories {
     mavenCentral()
