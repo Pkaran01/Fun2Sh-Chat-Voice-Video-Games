@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.VideoView;
 
 import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Splash;
 import com.ss.fun2sh.R;
 

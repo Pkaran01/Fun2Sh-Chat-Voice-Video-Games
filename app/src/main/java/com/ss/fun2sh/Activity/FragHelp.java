@@ -62,7 +62,7 @@ import com.ss.fun2sh.CRUD.AndroidMultiPartEntity;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.JSONParser;
 import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.oldutils.ConnectionDetector;
 import com.ss.fun2sh.oldutils.Constants;

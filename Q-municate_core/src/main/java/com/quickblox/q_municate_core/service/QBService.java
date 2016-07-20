@@ -15,53 +15,53 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.command.CompositeServiceCommand;
 import com.quickblox.q_municate_core.core.command.ServiceCommand;
 import com.quickblox.q_municate_core.models.AppSession;
-import com.quickblox.q_municate_core.qb.commands.friend.QBAcceptFriendCommand;
-import com.quickblox.q_municate_core.qb.commands.friend.QBAddFriendCommand;
-import com.quickblox.q_municate_core.qb.commands.chat.QBAddFriendsToGroupCommand;
 import com.quickblox.q_municate_core.qb.commands.QBChangePasswordCommand;
+import com.quickblox.q_municate_core.qb.commands.QBFindUsersCommand;
+import com.quickblox.q_municate_core.qb.commands.QBGetFileCommand;
+import com.quickblox.q_municate_core.qb.commands.QBLoadAttachFileCommand;
+import com.quickblox.q_municate_core.qb.commands.QBLoadUserCommand;
+import com.quickblox.q_municate_core.qb.commands.QBResetPasswordCommand;
+import com.quickblox.q_municate_core.qb.commands.QBUpdateUserCommand;
+import com.quickblox.q_municate_core.qb.commands.chat.QBAddFriendsToGroupCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBCreateGroupDialogCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBCreatePrivateChatCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBDeleteChatCommand;
-import com.quickblox.q_municate_core.qb.commands.QBFindUsersCommand;
-import com.quickblox.q_municate_core.qb.commands.QBGetFileCommand;
-import com.quickblox.q_municate_core.qb.commands.friend.QBImportFriendsCommand;
+import com.quickblox.q_municate_core.qb.commands.chat.QBInitCallChatCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBInitChatServiceCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBInitChatsCommand;
-import com.quickblox.q_municate_core.qb.commands.friend.QBInitFriendListCommand;
-import com.quickblox.q_municate_core.qb.commands.chat.QBInitCallChatCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBJoinGroupChatsCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLeaveGroupDialogCommand;
-import com.quickblox.q_municate_core.qb.commands.QBLoadAttachFileCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLoadDialogMessagesCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLoadDialogsCommand;
-import com.quickblox.q_municate_core.qb.commands.friend.QBLoadFriendListCommand;
-import com.quickblox.q_municate_core.qb.commands.QBLoadUserCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLoginChatCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLoginChatCompositeCommand;
-import com.quickblox.q_municate_core.qb.commands.rest.QBLoginCompositeCommand;
-import com.quickblox.q_municate_core.qb.commands.rest.QBLoginRestCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBLogoutAndDestroyChatCommand;
-import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
-import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutRestCommand;
+import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateGroupDialogCommand;
+import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
+import com.quickblox.q_municate_core.qb.commands.friend.QBAcceptFriendCommand;
+import com.quickblox.q_municate_core.qb.commands.friend.QBAddFriendCommand;
+import com.quickblox.q_municate_core.qb.commands.friend.QBImportFriendsCommand;
+import com.quickblox.q_municate_core.qb.commands.friend.QBInitFriendListCommand;
+import com.quickblox.q_municate_core.qb.commands.friend.QBLoadFriendListCommand;
 import com.quickblox.q_municate_core.qb.commands.friend.QBRejectFriendCommand;
 import com.quickblox.q_municate_core.qb.commands.friend.QBRemoveFriendCommand;
-import com.quickblox.q_municate_core.qb.commands.QBResetPasswordCommand;
+import com.quickblox.q_municate_core.qb.commands.push.QBSendPushCommand;
+import com.quickblox.q_municate_core.qb.commands.rest.QBLoginCompositeCommand;
+import com.quickblox.q_municate_core.qb.commands.rest.QBLoginRestCommand;
+import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
+import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutRestCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBSignUpCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBSignUpRestCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBSocialLoginCommand;
-import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateGroupDialogCommand;
-import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
-import com.quickblox.q_municate_core.qb.commands.QBUpdateUserCommand;
-import com.quickblox.q_municate_core.qb.commands.push.QBSendPushCommand;
 import com.quickblox.q_municate_core.qb.helpers.BaseHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBAuthHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBBaseChatHelper;
+import com.quickblox.q_municate_core.qb.helpers.QBCallChatHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBChatRestHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBGroupChatHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBPrivateChatHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBRestHelper;
-import com.quickblox.q_municate_core.qb.helpers.QBCallChatHelper;
 import com.quickblox.q_municate_core.utils.ConstsCore;
 import com.quickblox.q_municate_core.utils.Utils;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
@@ -102,7 +102,6 @@ public class QBService extends Service {
         threadQueue = new LinkedBlockingQueue<>();
         helpersMap = new HashMap<>();
         broadcastReceiver = new LoginBroadcastReceiver();
-
         initThreads();
 
         initHelpers();
@@ -560,11 +559,14 @@ public class QBService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action;
+        Log.e(TAG, "service started with intent=" + intent);
+        //Log.e(TAG, "service started with Action=" + intent.getAction());
         if (intent != null && (action = intent.getAction()) != null) {
-            Log.d(TAG, "service started with resultAction=" + action);
+            Log.e(TAG, "service started with resultAction=" + action);
             ServiceCommand command = serviceCommandMap.get(action);
             if (command != null) {
                 startAsync(command, intent);
+
             }
         }
         return START_NOT_STICKY;
@@ -625,13 +627,13 @@ public class QBService extends Service {
         }
     }
 
-    private class LoginBroadcastReceiver extends BroadcastReceiver {
+    public class LoginBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive " + intent.getAction());
+            Log.e(TAG, "onReceive " + intent.getAction());
             String action = intent.getAction();
-            if (action != null && QBServiceConsts.RE_LOGIN_IN_CHAT_SUCCESS_ACTION.equals(action)) {
+            if (action != null) {
                 ((QBBaseChatHelper) getHelper(PRIVATE_CHAT_HELPER)).init(AppSession.getSession().getUser());
                 ((QBBaseChatHelper) getHelper(GROUP_CHAT_HELPER)).init(AppSession.getSession().getUser());
                 ((QBCallChatHelper) getHelper(CALL_CHAT_HELPER)).init(QBChatService.getInstance());

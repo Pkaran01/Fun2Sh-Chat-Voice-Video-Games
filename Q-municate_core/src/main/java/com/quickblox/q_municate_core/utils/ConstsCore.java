@@ -25,7 +25,10 @@ public class ConstsCore {
     public static final String PUSH_MESSAGE = "message";
 
     public static final int NOT_INITIALIZED_VALUE = -1;
-    public static final int LOGIN_TIMEOUT = 40000;
+    //public static final int LOGIN_TIMEOUT = 40000;
+
+    public static final int LOGIN_TIMEOUT = 90000;
+
     public static final String TOKEN_REQUIRED_ERROR = "Token is required";
     public static final String SESSION_DOES_NOT_EXIST = "Required session does not exist";
     public static final int TOKEN_VALID_TIME_IN_MINUTES = 1;

@@ -105,6 +105,7 @@
                     android:gravity="center|bottom">
 
                     <TextView
+                        android:id="@+id/timeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|left|bottom"

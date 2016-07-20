@@ -8,10 +8,12 @@ import com.quickblox.q_municate_core.models.LoginType;
 import static com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper.Constants.*;
 
 public class CoreSharedHelper {
-
+    public static final String isCallRunning = "isCallRunning";
     public class Constants {
 
         public static final String NAME = "FunChat";
+
+
 
         public static final String LOGIN_TYPE = "login_type";
         public static final String IMPORT_INITIALIZED = "import_initialized";

@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.q_municate_core.core.command.Command;
+import com.quickblox.q_municate_core.qb.commands.chat.QBLogoutAndDestroyChatCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.ss.fun2sh.Adapter.NavDrawerListAdapter;
@@ -25,7 +25,7 @@ import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.Model.NavDrawerItem;
 import com.ss.fun2sh.R;
@@ -209,6 +209,7 @@ public class DashBoardActivity extends BaseLoggableActivity {
                                         if (res.getString("MSG").equals("SUCCESS")) {
                                             showProgress();
                                             QBLogoutCompositeCommand.start(DashBoardActivity.this);
+                                            //QBLogoutAndDestroyChatCommand.start(DashBoardActivity.this, true);
                                             PrefsHelper.getPrefsHelper().delete(Const.App_Ver.isFirstTimeLogin);
                                             PrefsHelper.getPrefsHelper().delete(Const.App_Ver.firstTimeProfile);
                                             PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.secondTimeLogin, true);
@@ -270,13 +271,14 @@ public class DashBoardActivity extends BaseLoggableActivity {
 
     private void addActions() {
         addAction(QBServiceConsts.LOGOUT_SUCCESS_ACTION, new LogoutSuccessAction());
+       // addAction(QBServiceConsts.LOGOUT_CHAT_SUCCESS_ACTION, new LogoutSuccessAction());
         addAction(QBServiceConsts.LOGOUT_FAIL_ACTION, failAction);
 
         updateBroadcastActionList();
     }
 
     private void removeActions() {
-        removeAction(QBServiceConsts.LOGOUT_SUCCESS_ACTION);
+        removeAction(QBServiceConsts.LOGOUT_CHAT_SUCCESS_ACTION);
         removeAction(QBServiceConsts.LOGOUT_FAIL_ACTION);
 
         updateBroadcastActionList();

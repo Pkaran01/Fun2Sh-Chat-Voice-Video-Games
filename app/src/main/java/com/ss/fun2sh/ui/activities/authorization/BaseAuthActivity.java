@@ -1,6 +1,5 @@
 package com.ss.fun2sh.ui.activities.authorization;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -12,14 +11,13 @@ import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.LoginType;
 import com.quickblox.q_municate_core.qb.commands.rest.QBLoginCompositeCommand;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.PrefsHelper;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
-import com.ss.fun2sh.ui.activities.profile.FirstTimeUserProfileActivity;
 
 import butterknife.Bind;
 
@@ -37,11 +35,6 @@ public abstract class BaseAuthActivity extends BaseActivity {
     protected Resources resources;
     protected LoginSuccessAction loginSuccessAction;
     protected FailAction failAction;
-
-    public static void start(Context context) {
-        Intent intent = new Intent(context, BaseAuthActivity.class);
-        context.startActivity(intent);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +87,6 @@ public abstract class BaseAuthActivity extends BaseActivity {
     }
 
 
-
     protected void startMainActivity(QBUser user) {
         AppSession.getSession().updateUser(user);
         if (!PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.firstTimeProfile, false)) {
@@ -111,8 +103,8 @@ public abstract class BaseAuthActivity extends BaseActivity {
     }
 
     protected void startMainActivity() {
-        //MainActivity.start(BaseAuthActivity.this);
-        FirstTimeUserProfileActivity.start(BaseAuthActivity.this);
+        MainActivity.start(BaseAuthActivity.this);
+        //FirstTimeUserProfileActivity.start(BaseAuthActivity.this);
         finish();
     }
 
@@ -160,10 +152,6 @@ public abstract class BaseAuthActivity extends BaseActivity {
     protected void performLoginSuccessAction(Bundle bundle) {
         QBUser user = (QBUser) bundle.getSerializable(QBServiceConsts.EXTRA_USER);
         startMainActivity(user);
-
-        // send analytics data
-        //  GoogleAnalyticsHelper.pushAnalyticsData(BaseAuthActivity.this, user, "User Sign In");
-        //FlurryAnalyticsHelper.pushAnalyticsData(BaseAuthActivity.this);
     }
 
     protected boolean isLoggedInToServer() {

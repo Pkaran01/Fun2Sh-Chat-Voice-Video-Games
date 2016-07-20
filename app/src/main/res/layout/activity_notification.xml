@@ -105,7 +105,7 @@
                 android:background="@color/color_less_blue"
                 android:layout_marginBottom="3dp"
                 android:layout_marginTop="2dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="16dp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -119,6 +119,7 @@
                 android:layout_height="match_parent"
                 android:text="The Notification will be displayed here"
                 android:textStyle="bold"
+               android:padding="16dp"
                 android:gravity="left"
                 android:background="@drawable/two_color_mix"/>
         </LinearLayout>

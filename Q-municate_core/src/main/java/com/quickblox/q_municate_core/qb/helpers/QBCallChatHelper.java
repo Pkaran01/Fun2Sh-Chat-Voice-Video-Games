@@ -12,6 +12,7 @@ import com.quickblox.chat.listeners.QBVideoChatSignalingManagerListener;
 import com.quickblox.q_municate_core.models.StartConversationReason;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
@@ -71,19 +72,19 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     public void initCurrentSession(QBRTCSession qbRtcSession, QBRTCSignalingCallback qbRtcSignalingCallback,
-            QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
+                                   QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
         this.currentQbRtcSession = qbRtcSession;
         initCurrentSession(qbRtcSignalingCallback, qbRtcSessionConnectionCallbacks);
     }
 
     public void initCurrentSession(QBRTCSignalingCallback qbRtcSignalingCallback,
-            QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
+                                   QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
         this.currentQbRtcSession.addSignalingCallback(qbRtcSignalingCallback);
         this.currentQbRtcSession.addSessionCallbacksListener(qbRtcSessionConnectionCallbacks);
     }
 
     public void releaseCurrentSession(QBRTCSignalingCallback qbRtcSignalingCallback,
-            QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
+                                      QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
         if (currentQbRtcSession != null) {
             currentQbRtcSession.removeSignalingCallback(qbRtcSignalingCallback);
             currentQbRtcSession.removeSessionnCallbacksListener(qbRtcSessionConnectionCallbacks);
@@ -124,8 +125,7 @@ public class QBCallChatHelper extends BaseHelper {
             qbUsersList.add(UserFriendUtils.createQbUser(user));
             Intent intent = new Intent(context, activityClass);
             intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);
-            intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE,
-                    StartConversationReason.INCOME_CALL_FOR_ACCEPTION);
+            intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.INCOME_CALL_FOR_ACCEPTION);
             intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbRtcSession.getConferenceType());
             intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSession.getSessionDescription());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -162,6 +162,7 @@ public class QBCallChatHelper extends BaseHelper {
         @Override
         public void onReceiveNewSession(QBRTCSession qbRtcSession) {
             Log.e(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, true);
             if (currentQbRtcSession != null) {
                 Log.d(TAG, "onReceiveNewSession(). Stop new session. Device now is busy");
                 if (!qbRtcSession.equals(currentQbRtcSession)) {
@@ -179,7 +180,7 @@ public class QBCallChatHelper extends BaseHelper {
         @Override
         public void onUserNotAnswer(QBRTCSession qbRtcSession, Integer integer) {
             Log.e(TAG, "onUserNotAnswer(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
-
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onUserNotAnswer(qbRtcSession, integer);
             }
@@ -188,7 +189,7 @@ public class QBCallChatHelper extends BaseHelper {
         @Override
         public void onCallRejectByUser(QBRTCSession qbRtcSession, Integer integer, Map<String, String> map) {
             Log.d(TAG, "onCallRejectByUser(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
-
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onCallRejectByUser(qbRtcSession, integer, map);
             }
@@ -207,7 +208,7 @@ public class QBCallChatHelper extends BaseHelper {
         public void onReceiveHangUpFromUser(QBRTCSession qbRtcSession, Integer integer) {
             Log.d(TAG,
                     "onReceiveHangUpFromUser(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
-
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onReceiveHangUpFromUser(qbRtcSession, integer);
             }
@@ -216,7 +217,7 @@ public class QBCallChatHelper extends BaseHelper {
         @Override
         public void onUserNoActions(QBRTCSession qbRtcSession, Integer integer) {
             Log.d(TAG, "onUserNoActions(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
-
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onUserNoActions(qbRtcSession, integer);
             }
@@ -225,7 +226,7 @@ public class QBCallChatHelper extends BaseHelper {
         @Override
         public void onSessionClosed(QBRTCSession qbRtcSession) {
             Log.d(TAG, "onSessionClosed(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
-
+            CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onSessionClosed(qbRtcSession);
             }

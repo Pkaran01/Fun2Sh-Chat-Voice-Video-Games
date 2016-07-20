@@ -17,7 +17,7 @@ public class QBInitCallChatCommand extends ServiceCommand {
     private QBCallChatHelper qbCallChatHelper;
 
     public QBInitCallChatCommand(Context context, QBCallChatHelper qbCallChatHelper, String successAction,
-            String failAction) {
+                                 String failAction) {
         super(context, successAction, failAction);
         this.qbCallChatHelper = qbCallChatHelper;
     }

@@ -1,11 +1,14 @@
 package com.ss.fun2sh.ui.activities.authorization;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.quickblox.q_municate_core.models.LoginType;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.utils.helpers.LoginHelper;
 import com.ss.fun2sh.utils.listeners.ExistingQbSessionListener;
@@ -17,15 +20,23 @@ public class SplashActivity extends BaseAuthActivity implements ExistingQbSessio
         return R.layout.activity_qb_splash;
     }
 
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SplashActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isNetworkAvailable()) {
+            M.E("in if");
             LoginHelper loginHelper = new LoginHelper(this, this);
             loginHelper.checkStartExistSession();
         } else if (LoginHelper.isCorrectOldAppSession()) {
+            M.E("in else if");
             startMainActivity();
         } else {
+            M.E("else");
             startLandingActivity();
         }
     }
@@ -58,7 +69,7 @@ public class SplashActivity extends BaseAuthActivity implements ExistingQbSessio
     private void startLandingActivity() {
         if (checkNetworkAvailableWithError()) {
             login();
-            SplashActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            //SplashActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 

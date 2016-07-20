@@ -45,6 +45,7 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
             viewHolder.avatarImageView = (HexagonImageView) convertView.findViewById(R.id.avatar_imageview);
             viewHolder.nameTextView = (TextView) convertView.findViewById(R.id.name_textview);
             viewHolder.lastMessageTextView = (TextView) convertView.findViewById(R.id.last_message_textview);
+            viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.timeTextView);
             viewHolder.unreadMessagesTextView = (TextView) convertView.findViewById(
                     R.id.unread_messages_textview);
 
@@ -68,6 +69,7 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
             }
         } else {
             viewHolder.nameTextView.setText(dialog.getTitle());
+
             viewHolder.avatarImageView.setImageResource(R.drawable.placeholder_group);
             displayGroupPhotoImage(dialog.getPhoto(), viewHolder.avatarImageView);
         }
@@ -94,6 +96,8 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
             viewHolder.lastMessageTextView.setText(
                     ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_notification_message), message, dialogNotification));
         }
+
+        viewHolder.timeTextView.setText(Utility.getTimeAgo(ChatUtils.getDialogMessageCreatedDate(true,message,dialogNotification) * 1000));
         return convertView;
     }
 
@@ -103,5 +107,6 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
         public TextView nameTextView;
         public TextView lastMessageTextView;
         public TextView unreadMessagesTextView;
+        public TextView timeTextView;
     }
 }

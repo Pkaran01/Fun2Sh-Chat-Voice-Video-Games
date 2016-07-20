@@ -29,6 +29,7 @@ public class LoginHelper {
     private Context context;
     private SharedHelper appSharedHelper;
     private CommandBroadcastReceiver commandBroadcastReceiver;
+    private LoginBroadcastReceiver loginBroadcastReceiver;
     private GlobalLoginListener globalLoginListener;
     private ExistingQbSessionListener existingQbSessionListener;
 
@@ -120,6 +121,7 @@ public class LoginHelper {
         }
     }
 
+
     public void makeGeneralLogin(GlobalLoginListener globalLoginListener) {
         this.globalLoginListener = globalLoginListener;
         commandBroadcastReceiver = new CommandBroadcastReceiver();
@@ -127,8 +129,26 @@ public class LoginHelper {
         login();
     }
 
+    private void registerLoginBroadcastReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+
+        intentFilter.addAction(QBServiceConsts.LOGIN_SUCCESS_ACTION);
+        intentFilter.addAction(QBServiceConsts.LOGIN_FAIL_ACTION);
+
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(loginBroadcastReceiver, intentFilter);
+    }
+
+    public void makeCallLogin(GlobalLoginListener globalLoginListener) {
+        this.globalLoginListener = globalLoginListener;
+        loginBroadcastReceiver = new LoginBroadcastReceiver();
+        registerLoginBroadcastReceiver();
+        login();
+    }
+
     private void unregisterBroadcastReceiver() {
         LocalBroadcastManager.getInstance(context).unregisterReceiver(commandBroadcastReceiver);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(loginBroadcastReceiver);
     }
 
     private void registerCommandBroadcastReceiver() {
@@ -169,6 +189,27 @@ public class LoginHelper {
                     || intent.getAction().equals(QBServiceConsts.LOGIN_CHAT_COMPOSITE_FAIL_ACTION)
                     || intent.getAction().equals(QBServiceConsts.LOAD_CHATS_DIALOGS_FAIL_ACTION)
                     || intent.getAction().equals(QBServiceConsts.SOCIAL_LOGIN_FAIL_ACTION)) {
+                unregisterBroadcastReceiver();
+                if (globalLoginListener != null) {
+                    globalLoginListener.onCompleteWithError("Login was finished with error!");
+                }
+            }
+        }
+    }
+
+    private class LoginBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            if (intent.getAction().equals(QBServiceConsts.LOGIN_SUCCESS_ACTION)) {
+                QBUser qbUser = (QBUser) intent.getExtras().getSerializable(QBServiceConsts.EXTRA_USER);
+                AppSession.getSession().updateUser(qbUser);
+                loginChat();
+                if (globalLoginListener != null) {
+                    globalLoginListener.onCompleteQbChatLogin();
+                }
+                unregisterBroadcastReceiver();
+            } else if (intent.getAction().equals(QBServiceConsts.LOGIN_FAIL_ACTION)) {
                 unregisterBroadcastReceiver();
                 if (globalLoginListener != null) {
                     globalLoginListener.onCompleteWithError("Login was finished with error!");

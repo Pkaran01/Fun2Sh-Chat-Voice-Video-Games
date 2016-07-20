@@ -46,7 +46,6 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
-import com.ss.fun2sh.Activity.DashBoardActivity;
 import com.ss.fun2sh.Activity.LogoutActivity;
 import com.ss.fun2sh.AppController;
 import com.ss.fun2sh.R;
@@ -105,7 +104,9 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     private ServiceConnection serviceConnection;
     private ActivityUIHelper activityUIHelper;
 
+
     protected abstract int getContentResId();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,15 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         setContentView(getContentResId());
         initFields();
         activateButterKnife();
+
+
+        //for Repeating actions
+       /* Intent ll24 = new Intent(this, AlarmReceiverLifeLog.class);
+        PendingIntent recurringLl24 = PendingIntent.getBroadcast(this, 0, ll24, 0);
+        AlarmManager alarms = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarms.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 20, recurringLl24); // Log repetition*/
     }
+
 
     @Override
     protected void onStop() {
@@ -280,6 +289,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         checkOpeningDialog();
 
         checkShowingConnectionError();
+
+
     }
 
     @Override
@@ -320,6 +331,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         globalBroadcastReceiver = new GlobalBroadcastReceiver();
         userStatusBroadcastReceiver = new UserStatusBroadcastReceiver();
         networkBroadcastReceiver = new NetworkBroadcastReceiver();
+
         broadcastCommandMap = new HashMap<>();
         fragmentsStatusChangingSet = new HashSet<>();
         fragmentsServiceConnectionSet = new HashSet<>();
@@ -518,10 +530,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     }
 
     public void forceRelogin() {
-        ErrorUtils.showError(this, getString(R.string.dlg_force_relogin_on_token_required));
-        DashBoardActivity.start(this);
+        // ErrorUtils.showError(this, getString(R.string.dlg_force_relogin_on_token_required));
+        SplashActivity.start(this);
         finish();
     }
+
 
     public void refreshSession() {
         if (LoginType.EMAIL.equals(AppSession.getSession().getLoginType())) {
@@ -771,7 +784,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
                     } else if (QBServiceConsts.GOT_CONTACT_REQUEST.equals(intent.getAction())) {
                         onReceiveContactRequestAction(intent.getExtras());
                     } else if (QBServiceConsts.FORCE_RELOGIN.equals(intent.getAction())) {
-                        //                        onReceiveForceReloginAction(intent.getExtras());
+                        onReceiveForceReloginAction(intent.getExtras());
                     } else if (QBServiceConsts.REFRESH_SESSION.equals(intent.getAction())) {
                         onReceiveRefreshSessionAction(intent.getExtras());
                     }
@@ -804,4 +817,5 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
 
         }
     }
+
 }

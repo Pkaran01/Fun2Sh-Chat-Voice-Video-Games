@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Chronometer;
 
 import com.quickblox.chat.QBChatService;
@@ -99,7 +100,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbConferenceType);
         intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.OUTCOME_CALL_MADE);
         intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSessionDescription);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivityForResult(intent, CALL_ACTIVITY_CLOSE);
     }
 
@@ -119,19 +120,19 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     }
 
-    public void setCallActionBarTitle(String title){
+    public void setCallActionBarTitle(String title) {
         if (actionBar != null) {
             actionBar.setTitle(title);
         }
     }
 
-    public void hideCallActionBar(){
+    public void hideCallActionBar() {
         if (actionBar != null) {
             actionBar.hide();
         }
     }
 
-    public void showCallActionBar(){
+    public void showCallActionBar() {
         if (actionBar != null) {
             actionBar.show();
         }
@@ -144,9 +145,10 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         initFields();
         audioStreamReceiver = new AudioStreamReceiver();
         initWiFiManagerListener();
-        if (ACTION_ANSWER_CALL.equals(getIntent().getAction())){
+        if (ACTION_ANSWER_CALL.equals(getIntent().getAction())) {
             addConversationFragmentReceiveCall();
         }
+
     }
 
     private void initCallFragment() {
@@ -184,6 +186,18 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     @Override
+    public void onAttachedToWindow() {
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -204,16 +218,16 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem itemSpeakerToggle = menu.findItem(R.id.switch_speaker_toggle);
-        if (itemSpeakerToggle != null){
-           itemSpeakerToggle.setIcon(isSpeakerEnabled ? R.drawable.ic_phonelink_ring : R.drawable.ic_speaker_phone);
+        if (itemSpeakerToggle != null) {
+            itemSpeakerToggle.setIcon(isSpeakerEnabled ? R.drawable.ic_phonelink_ring : R.drawable.ic_speaker_phone);
         }
 
         MenuItem itemCameraToggle = menu.findItem(R.id.switch_camera_toggle);
-        if (itemCameraToggle != null && getCurrentSession() != null){
-            if (QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO.equals(getCurrentSession().getConferenceType())){
-                    if (isVideoEnabled()) {
-                        itemCameraToggle.setIcon(isFrontCameraSelected() ? R.drawable.ic_camera_front_white : R.drawable.ic_camera_rear_white);
-                    }
+        if (itemCameraToggle != null && getCurrentSession() != null) {
+            if (QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO.equals(getCurrentSession().getConferenceType())) {
+                if (isVideoEnabled()) {
+                    itemCameraToggle.setIcon(isFrontCameraSelected() ? R.drawable.ic_camera_front_white : R.drawable.ic_camera_rear_white);
+                }
 
                 itemCameraToggle.setVisible(true);
                 itemCameraToggle.setEnabled(isVideoEnabled());
@@ -241,7 +255,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
     }
 
-    private boolean isVideoEnabled(){
+    private boolean isVideoEnabled() {
         QBRTCSession currentSession = getCurrentSession();
         QBMediaStreamManager mediaStreamManager;
         if (currentSession != null) {
@@ -250,7 +264,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
             return false;
         }
 
-        if (mediaStreamManager != null){
+        if (mediaStreamManager != null) {
             return mediaStreamManager.isVideoEnabled();
         } else {
             return false;
@@ -259,12 +273,12 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (getCurrentSession() == null){
+        if (getCurrentSession() == null) {
             return super.onOptionsItemSelected(item);
         }
 
         QBMediaStreamManager mediaStreamManager = getCurrentSession().getMediaStreamManager();
-        if (mediaStreamManager == null){
+        if (mediaStreamManager == null) {
             return super.onOptionsItemSelected(item);
         }
 
@@ -500,10 +514,14 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     private void initFields() {
-        opponentsList = (List<QBUser>) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_OPPONENTS);
-        qbConferenceType = (QBRTCTypes.QBConferenceType) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_CONFERENCE_TYPE);
-        startConversationReason = (StartConversationReason) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE);
-        qbRtcSessionDescription = (QBRTCSessionDescription) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_SESSION_DESCRIPTION);
+        try {
+            opponentsList = (List<QBUser>) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_OPPONENTS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        qbConferenceType = (QBRTCTypes.QBConferenceType) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE);
+        startConversationReason = (StartConversationReason) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE);
+        qbRtcSessionDescription = (QBRTCSessionDescription) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION);
 
         ringtonePlayer = new RingtonePlayer(this, R.raw.beep);
         // Add activity as callback to RTCClient
@@ -520,7 +538,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         };
     }
 
-    public User getOpponentAsUserFromDB(int opponentId){
+    public User getOpponentAsUserFromDB(int opponentId) {
         DataManager dataManager = DataManager.getInstance();
         Friend friend = dataManager.getFriendDataManager().getByUserId(opponentId);
         return friend.getUser();
@@ -671,7 +689,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
     }
 
-    private void stopTimer(){
+    private void stopTimer() {
         if (timerChronometer != null) {
             timerChronometer.stop();
             isStarted = false;

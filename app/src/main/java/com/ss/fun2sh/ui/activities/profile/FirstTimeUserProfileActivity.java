@@ -25,7 +25,7 @@ import com.quickblox.users.model.QBUser;
 import com.soundcloud.android.crop.Crop;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;

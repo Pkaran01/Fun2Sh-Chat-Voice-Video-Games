@@ -3,7 +3,6 @@ package com.ss.fun2sh.utils.broadcasts;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_db.models.User;
@@ -19,8 +18,7 @@ public class ChatMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        M.E("--- onReceive() ---");
-        M.E("crud");
+        M.E("--- onReceive()" + TAG);
         String activityOnTop = SystemUtils.getNameActivityOnTopStack();
 
         if (!SystemUtils.isAppRunningNow() && !callActivityName.equals(activityOnTop)) {

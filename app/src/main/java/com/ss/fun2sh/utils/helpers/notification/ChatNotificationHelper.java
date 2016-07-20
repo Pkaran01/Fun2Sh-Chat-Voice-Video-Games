@@ -7,14 +7,22 @@ import android.text.TextUtils;
 
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.NotificationEvent;
+import com.quickblox.q_municate_core.qb.commands.chat.QBInitCallChatCommand;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
+import com.quickblox.videochat.webrtc.QBRTCClient;
+import com.quickblox.videochat.webrtc.QBRTCSession;
+import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
 import com.ss.fun2sh.AppController;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.utils.SystemUtils;
 import com.ss.fun2sh.utils.helpers.LoginHelper;
 import com.ss.fun2sh.utils.helpers.SharedHelper;
 import com.ss.fun2sh.utils.listeners.simple.SimpleGlobalLoginListener;
+
+import java.util.Map;
 
 public class ChatNotificationHelper {
 
@@ -30,9 +38,12 @@ public class ChatNotificationHelper {
     private static String message;
     private static boolean isLoginNow;
 
+    private QBRTCClient qbRtcClient;
+
     public ChatNotificationHelper(Context context) {
         this.context = context;
         appSharedHelper = AppController.getInstance().getAppSharedHelper();
+        qbRtcClient = QBRTCClient.getInstance(context);
     }
 
     public void parseChatMessage(Bundle extras) {
@@ -64,7 +75,11 @@ public class ChatNotificationHelper {
             }
         } else {
             // push about call
-            sendNotification(message);
+            M.E("Call Noti" + message);
+            if (AppSession.getSession().getUser() != null) {
+                LoginHelper loginHelper = new LoginHelper(context);
+                loginHelper.makeCallLogin(new CallLoginListener());
+            }
         }
 
         saveOpeningDialog(false);
@@ -112,6 +127,62 @@ public class ChatNotificationHelper {
             isLoginNow = false;
 
             saveOpeningDialog(false);
+        }
+    }
+
+    private class CallLoginListener extends SimpleGlobalLoginListener {
+
+        @Override
+        public void onCompleteQbChatLogin() {
+            M.E("onCompleteQbChatLogin");
+            QBInitCallChatCommand.start(context, CallActivity.class);
+            qbRtcClient.addSessionCallbacksListener(new QBRTCClientSessionCallbacks() {
+                @Override
+                public void onReceiveNewSession(QBRTCSession qbrtcSession) {
+
+                }
+
+                @Override
+                public void onUserNotAnswer(QBRTCSession qbrtcSession, Integer integer) {
+
+                }
+
+                @Override
+                public void onCallRejectByUser(QBRTCSession qbrtcSession, Integer integer, Map<String, String> map) {
+
+                }
+
+                @Override
+                public void onCallAcceptByUser(QBRTCSession qbrtcSession, Integer integer, Map<String, String> map) {
+
+                }
+
+                @Override
+                public void onReceiveHangUpFromUser(QBRTCSession qbrtcSession, Integer integer) {
+
+                }
+
+                @Override
+                public void onUserNoActions(QBRTCSession qbrtcSession, Integer integer) {
+                    sendNotification(message);
+                }
+
+                @Override
+                public void onSessionClosed(QBRTCSession qbrtcSession) {
+
+                }
+
+                @Override
+                public void onSessionStartClose(QBRTCSession qbrtcSession) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onCompleteWithError(String error) {
+            isLoginNow = false;
+            sendNotification(message);
         }
     }
 }

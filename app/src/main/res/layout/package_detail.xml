@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/topImage"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/topImage"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -23,11 +23,11 @@
             android:text="Package Details"
             android:textColor="#000"
             android:textSize="15dp"
-             />
+            android:textStyle="bold"
+            />
 
         <Button
             android:id="@+id/packageUpgrade"
-            android:visibility="gone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,6 +36,7 @@
             android:text="Upgrade Now"
             android:textColor="#fff"
             android:textSize="15dp"
+            android:visibility="gone"
             ></Button>
     </LinearLayout>
 
@@ -52,9 +53,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:scaleType="fitStart"
-            android:src="@drawable/cardfree" />
+            android:src="@drawable/cardfree"/>
 
-        
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -88,7 +89,7 @@
                     android:text="$0.00"
                     android:textColor="#B5B4B4"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
 
@@ -107,7 +108,7 @@
                     android:text="Date of Registation"
                     android:textColor="#B5B4B4"
                     android:textSize="15dp"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/pkgDateofreg"
@@ -118,7 +119,7 @@
                     android:text="dd/mm/yyyy"
                     android:textColor="#B5B4B4"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
         </LinearLayout>
@@ -137,7 +138,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:scaleType="fitStart"
-            android:src="@drawable/standard" />
+            android:src="@drawable/standard"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -160,7 +161,7 @@
                     android:text="Standard Package"
                     android:textColor="#0093DD"
                     android:textSize="15dp"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/pkgStandard"
@@ -171,7 +172,7 @@
                     android:text="$50.00"
                     android:textColor="#0093DD"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
 
@@ -190,7 +191,7 @@
                     android:text="Date of Subscription"
                     android:textColor="#0093DD"
                     android:textSize="15dp"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/pkgDateofstandard"
@@ -201,16 +202,16 @@
                     android:text="dd/mm/yyyy"
                     android:textColor="#0093DD"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -220,7 +221,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:scaleType="fitStart"
-            android:src="@drawable/premium" />
+            android:src="@drawable/premium"/>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -243,7 +244,7 @@
                     android:text="Premium Package"
                     android:textColor="#E77817"
                     android:textSize="15dp"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/pkgPremium"
@@ -254,7 +255,7 @@
                     android:text="$500.00"
                     android:textColor="#E77817"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
 
@@ -273,7 +274,7 @@
                     android:text="Date of Subscription"
                     android:textColor="#E77817"
                     android:textSize="15dp"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/pkgDateofPrimum"
@@ -284,7 +285,7 @@
                     android:text="dd/mm/yyyy"
                     android:textColor="#E77817"
                     android:textSize="15dp"
-                     />
+                    />
 
             </LinearLayout>
         </LinearLayout>

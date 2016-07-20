@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.PrefsHelper;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 
 public class FragPackageUpgrade extends Fragment {

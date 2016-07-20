@@ -21,6 +21,7 @@ public class Const {
         String secondTimeLogin = "secondtimelogin";
         String firstTimeProfile = "firsttimeProfile";
         String QBPassword = "1234567890";
+
     }
 
     public interface URL {

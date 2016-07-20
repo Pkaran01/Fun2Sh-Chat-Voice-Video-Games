@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color_black">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/color_black">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:padding="10dp"
         android:weightSum="5">
 
         <LinearLayout
@@ -25,7 +24,7 @@
                 android:gravity="left|center"
                 android:text="Support Tickets # ddmmyy4862"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"/>
         </LinearLayout>
 
         <LinearLayout
@@ -46,7 +45,7 @@
                 android:gravity="center"
                 android:text="Back to List"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -55,10 +54,10 @@
                 android:layout_weight="1"
                 android:background="@color/colorPrimaryDark"
                 android:gravity="center"
-                android:visibility="invisible"
                 android:text="Close Ticket"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/replyticket"
@@ -70,7 +69,7 @@
                 android:gravity="center"
                 android:text="Reply Ticket"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="@color/color_white" />
+                android:textColor="@color/color_white"/>
 
         </LinearLayout>
 
@@ -96,18 +95,18 @@
                     android:text="Department"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/color_white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingBottom="10dp"
-                    android:gravity="right|bottom"
-                    android:text=":"
                     android:layout_marginRight="5dp"
+                    android:gravity="right|bottom"
+                    android:paddingBottom="10dp"
+                    android:text=":"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/color_white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
 
             </LinearLayout>
@@ -126,7 +125,7 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="1dp"
                     android:text="As a selected by user/modified"
-                    android:textColor="@color/color_white" />
+                    android:textColor="@color/color_white"/>
             </LinearLayout>
 
 
@@ -153,7 +152,7 @@
                     android:text="Subject"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/color_white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -163,7 +162,7 @@
                     android:text=":"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/color_white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
@@ -178,7 +177,7 @@
                     android:layout_height="match_parent"
                     android:gravity="left|center"
                     android:text="As selected by user/enter by the user"
-                    android:textColor="@color/color_white" />
+                    android:textColor="@color/color_white"/>
             </LinearLayout>
 
         </LinearLayout>
