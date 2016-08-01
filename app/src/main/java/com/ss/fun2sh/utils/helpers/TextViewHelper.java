@@ -12,7 +12,7 @@ import com.ss.fun2sh.R;
 public class TextViewHelper {
 
     public static void changeTextColorView(Context context, TextView textView, String target) {
-        String stringTextView = (String) textView.getText();
+        String stringTextView = textView.getText().toString();
         String stringTextViewLowerCase = stringTextView.toLowerCase();
 
         int startSpan;

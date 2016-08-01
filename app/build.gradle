@@ -17,6 +17,14 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
     }
     buildTypes {
+        /*release {
+            debuggable rootProject.prodDebug
+            signingConfig signingConfigs.debug
+            buildConfigField "String", "APP_ID", property('prodAppID')
+            buildConfigField "String", "AUTH_KEY", property('prodAuthKey')
+            buildConfigField "String", "AUTH_SECRET", property('prodAuthSecret')
+            buildConfigField "String", "PUSH_REGISTRATION_APP_ID", property('prodPushRegistrationAppID')
+        }*/
         debug {
             debuggable rootProject.prodDebug
             signingConfig signingConfigs.debug

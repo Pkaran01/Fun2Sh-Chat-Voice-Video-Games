@@ -72,6 +72,10 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
 
         return view;
     }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
 
 
     @Override

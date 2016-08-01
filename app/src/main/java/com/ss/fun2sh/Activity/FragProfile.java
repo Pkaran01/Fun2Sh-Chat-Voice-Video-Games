@@ -6,8 +6,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -18,20 +16,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
 import com.ss.fun2sh.CRUD.M;
-import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.oldutils.RestMethods;
 import com.ss.fun2sh.oldutils.WebserviceCallback;
 
-public class FragProfile extends Fragment {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class FragProfile extends BaseFragment {
     Button updateProfile, upgradePackage;
     private android.widget.TextView proEmailid;
     private android.widget.TextView proPassword;

@@ -56,10 +56,9 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
 
         List<DialogOccupant> dialogOccupantsList = dataManager.getDialogOccupantDataManager().getDialogOccupantsListByDialogId(
                 dialog.getDialogId());
-
+        User opponentUser = ChatUtils.getOpponentFromPrivateDialog(
+                UserFriendUtils.createLocalUser(currentUser), dialogOccupantsList);
         if (Dialog.Type.PRIVATE.equals(dialog.getType())) {
-            User opponentUser = ChatUtils.getOpponentFromPrivateDialog(
-                    UserFriendUtils.createLocalUser(currentUser), dialogOccupantsList);
             if (opponentUser.getFullName() != null) {
                 viewHolder.nameTextView.setText(Utility.capitalize(opponentUser.getFullName()));
                 displayAvatarImage(opponentUser.getAvatar(), viewHolder.avatarImageView);

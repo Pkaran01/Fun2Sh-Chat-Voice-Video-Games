@@ -52,7 +52,6 @@ import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutRestCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBSignUpCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBSignUpRestCommand;
-import com.quickblox.q_municate_core.qb.commands.rest.QBSocialLoginCommand;
 import com.quickblox.q_municate_core.qb.helpers.BaseHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBAuthHelper;
 import com.quickblox.q_municate_core.qb.helpers.QBBaseChatHelper;
@@ -129,7 +128,6 @@ public class QBService extends Service {
 
         // login/signUp commands
         registerLoginRestCommand();
-        registerLoginRestSocialCommand();
         registerSignUpCommand();
         registerLoginCommand();
 
@@ -180,7 +178,7 @@ public class QBService extends Service {
         serviceCommandMap.put(QBServiceConsts.LOGIN_REST_ACTION, loginRestCommand);
     }
 
-    private void registerLoginRestSocialCommand() {
+/*    private void registerLoginRestSocialCommand() {
         QBAuthHelper authHelper = (QBAuthHelper) getHelper(AUTH_HELPER);
 
         QBSocialLoginCommand loginRestCommand = new QBSocialLoginCommand(this, authHelper,
@@ -188,7 +186,7 @@ public class QBService extends Service {
                 QBServiceConsts.SOCIAL_LOGIN_FAIL_ACTION);
 
         serviceCommandMap.put(QBServiceConsts.SOCIAL_LOGIN_ACTION, loginRestCommand);
-    }
+    }*/
 
     private void registerLoginChatCommand() {
         CompositeServiceCommand loginChatCommand = new QBLoginChatCompositeCommand(this,

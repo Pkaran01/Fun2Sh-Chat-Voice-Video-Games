@@ -352,7 +352,6 @@ public class DashBoardActivity extends BaseLoggableActivity {
         public void execute(Bundle bundle) {
             hideProgress();
             startLandingScreen();
-            M.T(DashBoardActivity.this, "Logout successfully");
         }
     }
 }

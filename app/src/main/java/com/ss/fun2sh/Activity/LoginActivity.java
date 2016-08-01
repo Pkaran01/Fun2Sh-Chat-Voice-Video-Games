@@ -80,24 +80,25 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
         //for marsmallow
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             // only for gingerbread and newer versions
+            if (!Dexter.isRequestOngoing()) {
+                Dexter.checkPermissions(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        for (PermissionGrantedResponse response : report.getGrantedPermissionResponses()) {
+                            showPermissionGranted(response.getPermissionName());
+                        }
 
-            Dexter.checkPermissions(new MultiplePermissionsListener() {
-                @Override
-                public void onPermissionsChecked(MultiplePermissionsReport report) {
-                    for (PermissionGrantedResponse response : report.getGrantedPermissionResponses()) {
-                        showPermissionGranted(response.getPermissionName());
+                        for (PermissionDeniedResponse response : report.getDeniedPermissionResponses()) {
+                            showPermissionDenied(response.getPermissionName(), response.isPermanentlyDenied());
+                        }
                     }
 
-                    for (PermissionDeniedResponse response : report.getDeniedPermissionResponses()) {
-                        showPermissionDenied(response.getPermissionName(), response.isPermanentlyDenied());
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        showPermissionRationale(token);
                     }
-                }
-
-                @Override
-                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                    showPermissionRationale(token);
-                }
-            }, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
         } else {
             elsePart();
         }

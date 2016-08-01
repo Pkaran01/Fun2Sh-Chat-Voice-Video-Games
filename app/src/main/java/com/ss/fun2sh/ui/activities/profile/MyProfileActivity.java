@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -43,6 +44,9 @@ public class MyProfileActivity extends BaseLoggableActivity implements OnImagePi
 
     @Bind(R.id.avatar_imageview)
     CircularImageView photoImageView;
+
+    @Bind(R.id.input_displaytx)
+    TextView fullNameTextInputLayout;
 
     @Bind(R.id.full_name_edittext)
     EditText fullNameEditText;
@@ -156,6 +160,7 @@ public class MyProfileActivity extends BaseLoggableActivity implements OnImagePi
         loadAvatar();
         statusCurrent = userCustomData.getStatus();
         fullNameEditText.setText(currentFullName);
+        fullNameTextInputLayout.setText(qbUser.getLogin());
         if (statusCurrent != null) {
             statusEditText.setText(statusCurrent);
         } else {

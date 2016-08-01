@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.AppController;
+import com.ss.fun2sh.CRUD.Const;
 
 
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
@@ -21,8 +23,10 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 //        if (!enablePush) {
 //            return;
 //        }
-        ComponentName comp = new ComponentName(context.getPackageName(), GCMIntentService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
+        if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.isFirstTimeLogin, false)) {
+            ComponentName comp = new ComponentName(context.getPackageName(), GCMIntentService.class.getName());
+            startWakefulService(context, (intent.setComponent(comp)));
+            setResultCode(Activity.RESULT_OK);
+        }
     }
 }

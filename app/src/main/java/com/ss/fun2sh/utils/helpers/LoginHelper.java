@@ -157,9 +157,6 @@ public class LoginHelper {
         intentFilter.addAction(QBServiceConsts.LOGIN_SUCCESS_ACTION);
         intentFilter.addAction(QBServiceConsts.LOGIN_FAIL_ACTION);
 
-        intentFilter.addAction(QBServiceConsts.SOCIAL_LOGIN_SUCCESS_ACTION);
-        intentFilter.addAction(QBServiceConsts.SOCIAL_LOGIN_FAIL_ACTION);
-
         intentFilter.addAction(QBServiceConsts.LOGIN_CHAT_COMPOSITE_SUCCESS_ACTION);
         intentFilter.addAction(QBServiceConsts.LOGIN_CHAT_COMPOSITE_FAIL_ACTION);
 
@@ -173,8 +170,7 @@ public class LoginHelper {
 
         @Override
         public void onReceive(Context context, final Intent intent) {
-            if (intent.getAction().equals(QBServiceConsts.LOGIN_SUCCESS_ACTION)
-                    || intent.getAction().equals(QBServiceConsts.SOCIAL_LOGIN_SUCCESS_ACTION)) {
+            if (intent.getAction().equals(QBServiceConsts.LOGIN_SUCCESS_ACTION)) {
                 QBUser qbUser = (QBUser) intent.getExtras().getSerializable(QBServiceConsts.EXTRA_USER);
                 AppSession.getSession().updateUser(qbUser);
                 loginChat();

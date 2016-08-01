@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -14,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.VideoView;
 
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
-import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -25,7 +24,7 @@ import pl.droidsonroids.gif.GifImageView;
 /**
  * Created by CRUD Technology on 5/27/2016.
  */
-public class FragHome extends Fragment {
+public class FragHome extends BaseFragment {
 
     String user, pwd;
     private GifImageView game;

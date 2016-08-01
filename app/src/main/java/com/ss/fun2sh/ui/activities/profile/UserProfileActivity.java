@@ -109,7 +109,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
     }
 
     private void setStatus() {
-        if (user.getStatus() != null || user.getStatus().length() > 0) {
+        if (user.getStatus() != null) {
             statusTextView.setText(user.getStatus());
         } else {
             statusTextView.setText(getString(R.string.dummy_status));
@@ -247,9 +247,13 @@ public class UserProfileActivity extends BaseLoggableActivity {
     }
 
     private void loadAvatar() {
-        String url = user.getAvatar();
-        ImageLoader.getInstance().displayImage(url, avatarImageView,
-                ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
+        if (user.getAvatar() != null) {
+            String url = user.getAvatar();
+            ImageLoader.getInstance().displayImage(url, avatarImageView,
+                    ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
+        } else {
+            avatarImageView.setImageResource(R.drawable.userimgdefault);
+        }
     }
 
     private void showRemoveContactAndChatHistoryDialog() {

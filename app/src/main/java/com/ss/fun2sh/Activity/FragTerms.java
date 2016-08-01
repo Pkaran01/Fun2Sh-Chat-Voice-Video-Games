@@ -5,17 +5,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
@@ -24,7 +19,11 @@ import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.oldutils.RestMethods;
 import com.ss.fun2sh.oldutils.WebserviceCallback;
 
-public class FragTerms extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class FragTerms extends BaseFragment {
 
     TextView txt_terms_content,registerd;
     Context con;

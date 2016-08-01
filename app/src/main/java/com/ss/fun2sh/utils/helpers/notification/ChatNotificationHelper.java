@@ -75,10 +75,9 @@ public class ChatNotificationHelper {
             }
         } else {
             // push about call
-            M.E("Call Noti" + message);
             if (AppSession.getSession().getUser() != null) {
                 LoginHelper loginHelper = new LoginHelper(context);
-                loginHelper.makeCallLogin(new CallLoginListener());
+                loginHelper.makeGeneralLogin(new CallLoginListener());
             }
         }
 

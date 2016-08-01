@@ -80,7 +80,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/name_textview"
                         android:layout_gravity="center_vertical"
-                        android:singleLine="true"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_small"
                         tools:text="1111111 sclk" />
@@ -93,30 +92,31 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.1"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center|bottom">
 
                     <TextView
                         android:id="@+id/timeTextView"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|left|bottom"
-                        android:text="05:05AM"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                        android:maxLines="1"
+                        android:text="29 minutes ago"
+                        android:textSize="12dp"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center">
 

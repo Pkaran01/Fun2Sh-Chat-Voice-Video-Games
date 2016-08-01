@@ -47,10 +47,26 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/input_displaytx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:inputType="text"
+            android:padding="5dp"
+            android:text="Display Name"
+            android:textColor="@color/textColorRember"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            />
+
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Full Name"
             android:paddingLeft="10dp"
+            android:text="Full Name"
             android:textColor="@color/textColorRember"
             android:textSize="17dp"
             android:textStyle="bold"
@@ -59,7 +75,6 @@
         <EditText
             android:id="@+id/full_name_edittext"
             android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_circulerlogin"
             android:hint="@string/profile_full_name"
@@ -69,18 +84,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Mood"
             android:paddingLeft="10dp"
-            android:textStyle="bold"
+            android:text="Mood"
             android:textColor="@color/textColorRember"
             android:textSize="17dp"
+            android:textStyle="bold"
             />
 
         <EditText
             android:id="@+id/status_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-android:layout_marginTop="5dp"
             android:background="@drawable/rounded_circulerlogin"
             android:hint="@string/profile_staus"
             android:imeOptions="actionDone"

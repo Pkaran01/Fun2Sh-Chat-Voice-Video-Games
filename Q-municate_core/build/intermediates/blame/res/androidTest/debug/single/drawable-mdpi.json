@@ -20,12 +20,12 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_btn_radio_to_on_mtrl_015.png"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\ic_setting_light.png",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-mdpi\\ic_setting_light.png"
-    },
-    {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\common_signin_btn_icon_disabled_light.9.png",
         "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-mdpi\\common_signin_btn_icon_disabled_light.9.png"
+    },
+    {
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\ic_setting_light.png",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-mdpi\\ic_setting_light.png"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\abc_cab_background_top_mtrl_alpha.9.png",
@@ -360,12 +360,12 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\8.1.0\\res\\drawable-mdpi\\ic_plusone_medium_off_client.png"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\abc_btn_check_to_on_mtrl_000.png",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_btn_check_to_on_mtrl_000.png"
-    },
-    {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png",
         "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png"
+    },
+    {
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\abc_btn_check_to_on_mtrl_000.png",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-mdpi\\abc_btn_check_to_on_mtrl_000.png"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-mdpi\\abc_list_selector_disabled_holo_light.9.png",

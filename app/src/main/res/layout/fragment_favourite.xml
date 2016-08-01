@@ -14,8 +14,7 @@
         android:id="@+id/favouriteRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:visibility="gone" />
+        android:scrollbars="vertical"/>
 
     <TextView
         android:id="@+id/empty_list_textview"
@@ -27,6 +26,6 @@
         android:text="This module is coming soon."
         android:textColor="@color/dark_gray"
         android:textSize="25dp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </FrameLayout>

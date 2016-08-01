@@ -4,22 +4,20 @@ package com.ss.fun2sh.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.annotation.Nullable;
-
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
-import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.R;
 
-public class FragPackageUpgrade extends Fragment {
+public class FragPackageUpgrade extends BaseFragment {
 
     String url = "https://fun-joy.co.uk/FMA_PayNow.aspx?";
     ImageView img_package;

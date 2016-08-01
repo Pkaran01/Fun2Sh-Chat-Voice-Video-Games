@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,9 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +27,20 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.quickblox.q_municate_core.utils.PrefsHelper;
+import com.ss.fun2sh.Adapter.CloseTicketsAdapter;
+import com.ss.fun2sh.Adapter.NotificationListAdapter;
+import com.ss.fun2sh.Adapter.OpenTicketAdapter;
+import com.ss.fun2sh.CRUD.AndroidMultiPartEntity;
+import com.ss.fun2sh.CRUD.Const;
+import com.ss.fun2sh.CRUD.JSONParser;
+import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.ConnectionDetector;
+import com.ss.fun2sh.oldutils.Constants;
+import com.ss.fun2sh.oldutils.RestMethods;
+import com.ss.fun2sh.oldutils.WebserviceCallback;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -55,24 +66,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.ss.fun2sh.Adapter.CloseTicketsAdapter;
-import com.ss.fun2sh.Adapter.NotificationListAdapter;
-import com.ss.fun2sh.Adapter.OpenTicketAdapter;
-import com.ss.fun2sh.CRUD.AndroidMultiPartEntity;
-import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.JSONParser;
-import com.ss.fun2sh.CRUD.M;
-import com.quickblox.q_municate_core.utils.PrefsHelper;
-import com.ss.fun2sh.R;
-import com.ss.fun2sh.oldutils.ConnectionDetector;
-import com.ss.fun2sh.oldutils.Constants;
-
-import com.ss.fun2sh.oldutils.RestMethods;
-import com.ss.fun2sh.oldutils.WebserviceCallback;
-
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 
-public class FragHelp extends Fragment {
+public class FragHelp extends BaseFragment {
     TextView close_ticketBT, notificationBT, new_ticketBT, tiketsName, open_ticketBT;
     OpenTicketAdapter ticketAdapter;
     ListView openticket_list, newticketListview, closeTicketListView, notificationListview;

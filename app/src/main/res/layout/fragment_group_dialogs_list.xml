@@ -12,7 +12,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:visibility="gone"
         >
 
         <LinearLayout
@@ -59,19 +58,6 @@
             android:padding="10dp"
             android:text="@string/dialog_no_group_chats"
             android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size"
-            android:visibility="gone"/>
+            android:textSize="@dimen/text_size"/>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
-        android:text="This module is coming soon."
-        android:textColor="@color/dark_gray"
-        android:textSize="25dp"
-        android:visibility="visible"/>
-
 </RelativeLayout>

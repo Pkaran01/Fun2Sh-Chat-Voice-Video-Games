@@ -87,6 +87,11 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         globalSearchAdapter.notifyDataSetChanged();
