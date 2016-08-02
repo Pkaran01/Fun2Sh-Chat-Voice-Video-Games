@@ -155,6 +155,7 @@
         <activity
             android:name="com.ss.fun2sh.ui.activities.call.CallActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
         <activity
             android:name="com.ss.fun2sh.ui.fragments.search.SearchFragment"
@@ -236,11 +237,6 @@
             android:label="ChatMessageReceiver">
             <intent-filter>
                 <action android:name="q_municate.got_chat_message"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".CRUD.AlarmReceiverLifeLog">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.quickblox.q_municate_db.helpers.DataHelper;
 import com.quickblox.q_municate_db.models.Attachment;
+import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
@@ -20,6 +21,7 @@ public class DataManager {
 
     private UserDataManager userDataManager;
     private FriendDataManager friendDataManager;
+    private CallDataManager callDataManager;
     private SocialDataManager socialDataManager;
     private UserRequestDataManager userRequestDataManager;
     private DialogDataManager dialogDataManager;
@@ -66,6 +68,15 @@ public class DataManager {
                     getDataHelper().getDaoByClass(User.class));
         }
         return friendDataManager;
+    }
+
+    public CallDataManager getCallDataManager() {
+        if (callDataManager == null) {
+            callDataManager = new CallDataManager(
+                    getDataHelper().getDaoByClass(Call.class),
+                    getDataHelper().getDaoByClass(User.class));
+        }
+        return callDataManager;
     }
 
     public SocialDataManager getSocialDataManager() {

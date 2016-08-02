@@ -8,6 +8,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.quickblox.q_municate_db.R;
 import com.quickblox.q_municate_db.models.Attachment;
+import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
@@ -34,7 +35,8 @@ public class DataHelper extends OrmLiteSqliteOpenHelper {
             DialogOccupant.class,
             DialogNotification.class,
             Attachment.class,
-            Message.class
+            Message.class,
+            Call.class
     };
 
     public DataHelper(Context context) {

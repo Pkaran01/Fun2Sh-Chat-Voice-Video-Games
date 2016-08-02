@@ -15,7 +15,6 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 public class QBInitCallChatCommand extends ServiceCommand {
 
     private QBCallChatHelper qbCallChatHelper;
-
     public QBInitCallChatCommand(Context context, QBCallChatHelper qbCallChatHelper, String successAction,
                                  String failAction) {
         super(context, successAction, failAction);

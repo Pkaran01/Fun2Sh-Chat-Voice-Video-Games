@@ -14,6 +14,8 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class QBFindUsersCommand extends ServiceCommand {
@@ -41,7 +43,12 @@ public class QBFindUsersCommand extends ServiceCommand {
         requestBuilder.setPerPage(ConstsCore.FL_FRIENDS_PER_PAGE);
 
         Bundle requestParams = new Bundle();
-        Collection<QBUser> userList = QBUsers.getUsersByFullName(constraint, requestBuilder, requestParams);
+
+        //Collection<QBUser> userList = QBUsers.getUsersByFullName(constraint, requestBuilder, requestParams);
+
+        Collection<QBUser> userList = QBUsers.getUsersByLogins(new ArrayList<String>(Arrays.asList(constraint)), requestBuilder, requestParams);
+
+
         Collection<User> userCollection = UserFriendUtils.createUsersList(userList);
 //        userCollection.remove(UserFriendUtils.createLocalUser(currentUser));
 

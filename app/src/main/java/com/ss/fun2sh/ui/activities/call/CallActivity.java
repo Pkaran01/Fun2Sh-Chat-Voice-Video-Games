@@ -26,11 +26,13 @@ import com.quickblox.q_municate_core.models.StartConversationReason;
 import com.quickblox.q_municate_core.qb.helpers.QBCallChatHelper;
 import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.DateUtilsCore;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_core.utils.call.CameraUtils;
 import com.quickblox.q_municate_core.utils.call.RingtonePlayer;
 import com.quickblox.q_municate_core.utils.call.SettingsUtil;
 import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Friend;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
@@ -93,8 +95,12 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     private AudioStreamReceiver audioStreamReceiver;
     private String ACTION_ANSWER_CALL = "action_answer_call";
 
+    DataManager dataManager;
+    private Call call;
+
     public static void start(Activity activity, List<QBUser> qbUsersList, QBRTCTypes.QBConferenceType qbConferenceType,
                              QBRTCSessionDescription qbRtcSessionDescription) {
+
         Intent intent = new Intent(activity, CallActivity.class);
         intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);
         intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbConferenceType);
@@ -141,6 +147,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dataManager = DataManager.getInstance();
         canPerformLogout.set(false);
         initFields();
         audioStreamReceiver = new AudioStreamReceiver();
@@ -150,6 +157,8 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
 
     }
+
+
 
     private void initCallFragment() {
         switch (startConversationReason) {
@@ -333,7 +342,8 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (qbRtcSessionUserCallback != null) {
             qbRtcSessionUserCallback.onUserNotAnswer(session, userID);
         }
-
+        //missed call ka code
+        call.setStatus(2);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -403,10 +413,13 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     public void onUserNoActions(QBRTCSession qbrtcSession, Integer integer) {
         startIncomeCallTimer(0);
+        //missed call ka code
+        call.setStatus(2);
     }
 
     @Override
     public void onSessionClosed(final QBRTCSession session) {
+        dataManager.getCallDataManager().createOrUpdate(call);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -526,6 +539,21 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         ringtonePlayer = new RingtonePlayer(this, R.raw.beep);
         // Add activity as callback to RTCClient
         qbRtcClient = QBRTCClient.getInstance(this);
+        //store in databse
+        call = new Call();
+        call.setCallId(0);
+        call.setUser(dataManager.getUserDataManager().get(opponentsList.get(0).getId()));
+        call.setCallType(qbConferenceType.getValue());
+        call.setCreatedDate(DateUtilsCore.getCurrentTime());
+        switch (startConversationReason) {
+            case INCOME_CALL_FOR_ACCEPTION:
+                call.setStatus(0);
+                break;
+            case OUTCOME_CALL_MADE:
+                call.setStatus(1);
+                break;
+        }
+
     }
 
     private void initWiFiManagerListener() {

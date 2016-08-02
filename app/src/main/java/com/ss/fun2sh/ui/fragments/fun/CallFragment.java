@@ -13,10 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.Call;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ public class CallFragment extends Fragment {
 
     CallAdapter callAdapter;
     RecyclerView callRecyclerView;
-    List<String> callList;
+    List<Call> callList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class CallFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_call, container, false);
 
-        callList = new ArrayList<String>();
+        callList = DataManager.getInstance().getCallDataManager().getAllSorted();
 
 
         callAdapter = new CallAdapter(getActivity(), callList);
@@ -51,16 +52,6 @@ public class CallFragment extends Fragment {
         callRecyclerView.setItemAnimator(new DefaultItemAnimator());
         callRecyclerView.setAdapter(callAdapter);
 
-        callAdapter.setOnItemClickListener(new CallAdapter.MyClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-
-
-            }
-        });
-
-
-        getCallData();
 
         return rootView;
     }
@@ -84,19 +75,4 @@ public class CallFragment extends Fragment {
         }
         return true;
     }
-    private void getCallData() {
-        callList.add("call frank");
-        callList.add("call ram");
-        callList.add("call mohan");
-        callList.add("call king");
-        callList.add("call Mohan");
-        callList.add("call ranu");
-        callList.add("call shanu");
-        callList.add("call ruch");
-        callList.add("call hukum");
-
-        callAdapter.notifyDataSetChanged();
-    }
-
-
 }

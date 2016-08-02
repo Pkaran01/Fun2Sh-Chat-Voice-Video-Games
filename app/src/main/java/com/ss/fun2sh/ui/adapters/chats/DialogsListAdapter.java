@@ -68,7 +68,6 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
             }
         } else {
             viewHolder.nameTextView.setText(dialog.getTitle());
-
             viewHolder.avatarImageView.setImageResource(R.drawable.placeholder_group);
             displayGroupPhotoImage(dialog.getPhoto(), viewHolder.avatarImageView);
         }
@@ -88,15 +87,26 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
 
         Message message = dataManager.getMessageDataManager().getLastMessageWithTempByDialogId(dialogOccupantsIdsList);
         DialogNotification dialogNotification = dataManager.getDialogNotificationDataManager().getLastDialogNotificationByDialogId(dialogOccupantsIdsList);
+        boolean friendsRequestMessage = DialogNotification.Type.FRIENDS_REQUEST.equals(
+                dialogNotification.getType());
         if (Dialog.Type.PRIVATE.equals(dialog.getType())) {
-            viewHolder.lastMessageTextView.setText(
-                    ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_sent), message, dialogNotification));
+            if (friendsRequestMessage) {
+                viewHolder.lastMessageTextView.setText(
+                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_received), message, dialogNotification));
+            } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(
+                    dialogNotification.getType())) {
+                viewHolder.lastMessageTextView.setText(
+                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_acccepted), message, dialogNotification));
+            } else {
+                viewHolder.lastMessageTextView.setText(
+                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_sent), message, dialogNotification));
+            }
         } else {
             viewHolder.lastMessageTextView.setText(
                     ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_notification_message), message, dialogNotification));
         }
 
-        viewHolder.timeTextView.setText(Utility.getTimeAgo(ChatUtils.getDialogMessageCreatedDate(true,message,dialogNotification) * 1000));
+        viewHolder.timeTextView.setText(Utility.getTimeAgo(ChatUtils.getDialogMessageCreatedDate(true, message, dialogNotification) * 1000));
         return convertView;
     }
 

@@ -53,8 +53,8 @@ public class GlobalSearchAdapter extends BaseFilterAdapter<User, BaseClickListen
         User user = getItem(position);
         ViewHolder holder = (ViewHolder) baseClickListenerViewHolder;
 
-        if (user.getFullName() != null) {
-            holder.fullNameTextView.setText(Utility.capitalize(user.getFullName()));
+        if (user.getLogin() != null) {
+            holder.fullNameTextView.setText(Utility.capitalize(user.getLogin()));
         } else {
             holder.fullNameTextView.setText(Utility.capitalize(String.valueOf(user.getUserId())));
         }

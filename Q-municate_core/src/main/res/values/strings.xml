@@ -29,7 +29,9 @@
     <string name="cht_update_group_added_message">%1$s has added %2$s to the group chat</string>
     <string name="cht_update_group_leave_message">%1$s has left</string>
     <string name="cht_notification_message">Notification message</string>
-    <string name="cht_contact_request_sent">Contact Request Sent</string>
+    <string name="cht_contact_request_sent">Contact request sent</string>
+    <string name="cht_contact_request_received">Contact request received</string>
+    <string name="cht_contact_request_acccepted">Contact request accepted</string>
 
     <string name="url_to_facebook_avatar">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="file_was_attached">file was attached</string>

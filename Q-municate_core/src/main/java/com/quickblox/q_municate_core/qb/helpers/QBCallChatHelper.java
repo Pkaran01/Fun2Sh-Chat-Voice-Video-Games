@@ -41,6 +41,7 @@ public class QBCallChatHelper extends BaseHelper {
     private QBRTCClient qbRtcClient;
     private Class<? extends Activity> activityClass;
 
+
     private QBRTCSession currentQbRtcSession;
     private QBRTCClientSessionCallbacks qbRtcClientSessionCallbacks;
 
@@ -129,6 +130,7 @@ public class QBCallChatHelper extends BaseHelper {
             intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbRtcSession.getConferenceType());
             intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSession.getSessionDescription());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             context.getApplicationContext().startActivity(intent);
         } else {
             throw new NullPointerException("user is null!");

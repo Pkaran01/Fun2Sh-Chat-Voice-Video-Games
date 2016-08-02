@@ -10,6 +10,7 @@ import static com.quickblox.q_municate_db.models.Message.Column.CREATED_DATE;
 import static com.quickblox.q_municate_db.models.Message.Column.ID;
 import static com.quickblox.q_municate_db.models.Message.Column.STATE;
 import static com.quickblox.q_municate_db.models.Message.Column.TABLE_NAME;
+import static com.quickblox.q_municate_db.models.Message.Column.isFavourite;
 
 @DatabaseTable(tableName = TABLE_NAME)
 public class Message implements Serializable {
@@ -47,17 +48,28 @@ public class Message implements Serializable {
             columnName = CREATED_DATE)
     private long createdDate;
 
+    @DatabaseField(columnName = isFavourite)
+    private int isfavourite = 0;
+
     public Message() {
     }
 
     public Message(String messageId, DialogOccupant dialogOccupant, Attachment attachment, State state,
-            String body, long createdDate) {
+                   String body, long createdDate) {
         this.messageId = messageId;
         this.dialogOccupant = dialogOccupant;
         this.attachment = attachment;
         this.state = state;
         this.body = body;
         this.createdDate = createdDate;
+    }
+
+    public int getIsfavourite() {
+        return isfavourite;
+    }
+
+    public void setIsfavourite(int isfavourite) {
+        this.isfavourite = isfavourite;
     }
 
     public String getMessageId() {
@@ -127,5 +139,6 @@ public class Message implements Serializable {
         String BODY = "body";
         String CREATED_DATE = "created_date";
         String STATE = "state";
+        String isFavourite = "is_favourite";
     }
 }

@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.quickblox.q_municate_db.managers.base.BaseManager;
 import com.quickblox.q_municate_db.models.Dialog;
@@ -25,7 +26,7 @@ public class MessageDataManager extends BaseManager<Message> {
     private Dao<DialogOccupant, Long> dialogOccupantDao;
 
     public MessageDataManager(Dao<Message, Long> messageDao, Dao<Dialog, Long> dialogDao,
-            Dao<DialogOccupant, Long> dialogOccupantDao) {
+                              Dao<DialogOccupant, Long> dialogOccupantDao) {
         super(messageDao, MessageDataManager.class.getSimpleName());
         this.dialogDao = dialogDao;
         this.dialogOccupantDao = dialogOccupantDao;
@@ -173,7 +174,7 @@ public class MessageDataManager extends BaseManager<Message> {
         notifyObservers(OBSERVE_KEY);
     }
 
-    public List<Message> getTempMessagesByDialogId(String dialogId){
+    public List<Message> getTempMessagesByDialogId(String dialogId) {
         List<Message> messagesList = new ArrayList<>();
         try {
             QueryBuilder<Message, Long> messageQueryBuilder = dao.queryBuilder();
@@ -197,5 +198,35 @@ public class MessageDataManager extends BaseManager<Message> {
         }
 
         return messagesList;
+    }
+
+    public List<Message> getFavMessages() {
+        List<Message> messagesList = new ArrayList<>();
+        try {
+            QueryBuilder<Message, Long> messageQueryBuilder = dao.queryBuilder();
+            messageQueryBuilder.where().eq(Message.Column.isFavourite, 1);
+            QueryBuilder<DialogOccupant, Long> dialogOccupantQueryBuilder = dialogOccupantDao.queryBuilder();
+            QueryBuilder<Dialog, Long> dialogQueryBuilder = dialogDao.queryBuilder();
+            dialogOccupantQueryBuilder.join(dialogQueryBuilder);
+            messageQueryBuilder.join(dialogOccupantQueryBuilder);
+            PreparedQuery<Message> preparedQuery = messageQueryBuilder.prepare();
+            messagesList = dao.query(preparedQuery);
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+        return messagesList;
+    }
+
+
+    public int updateFav(String messaeId, long value) {
+        try {
+            UpdateBuilder<Message, Long> updateBuilder = dao.updateBuilder();
+            updateBuilder.updateColumnValue(Message.Column.isFavourite, value);
+            updateBuilder.where().eq(Message.Column.ID, messaeId);
+            return updateBuilder.update();
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+        return 0;
     }
 }

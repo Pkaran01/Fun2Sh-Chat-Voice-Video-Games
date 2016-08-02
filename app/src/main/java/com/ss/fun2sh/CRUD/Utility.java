@@ -34,6 +34,7 @@ public class Utility {
         return strDate;
     }
 
+
     public static String getHomeCurrentDateTime() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");//dd/MM/yyyy
         Calendar cal = Calendar.getInstance();

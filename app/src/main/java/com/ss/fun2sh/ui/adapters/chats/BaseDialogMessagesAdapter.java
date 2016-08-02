@@ -230,6 +230,7 @@ public abstract class BaseDialogMessagesAdapter
         public ViewHolder(BaseDialogMessagesAdapter adapter, View view) {
             super(adapter, view);
         }
+
     }
 
     public class ImageLoadingListener extends SimpleImageLoadingListener {
@@ -284,7 +285,7 @@ public abstract class BaseDialogMessagesAdapter
                 @Override
                 public void onClick(View view) {
                     if (imageUrl != null) {
-                        bitmap = ((BitmapDrawable)viewHolder.attachImageView.getDrawable()).getBitmap();
+                        bitmap = ((BitmapDrawable) viewHolder.attachImageView.getDrawable()).getBitmap();
                         view.startAnimation(AnimationUtils.loadAnimation(baseActivity, R.anim.chat_attached_file_click));
                         PreviewImageActivity.start(baseActivity, imageUrl);
                     }

@@ -51,6 +51,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
     @Bind(R.id.name_textview)
     TextView nameTextView;
 
+
     @Bind(R.id.timestamp_textview)
     TextView timestampTextView;
 
@@ -162,6 +163,11 @@ public class UserProfileActivity extends BaseLoggableActivity {
             removeContactAndChatHistory = false;
             showRemoveChatHistoryDialog();
         }
+    }
+
+    @OnClick(R.id.block_contact)
+    void blockContact(View view) {
+        //Block Contact
     }
 
     @OnClick(R.id.remove_contact_and_chat_history_button)
