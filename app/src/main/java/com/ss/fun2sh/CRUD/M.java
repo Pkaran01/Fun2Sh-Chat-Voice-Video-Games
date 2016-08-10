@@ -31,6 +31,7 @@ public class M {
     public static void T(Context c, String msg) {
         Toast.makeText(c, msg, Toast.LENGTH_SHORT).show();
     }
+
     public static void dSimple(Context c, String title) {
         new SweetAlertDialog(c)
                 .setTitleText(title)
@@ -78,8 +79,27 @@ public class M {
         SweetAlertDialog s = new SweetAlertDialog(c, SweetAlertDialog.WARNING_TYPE);
 //        s.setTitleText("Are you sure ?");
 //        s.setContentText(msg);
-        s.setTitleText(msg);
-        s.setContentText("Are you sure ?");
+        s.setTitleText("Are you sure ?");
+        s.setContentText(msg);
+        s.setConfirmText(confirmText);
+        s.setCancelText(cancleText);
+                /*s.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                });*/
+        s.show();
+        return s;
+    }
+
+    public static SweetAlertDialog dConfirem(Context c, String title,String msg, String confirmText, String cancleText) {
+
+        SweetAlertDialog s = new SweetAlertDialog(c, SweetAlertDialog.WARNING_TYPE);
+//        s.setTitleText("Are you sure ?");
+//        s.setContentText(msg);
+        s.setTitleText(title);
+        s.setContentText(msg);
         s.setConfirmText(confirmText);
         s.setCancelText(cancleText);
                 /*s.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {

@@ -189,7 +189,7 @@ public class DashBoardActivity extends BaseLoggableActivity {
                     ft.addToBackStack("FragPrivacy");
                 } else {
                     fragment = null;
-                    SweetAlertDialog sweetAlertDialog = M.dConfirem(DashBoardActivity.this, "You are Signing Out", "Yes", "No");
+                    SweetAlertDialog sweetAlertDialog = M.dConfirem(DashBoardActivity.this, "You are signing out", "Yes", "No");
                     sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {

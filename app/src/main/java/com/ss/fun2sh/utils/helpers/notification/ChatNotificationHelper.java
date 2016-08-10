@@ -1,5 +1,6 @@
 package com.ss.fun2sh.utils.helpers.notification;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -138,7 +139,9 @@ public class ChatNotificationHelper {
             qbRtcClient.addSessionCallbacksListener(new QBRTCClientSessionCallbacks() {
                 @Override
                 public void onReceiveNewSession(QBRTCSession qbrtcSession) {
-
+                    KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+                    final KeyguardManager.KeyguardLock kl = km.newKeyguardLock("MyKeyguardLock");
+                    kl.disableKeyguard();
                 }
 
                 @Override

@@ -26,6 +26,7 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
@@ -194,10 +195,18 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         }
         switch (item.getItemId()) {
             case R.id.action_audio_call:
-                callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
+                    callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                } else {
+                    Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat voice call", opponentUser.getUserId());
+                }
                 break;
             case R.id.switch_camera_toggle:
-                callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
+                    callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                } else {
+                    Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat video call",  opponentUser.getUserId());
+                }
                 break;
             default:
                 super.onOptionsItemSelected(item);
@@ -263,6 +272,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         List<QBUser> qbUserList = new ArrayList<>(1);
         qbUserList.add(UserFriendUtils.createQbUser(user));
         CallActivity.start(PrivateDialogActivity.this, qbUserList, qbConferenceType, null);
+
     }
 
     private void acceptUser(final int userId) {

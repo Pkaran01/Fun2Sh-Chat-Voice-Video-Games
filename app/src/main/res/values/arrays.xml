@@ -17,7 +17,7 @@
 
     <integer-array name="local_view_coordinates_full_screen">
         <item>70</item>
-        <item>80</item>
+        <item>63</item>
         <item>30</item>
         <item>20</item>
     </integer-array>
@@ -55,6 +55,7 @@
     <string-array name="contactarray">
         <item>Home</item>
         <item>Announcements</item>
+        <item>Blocked Contact</item>
         <item>Settings</item>
     </string-array>
 
@@ -64,6 +65,27 @@
         <item>Refresh</item>
         <item>Announcements</item>
         <item>Settings</item>
+    </string-array>
+
+    <string-array name="searcbycallstatus">
+        <item>ALL CALLS</item>
+        <item>INCOMING CALLS ONLY</item>
+        <item>OUTGOING CALLS ONLY</item>
+        <item>MISSED CALLS ONLY</item>
+    </string-array>
+
+    <string-array name="searcbycalltype">
+        <item>ALL TYPES</item>
+        <item>Video CALLS</item>
+        <item>Voice CALLS</item>
+    </string-array>
+
+    <string-array name="attach_file_option">
+        <item>RECORD VIDEO</item>
+        <item>VIDEO FROM GALLERY</item>
+        <item>AUDIO FROM SDCARD</item>
+        <item>RECORD AUDIO</item>
+        <item>FILE FROM SDCARD</item>
     </string-array>
 
 </resources>

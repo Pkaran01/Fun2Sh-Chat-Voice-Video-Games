@@ -1,26 +1,46 @@
 package com.ss.fun2sh.CRUD;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.widget.VideoView;
 
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBPrivacyListsManager;
+import com.quickblox.chat.listeners.QBPrivacyListListener;
+import com.quickblox.chat.model.QBPrivacyList;
+import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
+import com.quickblox.q_municate_db.managers.DataManager;
 import com.ss.fun2sh.R;
 
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.ss.fun2sh.CRUD.Const.App_Ver.userId;
 
 /**
  * Created by CRUD Technology on 11/25/2015.
@@ -160,7 +180,7 @@ public class Utility {
     public static JSONObject getParam() {
         JSONObject param = new JSONObject();
         try {
-            param.put("IDNO", PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.userId));
+            param.put("IDNO", PrefsHelper.getPrefsHelper().getPref(userId));
             param.put("PWD", PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.pwd));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -196,11 +216,157 @@ public class Utility {
         } else if (diff < 90 * MINUTE_MILLIS) {
             return "an hour ago";
         } else if (diff < 24 * HOUR_MILLIS) {
-            return diff / HOUR_MILLIS + " hours ago";
+            if ((diff / HOUR_MILLIS) == 1) {
+                return diff / HOUR_MILLIS + " hour ago";
+            } else {
+                return diff / HOUR_MILLIS + " hours ago";
+            }
         } else if (diff < 48 * HOUR_MILLIS) {
             return "yesterday";
         } else {
             return diff / DAY_MILLIS + " days ago";
         }
+    }
+
+    public static void msgInClipBoard(Context cx, String message) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) cx.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(message);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) cx.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Fun2Sh", message);
+            clipboard.setPrimaryClip(clip);
+        }
+        M.T(cx, "Message copied to clip board");
+    }
+
+    public static void blockContactMessage(final Context cx, String message, final int userId) {
+        final SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(cx, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setTitleText("FunChat");
+        sweetAlertDialog.setContentText(message);
+        sweetAlertDialog.setConfirmText("UNBLOCK");
+        sweetAlertDialog.setCancelText("CANCEL");
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if (NetworkUtil.getConnectivityStatus(cx)) {
+                    unBlockContact(userId);
+                    M.T(cx, "Unblocked user");
+                } else {
+                    M.T(cx, cx.getString(R.string.dlg_internet_connection_is_missing));
+                }
+                sweetAlertDialog.dismiss();
+            }
+        });
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
+        sweetAlertDialog.show();
+    }
+
+    public static void unBlockContact(int userId) {
+        try {
+            QBPrivacyListsManager privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
+            privacyListsManager.addPrivacyListListener(new QBPrivacyListListener() {
+                @Override
+                public void setPrivacyList(String s, List<QBPrivacyListItem> list) {
+                    M.E("setPrivacyList");
+                }
+
+                @Override
+                public void updatedPrivacyList(String s) {
+                    M.E("updatedPrivacyList");
+                }
+            });
+            QBPrivacyList list = new QBPrivacyList();
+            list.setName("public");
+
+            ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
+
+            QBPrivacyListItem item1 = new QBPrivacyListItem();
+            item1.setAllow(true);
+            item1.setType(QBPrivacyListItem.Type.USER_ID);
+            item1.setValueForType(String.valueOf(userId));
+            items.add(item1);
+            DataManager.getInstance().getUserDataManager().updateFriend(userId, 0);
+            list.setItems(items);
+
+            privacyListsManager.setPrivacyListAsDefault("public");
+            privacyListsManager.setPrivacyListAsActive("public");
+            privacyListsManager.setPrivacyList(list);
+
+        } catch (SmackException.NotConnectedException e) {
+            M.E(e.getMessage());
+        } catch (XMPPException.XMPPErrorException e) {
+            M.E(e.getMessage());
+        } catch (SmackException.NoResponseException e) {
+            M.E(e.getMessage());
+        }
+    }
+
+    public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
+        String selection = null;
+        String[] selectionArgs = null;
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }

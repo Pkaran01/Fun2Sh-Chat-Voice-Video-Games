@@ -3,12 +3,14 @@ package com.ss.fun2sh.ui.adapters.chats;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.State;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -31,14 +33,14 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
             case TYPE_OWN_MESSAGE:
                 return new ViewHolder(this, layoutInflater.inflate(R.layout.item_message_own, viewGroup, false));
             case TYPE_OPPONENT_MESSAGE:
-                return new ViewHolder(this, layoutInflater.inflate(R.layout.item_private_message_opponent, viewGroup, false));
+                return new ViewHolder(this, layoutInflater.inflate(R.layout.item_group_message_opponent, viewGroup, false));
             default:
                 return null;
         }
     }
 
     @Override
-    public void onBindViewHolder(BaseClickListenerViewHolder<CombinationMessage> baseClickListenerViewHolder, int position) {
+    public void onBindViewHolder(BaseClickListenerViewHolder<CombinationMessage> baseClickListenerViewHolder, final int position) {
         final CombinationMessage combinationMessage = getItem(position);
         boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
 
@@ -46,14 +48,36 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
 
 
         String avatarUrl = null;
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        String senderName;
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), 0) > 0) {
-                    M.T(v.getContext(), "Remove to favourite");
-                } else {
-                    M.E("Error in add to favourite");
-                }
+            public boolean onLongClick(View v) {
+                new MaterialDialog.Builder(baseActivity)
+                        .title(R.string.new_message_select_option)
+                        .items(R.array.new_messages_fav)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which == 0) {
+                                    if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), 0) > 0) {
+                                        removeItem(combinationMessage);
+                                        M.T(baseActivity, "Removed from favourite");
+                                    } else {
+                                        M.E("Error in remove to favourite");
+                                    }
+                                } else if (which == 1) {
+                                    //Copy
+                                    if (combinationMessage.getAttachment() != null) {
+                                        //forward images or file ka code
+                                        M.T(baseActivity, "Coming soon");
+                                    } else {
+                                        Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
+                                    }
+                                }
+                            }
+                        })
+                        .show();
+                return false;
             }
         });
 
@@ -91,7 +115,10 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
             avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         } else {
+            senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
             avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+            viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
+            viewHolder.nameTextView.setText(senderName);
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         }
 

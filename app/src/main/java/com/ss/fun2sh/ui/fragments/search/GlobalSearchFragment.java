@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
@@ -22,6 +24,7 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.FriendDataManager;
 import com.quickblox.q_municate_db.managers.UserRequestDataManager;
 import com.quickblox.q_municate_db.models.User;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
 import com.ss.fun2sh.ui.adapters.search.GlobalSearchAdapter;
@@ -52,6 +55,12 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
     @Bind(R.id.contacts_swipyrefreshlayout)
     SwipyRefreshLayout swipyRefreshLayout;
 
+    @Bind(R.id.byUserid)
+    RadioButton byuserid;
+
+    @Bind(R.id.byName)
+    RadioButton byname;
+
     @Bind(R.id.contacts_recyclerview)
     RecyclerView contactsRecyclerView;
 
@@ -61,10 +70,11 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
     private UserOperationAction userOperationAction;
     private DataManager dataManager;
     private Observer commonObserver;
-    private GlobalSearchAdapter globalSearchAdapter;
+    public GlobalSearchAdapter globalSearchAdapter;
     private List<User> usersList;
     private String searchQuery;
     private boolean excludedMe;
+    private String type = "uid";
 
     public static GlobalSearchFragment newInstance() {
         return new GlobalSearchFragment();
@@ -170,13 +180,26 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
         userOperationAction = new UserOperationAction();
         commonObserver = new CommonObserver();
         swipyRefreshLayout.setEnabled(false);
+        byname.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                cancelSearch();
+                if (byname.isChecked()) {
+                    M.E("true");
+                    type = "name";
+                } else {
+                    type = "uid";
+                }
+                globalSearchAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initContactsList(List<User> usersList) {
         globalSearchAdapter = new GlobalSearchAdapter(baseActivity, usersList);
         globalSearchAdapter.setFriendListHelper(friendListHelper);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        contactsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));;
+        contactsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         contactsRecyclerView.setAdapter(globalSearchAdapter);
         globalSearchAdapter.setUserOperationListener(userOperationAction);
     }
@@ -205,6 +228,7 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
     private void updateContactsList(List<User> usersList) {
         this.usersList = usersList;
         globalSearchAdapter.setList(usersList);
+        globalSearchAdapter.notifyDataSetChanged();
         globalSearchAdapter.setFilter(searchQuery);
     }
 
@@ -252,7 +276,7 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
 
     private void searchUsers() {
         if (!TextUtils.isEmpty(searchQuery) && checkSearchDataWithError(searchQuery)) {
-            QBFindUsersCommand.start(baseActivity, AppSession.getSession().getUser(), searchQuery, page);
+            QBFindUsersCommand.start(baseActivity, AppSession.getSession().getUser(), searchQuery, page, type);
         }
     }
 
@@ -292,9 +316,8 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
             Collection<User> newUsersCollection = (Collection<User>) bundle.getSerializable(QBServiceConsts.EXTRA_USERS);
             if (newUsersCollection != null && !newUsersCollection.isEmpty()) {
                 checkForExcludeMe(newUsersCollection);
-
                 usersList.addAll(newUsersCollection);
-
+                M.E("parseResulet" + usersList.toString());
                 updateContactsList(usersList);
             }
         } else {

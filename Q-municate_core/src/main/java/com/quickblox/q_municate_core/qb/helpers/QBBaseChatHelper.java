@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
@@ -171,8 +172,8 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     }
 
     public List<QBChatMessage> getDialogMessages(QBRequestGetBuilder customObjectRequestBuilder,
-                                                        Bundle returnedBundle, QBDialog qbDialog,
-                                                        long lastDateLoad) throws QBResponseException {
+                                                 Bundle returnedBundle, QBDialog qbDialog,
+                                                 long lastDateLoad) throws QBResponseException {
         List<QBChatMessage> qbMessagesList = QBChatService.getDialogMessages(qbDialog,
                 customObjectRequestBuilder, returnedBundle);
 
@@ -214,20 +215,29 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     }
 
     private QBAttachment getAttachment(QBFile file) {
-        // TODO temp value
-        String contentType = "image/jpeg";
-
+        // TODO temp value karan content type
+        // String contentType = "image/jpeg";
+        Log.e("QBBaseChatHelper", file.getContentType());
         QBAttachment attachment = new QBAttachment(QBAttachment.PHOTO_TYPE);
         attachment.setId(file.getUid());
         attachment.setName(file.getName());
-        attachment.setContentType(contentType);
+        attachment.setContentType(file.getContentType());
         attachment.setUrl(file.getPublicUrl());
         attachment.setSize(file.getSize());
 
         return attachment;
     }
 
-    public void sendTypingStatusToServer(int opponentId, boolean startTyping)  {
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    public void sendTypingStatusToServer(int opponentId, boolean startTyping) {
         try {
             QBPrivateChat privateChat = createPrivateChatIfNotExist(opponentId);
             if (startTyping) {
@@ -269,7 +279,7 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     }
 
     protected void checkForSendingNotification(boolean ownMessage, QBChatMessage qbChatMessage, User user,
-            boolean isPrivateChat) {
+                                               boolean isPrivateChat) {
         String dialogId = (String) qbChatMessage.getProperty(ChatNotificationUtils.PROPERTY_DIALOG_ID);
         if (qbChatMessage.getId() == null || dialogId == null) {
             return;
@@ -289,7 +299,7 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     }
 
     private void sendNotificationBroadcast(String action, QBChatMessage chatMessage, User user, String dialogId,
-            boolean isPrivateMessage) {
+                                           boolean isPrivateMessage) {
         Intent intent = new Intent(action);
         String messageBody = chatMessage.getBody();
         String extraChatMessage;
@@ -319,6 +329,8 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     protected Message parseReceivedMessage(QBChatMessage qbChatMessage) {
         long dateSent = ChatUtils.getMessageDateSent(qbChatMessage);
         String attachUrl = ChatUtils.getAttachUrlIfExists(qbChatMessage);
+        String attachmentType = ChatUtils.getAttachTypeIfExists(qbChatMessage);
+        Log.e("karan type", attachmentType);
         String dialogId = (String) qbChatMessage.getProperty(ChatNotificationUtils.PROPERTY_DIALOG_ID);
 
         Message message = new Message();
@@ -341,10 +353,19 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         }
 
         message.setDialogOccupant(dialogOccupant);
-
-        if (qbChatMessage.getAttachments()!= null && !qbChatMessage.getAttachments().isEmpty()) {
+        if (qbChatMessage.getAttachments() != null && !qbChatMessage.getAttachments().isEmpty()) {
             Attachment attachment = new Attachment();
-            attachment.setType(Attachment.Type.PICTURE);
+            if (attachmentType.contains("audio")) {
+                attachment.setType(Attachment.Type.AUDIO);
+            } else if (attachmentType.contains("video")) {
+                attachment.setType(Attachment.Type.VIDEO);
+            } else if (attachmentType.contains("image")) {
+                attachment.setType(Attachment.Type.PICTURE);
+            } else if (attachmentType.equals("application/pdf")) {
+                attachment.setType(Attachment.Type.DOC);
+            } else {
+                attachment.setType(Attachment.Type.OTHER);
+            }
             attachment.setRemoteUrl(attachUrl);
             message.setAttachment(attachment);
         }
@@ -358,13 +379,13 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     }
 
     public void updateStatusMessageRead(String dialogId, CombinationMessage combinationMessage,
-            boolean forPrivate) throws Exception {
+                                        boolean forPrivate) throws Exception {
         updateStatusMessageReadServer(dialogId, combinationMessage, forPrivate);
         DbUtils.updateStatusMessageLocal(dataManager, combinationMessage.toMessage());
     }
 
     public void updateStatusMessageReadServer(String dialogId, CombinationMessage combinationMessage,
-            boolean fromPrivate) throws Exception {
+                                              boolean fromPrivate) throws Exception {
         if (fromPrivate) {
             QBPrivateChat privateChat = createPrivateChatIfNotExist(combinationMessage.getDialogOccupant().getUser().getUserId());
             if (privateChat != null) {

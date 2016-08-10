@@ -184,7 +184,6 @@ public class NewMessageActivity extends BaseFragment{
 
     private void startPrivateChat(Dialog dialog) {
         PrivateDialogActivity.start(baseActivity, selectedUser, dialog);
-        baseActivity.finish();
     }
 
     private void search(String searchQuery) {

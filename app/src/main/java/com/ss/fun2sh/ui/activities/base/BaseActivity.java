@@ -114,13 +114,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         setContentView(getContentResId());
         initFields();
         activateButterKnife();
-
-
-        //for Repeating actions
-       /* Intent ll24 = new Intent(this, AlarmReceiverLifeLog.class);
-        PendingIntent recurringLl24 = PendingIntent.getBroadcast(this, 0, ll24, 0);
-        AlarmManager alarms = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarms.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 20, recurringLl24); // Log repetition*/
     }
 
 
@@ -460,9 +453,6 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
         Intent intent = NavUtils.getParentActivityIntent(this);
         if (intent == null) {
             this.finish();
-            /*Intent inte = new Intent(this, MainActivity.class);
-            startActivity(inte);
-            finish();*/
         } else {
             NavUtils.navigateUpFromSameTask(this);
         }

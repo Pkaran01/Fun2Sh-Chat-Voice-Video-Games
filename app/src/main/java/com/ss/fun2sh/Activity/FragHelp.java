@@ -32,9 +32,7 @@ import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.Adapter.CloseTicketsAdapter;
 import com.ss.fun2sh.Adapter.NotificationListAdapter;
 import com.ss.fun2sh.Adapter.OpenTicketAdapter;
-import com.ss.fun2sh.CRUD.AndroidMultiPartEntity;
 import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.JSONParser;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.oldutils.ConnectionDetector;
@@ -42,16 +40,6 @@ import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.oldutils.RestMethods;
 import com.ss.fun2sh.oldutils.WebserviceCallback;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,8 +76,6 @@ public class FragHelp extends BaseFragment {
     HashMap<String, ArrayList<String>> not_map, open_map, close_map;
     long max_file_size = 3000000;
     int PICKFILE_REQUEST_CODE = 10;
-    private AndroidMultiPartEntity reqEntity;
-    long totalSize = 0;
     public static FragHelp fragHelp;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -980,66 +966,6 @@ public class FragHelp extends BaseFragment {
         }
     }
 
-
-    //end now use this mathod in you activity
-    public String uploadIt(String url, final JSONParser.UploadData data) {
-        //String part
-        try {
-            //multipart entity part
-
-
-            reqEntity = new AndroidMultiPartEntity(
-                    new AndroidMultiPartEntity.ProgressListener() {
-
-                        public void transferred(long num) {
-                            data.doProgress((int) ((num / (float) totalSize) * 100));
-                        }
-                    });
-
-
-            //// file uploading tassk
-            File mediaFile;
-            M.E("fileuri " + filePath);
-            mediaFile = new File(filePath);
-            reqEntity.addPart("userfile", new FileBody(mediaFile));
-            totalSize = reqEntity.getContentLength();
-            try {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(url);
-                httppost.setEntity(reqEntity);
-                HttpParams httpParameters = new BasicHttpParams();
-                int timeoutConnection = 5000;
-                HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-// Set the default socket timeout (SO_TIMEOUT)
-// in milliseconds which is the timeout for waiting for data.
-                int timeoutSocket = 5000;
-
-                HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-                // Making server call
-                HttpResponse response = httpclient.execute(httppost);
-                //Log.e("Responce string", response.toString());
-                HttpEntity r_entity = response.getEntity();
-                int statusCode = response.getStatusLine().getStatusCode();
-                // Log.e("Responce string", " " + statusCode);
-                if (statusCode == 200) {
-                    // Server response
-                    String responseString = EntityUtils.toString(r_entity);
-                    M.E(responseString);
-                    return responseString;
-                }
-            } catch (Exception en) {
-                try {
-                    Log.e("Error", en.getMessage());
-                } catch (NullPointerException nen) {
-                    Log.e("Error", "Null" + nen.getMessage());
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            M.T(getActivity(), e.getMessage());
-        }
-        return null;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {

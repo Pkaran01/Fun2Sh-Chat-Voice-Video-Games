@@ -31,7 +31,6 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
-
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
@@ -42,12 +41,12 @@
     <application
         android:name=".AppController"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:largeHeap="true"
         tools:replace="android:icon">
         <activity
             android:name=".Activity.DashBoardActivity"
@@ -135,6 +134,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.ss.fun2sh.ui.activities.main.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.ss.fun2sh.ui.activities.settings.SettingsActivity"
@@ -155,17 +155,16 @@
         <activity
             android:name="com.ss.fun2sh.ui.activities.call.CallActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.ss.fun2sh.ui.fragments.search.SearchFragment"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.ss.fun2sh.ui.activities.chats.NewGroupDialogActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustNothing"></activity>
+            android:windowSoftInputMode="adjustPan|adjustNothing"/>
         <activity
             android:name="com.ss.fun2sh.ui.activities.chats.CreateGroupDialogActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -174,12 +173,14 @@
             android:name="com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name="com.ss.fun2sh.ui.activities.chats.GroupDialogActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name="com.ss.fun2sh.ui.activities.chats.GroupDialogDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -210,6 +211,7 @@
 
 
         <activity android:name="com.ss.fun2sh.ui.activities.others.PreviewImageActivity"></activity>
+        <activity android:name="com.ss.fun2sh.ui.activities.others.PreviewProfileImageActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -246,17 +248,17 @@
             android:name="com.quickblox.q_municate_core.service.QBService"
             android:icon="@drawable/ic_launcher"/>
 
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="1a8a9dd386ec38825bd39eee5822683318106c09"/>
+        <!--      <meta-data
+                  android:name="com.crashlytics.ApiKey"
+                  android:value="1a8a9dd386ec38825bd39eee5822683318106c09"/>-->
 
         <activity
             android:name="com.ss.fun2sh.ui.activities.profile.FirstTimeUserProfileActivity"
-            android:label="@string/title_activity_first_time_user_profile"></activity>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="1a8a9dd386ec38825bd39eee5822683318106c09"
-            />
+            android:label="@string/title_activity_first_time_user_profile"/>
+        <!-- <meta-data
+             android:name="io.fabric.ApiKey"
+             android:value="1a8a9dd386ec38825bd39eee5822683318106c09"
+             />-->
     </application>
 
 </manifest>

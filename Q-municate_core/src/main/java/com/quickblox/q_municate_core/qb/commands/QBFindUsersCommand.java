@@ -3,6 +3,7 @@ package com.quickblox.q_municate_core.qb.commands;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.quickblox.core.request.QBPagedRequestBuilder;
 import com.quickblox.q_municate_core.core.command.ServiceCommand;
@@ -14,7 +15,6 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -24,17 +24,19 @@ public class QBFindUsersCommand extends ServiceCommand {
         super(context, successAction, failAction);
     }
 
-    public static void start(Context context, QBUser currentUser, String constraint, int page) {
+    public static void start(Context context, QBUser currentUser, String constraint, int page, String type) {
         Intent intent = new Intent(QBServiceConsts.FIND_USERS_ACTION, null, context, QBService.class);
         intent.putExtra(QBServiceConsts.EXTRA_USER, currentUser);
         intent.putExtra(QBServiceConsts.EXTRA_CONSTRAINT, constraint);
         intent.putExtra(QBServiceConsts.EXTRA_PAGE, page);
+        intent.putExtra(QBServiceConsts.EXTRA_SEARCH_TYPE, type);
         context.startService(intent);
     }
 
     @Override
     public Bundle perform(Bundle extras) throws Exception {
         String constraint = (String) extras.getSerializable(QBServiceConsts.EXTRA_CONSTRAINT);
+        String type = (String) extras.getSerializable(QBServiceConsts.EXTRA_SEARCH_TYPE);
         QBUser currentUser = (QBUser) extras.getSerializable(QBServiceConsts.EXTRA_USER);
         int page = extras.getInt(QBServiceConsts.EXTRA_PAGE);
 
@@ -44,10 +46,16 @@ public class QBFindUsersCommand extends ServiceCommand {
 
         Bundle requestParams = new Bundle();
 
-        //Collection<QBUser> userList = QBUsers.getUsersByFullName(constraint, requestBuilder, requestParams);
+        // Collection<QBUser>
+        Log.e("Type", type);
+        Collection<QBUser> userList;
+        if (type.equals("name")) {
+            userList = QBUsers.getUsersByFullName(constraint, requestBuilder, requestParams);
+        } else {
+            userList = QBUsers.getUsersByLogins(Arrays.asList(constraint), requestBuilder, requestParams);
+        }
 
-        Collection<QBUser> userList = QBUsers.getUsersByLogins(new ArrayList<String>(Arrays.asList(constraint)), requestBuilder, requestParams);
-
+        Log.e("Searching", userList.toString());
 
         Collection<User> userCollection = UserFriendUtils.createUsersList(userList);
 //        userCollection.remove(UserFriendUtils.createLocalUser(currentUser));
@@ -59,4 +67,5 @@ public class QBFindUsersCommand extends ServiceCommand {
 
         return params;
     }
+
 }

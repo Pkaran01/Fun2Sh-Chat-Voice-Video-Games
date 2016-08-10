@@ -164,7 +164,7 @@ public class GCMNotifService extends Service {
         options.inSampleSize = calculateInSampleSize(options, reqWidth,
                 reqHeight);
 
-        // Decode bitmap with inSampleSize set
+        // Decode previewImage with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
     }

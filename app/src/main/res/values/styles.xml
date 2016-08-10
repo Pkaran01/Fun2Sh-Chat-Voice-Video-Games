@@ -139,7 +139,7 @@
 
         <item name="windowActionModeOverlay">true</item>
 
-        <item name="android:windowBackground">@color/bg_main</item>
+        <item name="android:windowBackground">@null</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 

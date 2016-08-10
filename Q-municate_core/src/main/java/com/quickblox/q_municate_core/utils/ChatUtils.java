@@ -57,6 +57,26 @@ public class ChatUtils {
         return attachURL;
     }
 
+    public static String getAttachTypeIfExists(QBChatMessage chatMessage) {
+        String attachURL = ConstsCore.EMPTY_STRING;
+        Collection<QBAttachment> attachmentCollection = chatMessage.getAttachments();
+        if (attachmentCollection != null && attachmentCollection.size() > 0) {
+            attachURL = getAttachTypeFromMessage(attachmentCollection);
+        }
+        return attachURL;
+    }
+
+
+    public static String getAttachTypeFromMessage(Collection<QBAttachment> attachmentsCollection) {
+        if (attachmentsCollection != null) {
+            ArrayList<QBAttachment> attachmentsList = new ArrayList<QBAttachment>(attachmentsCollection);
+            if (!attachmentsList.isEmpty()) {
+                return attachmentsList.get(0).getContentType();
+            }
+        }
+        return ConstsCore.EMPTY_STRING;
+    }
+
     public static String getSelectedFriendsFullNamesFromMap(List<User> usersList) {
         if (usersList.isEmpty()) {
             return "";
@@ -132,7 +152,7 @@ public class ChatUtils {
     }
 
     public static String getFullNamesFromOpponentId(DataManager dataManager, Integer userId,
-            String occupantsIdsString) {
+                                                    String occupantsIdsString) {
         List<Integer> occupantsIdsList = getOccupantsIdsListFromString(occupantsIdsString);
         occupantsIdsList.remove(userId);
         return getFullNamesFromOpponentIdsList(dataManager, occupantsIdsList);
@@ -146,7 +166,7 @@ public class ChatUtils {
         return stringBuilder.toString().substring(ConstsCore.ZERO_INT_VALUE, stringBuilder.length() - 2);
     }
 
-    public static List<ParcelableQBDialog> qbDialogsToParcelableQBDialogs(List<QBDialog> dialogList){
+    public static List<ParcelableQBDialog> qbDialogsToParcelableQBDialogs(List<QBDialog> dialogList) {
         List<ParcelableQBDialog> parcelableDialogList = new ArrayList<ParcelableQBDialog>(dialogList.size());
         for (QBDialog dialog : dialogList) {
             ParcelableQBDialog parcelableQBDialog = new ParcelableQBDialog(dialog);
@@ -156,7 +176,7 @@ public class ChatUtils {
     }
 
 
-    public static List<QBDialog> parcelableQBDialogsToQBDialogs(List<ParcelableQBDialog> parcelableQBDialogsList){
+    public static List<QBDialog> parcelableQBDialogsToQBDialogs(List<ParcelableQBDialog> parcelableQBDialogsList) {
         List<QBDialog> qbDialogsList = new ArrayList<QBDialog>(parcelableQBDialogsList.size());
         for (ParcelableQBDialog parcelableQBDialog : parcelableQBDialogsList) {
             QBDialog qbDialog = parcelableQBDialog.getDialog();
@@ -188,7 +208,7 @@ public class ChatUtils {
 
         if (QBDialogType.PRIVATE.equals(qbDialog.getType())) {
             dialog.setType(Dialog.Type.PRIVATE);
-        } else if (QBDialogType.GROUP.equals(qbDialog.getType())){
+        } else if (QBDialogType.GROUP.equals(qbDialog.getType())) {
             dialog.setType(Dialog.Type.GROUP);
         }
 
@@ -215,7 +235,7 @@ public class ChatUtils {
     }
 
     public static List<Message> createTempLocalMessagesList(DataManager dataManager,
-            List<QBDialog> qbDialogsList, QBDialog currentDialog) {
+                                                            List<QBDialog> qbDialogsList, QBDialog currentDialog) {
         List<Message> messagesList = new ArrayList<>();
 
         for (QBDialog qbDialog : qbDialogsList) {
@@ -413,10 +433,23 @@ public class ChatUtils {
     }
 
     public static Attachment createLocalAttachment(QBAttachment qbAttachment) {
+        Log.e("Chat Utils karan", qbAttachment.getContentType());
+        String attachmentType = qbAttachment.getContentType();
         Attachment attachment = new Attachment();
         attachment.setAttachmentId(qbAttachment.getId());
         attachment.setRemoteUrl(qbAttachment.getUrl());
         attachment.setName(qbAttachment.getName());
+        if (attachmentType.contains("audio")) {
+            attachment.setType(Attachment.Type.AUDIO);
+        } else if (attachmentType.contains("video")) {
+            attachment.setType(Attachment.Type.VIDEO);
+        } else if (attachmentType.contains("image")) {
+            attachment.setType(Attachment.Type.PICTURE);
+        } else if (attachmentType.equals("application/pdf")) {
+            attachment.setType(Attachment.Type.DOC);
+        } else {
+            attachment.setType(Attachment.Type.OTHER);
+        }
         attachment.setSize(qbAttachment.getSize());
         return attachment;
     }
@@ -521,7 +554,7 @@ public class ChatUtils {
     }
 
     public static List<CombinationMessage> createCombinationMessagesList(List<Message> messagesList,
-            List<DialogNotification> dialogNotificationsList) {
+                                                                         List<DialogNotification> dialogNotificationsList) {
         List<CombinationMessage> combinationMessagesList = new ArrayList<>();
         combinationMessagesList.addAll(getCombinationMessagesListFromMessagesList(messagesList));
         combinationMessagesList.addAll(getCombinationMessagesListFromDialogNotificationsList(
@@ -534,12 +567,24 @@ public class ChatUtils {
         String lastMessage = "";
 
         if (message == null && dialogNotification != null) {
+            Log.e("Notification type", dialogNotification.getType().toString());
+            if (DialogNotification.Type.FRIENDS_REQUEST.equals(dialogNotification.getType())) {
+                defaultLasMessage = "Contact request sent";
+            } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(dialogNotification.getType())) {
+                defaultLasMessage = "Contact request accepted";
+            }
             lastMessage = defaultLasMessage;
         } else if (dialogNotification == null && message != null) {
             lastMessage = message.getBody();
         } else if (message != null && dialogNotification != null) {
-            lastMessage = message.getCreatedDate() > dialogNotification.getCreatedDate()
-                    ? message.getBody() : defaultLasMessage;
+            if (message.getCreatedDate() > dialogNotification.getCreatedDate()) {
+                lastMessage = message.getBody();
+            } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(dialogNotification.getType())) {
+                lastMessage = "Contact request accepted";
+            } else {
+                lastMessage = defaultLasMessage;
+            }
+
         }
 
         return lastMessage;
@@ -564,14 +609,14 @@ public class ChatUtils {
     }
 
     public static List<Dialog> fillTitleForPrivateDialogsList(String titleForDeletedUser, DataManager dataManager,
-            List<Dialog> inputDialogsList) {
+                                                              List<Dialog> inputDialogsList) {
         List<Dialog> dialogsList = new ArrayList<>(inputDialogsList.size());
 
         for (Dialog dialog : inputDialogsList) {
             if (Dialog.Type.PRIVATE.equals(dialog.getType())) {
                 List<DialogOccupant> dialogOccupantsList = dataManager.getDialogOccupantDataManager()
                         .getDialogOccupantsListByDialogId(dialog.getDialogId());
-                User currentUser =  UserFriendUtils.createLocalUser(AppSession.getSession().getUser());
+                User currentUser = UserFriendUtils.createLocalUser(AppSession.getSession().getUser());
                 User opponentUser = getOpponentFromPrivateDialog(currentUser, dialogOccupantsList);
                 if (opponentUser.getFullName() != null) {
                     dialog.setTitle(opponentUser.getFullName());
@@ -584,8 +629,9 @@ public class ChatUtils {
 
         return dialogsList;
     }
+
     public static List<Dialog> fillTitleForGroupDialogsList(String titleForDeletedUser, DataManager dataManager,
-                                                              List<Dialog> inputDialogsList) {
+                                                            List<Dialog> inputDialogsList) {
         List<Dialog> dialogsList = new ArrayList<>(inputDialogsList.size());
 
         for (Dialog dialog : inputDialogsList) {
@@ -631,7 +677,7 @@ public class ChatUtils {
     }
 
     public static DialogOccupant getUpdatedDialogOccupant(DataManager dataManager, String dialogId,
-            DialogOccupant.Status status, Integer userId) {
+                                                          DialogOccupant.Status status, Integer userId) {
         DialogOccupant dialogOccupant = dataManager.getDialogOccupantDataManager().getDialogOccupant(dialogId, userId);
         if (dialogOccupant != null) {
             dialogOccupant.setStatus(status);

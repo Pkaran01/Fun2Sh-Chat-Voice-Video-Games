@@ -30,10 +30,6 @@ public class SearchFragment extends BaseLoggableActivity implements SearchView.O
 
     private SearchViewPagerAdapter searchViewPagerAdapter;
 
-    public static SearchFragment newInstance() {
-        return new SearchFragment();
-    }
-
     @Override
     protected int getContentResId() {
         return R.layout.fragment_search;

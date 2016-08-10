@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -18,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Chronometer;
 
 import com.quickblox.chat.QBChatService;
@@ -48,6 +48,7 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
 import com.quickblox.videochat.webrtc.exception.QBRTCException;
 import com.quickblox.videochat.webrtc.exception.QBRTCSignalException;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.fragments.call.ConversationCallFragment;
@@ -61,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+
+import static com.ss.fun2sh.CRUD.M.E;
 
 public class CallActivity extends BaseLoggableActivity implements QBRTCClientSessionCallbacks, QBRTCSessionConnectionCallbacks, QBRTCSignalingCallback {
 
@@ -97,6 +100,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     DataManager dataManager;
     private Call call;
+
 
     public static void start(Activity activity, List<QBUser> qbUsersList, QBRTCTypes.QBConferenceType qbConferenceType,
                              QBRTCSessionDescription qbRtcSessionDescription) {
@@ -159,7 +163,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
 
-
     private void initCallFragment() {
         switch (startConversationReason) {
             case INCOME_CALL_FOR_ACCEPTION:
@@ -178,8 +181,11 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     protected void onStop() {
         super.onStop();
+        dataManager.getCallDataManager().create(call);
         unregisterReceiver(wifiStateReceiver);
         unregisterReceiver(audioStreamReceiver);
+
+
     }
 
     @Override
@@ -192,19 +198,13 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     protected void onResume() {
         isInFront = true;
         super.onResume();
+        if(wakeLock.isHeld()){
+            wakeLock.release();
+        }
+
     }
 
-    @Override
-    public void onAttachedToWindow() {
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    }
+    PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onStart() {
@@ -216,6 +216,11 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         intentFilter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
         registerReceiver(wifiStateReceiver, intentFilter);
         registerReceiver(audioStreamReceiver, intentFilter);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
+        wakeLock.acquire();
+
     }
 
     @Override
@@ -335,6 +340,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public void onUserNotAnswer(QBRTCSession session, Integer userID) {
+        E("onUserNotAnswer");
         if (!session.equals(getCurrentSession())) {
             return;
         }
@@ -343,7 +349,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
             qbRtcSessionUserCallback.onUserNotAnswer(session, userID);
         }
         //missed call ka code
-        call.setStatus(2);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -402,7 +408,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
                 @Override
                 public void run() {
                     ToastUtils.longToast("User " + participantName + " " + getString(
-                            R.string.call_hung_up) + " conversation");
+                            R.string.call_hung_up) + " this call. Please try later.");
                 }
             });
 
@@ -412,14 +418,16 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public void onUserNoActions(QBRTCSession qbrtcSession, Integer integer) {
+        E("onUserNoActions");
+
         startIncomeCallTimer(0);
         //missed call ka code
-        call.setStatus(2);
+
     }
 
     @Override
     public void onSessionClosed(final QBRTCSession session) {
-        dataManager.getCallDataManager().createOrUpdate(call);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -499,12 +507,11 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public void onDisconnectedFromUser(QBRTCSession session, Integer userID) {
-
+        setMissedCallValue();
     }
 
     @Override
     public void onDisconnectedTimeoutFromUser(QBRTCSession session, Integer userID) {
-
     }
 
     @Override
@@ -539,18 +546,19 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         ringtonePlayer = new RingtonePlayer(this, R.raw.beep);
         // Add activity as callback to RTCClient
         qbRtcClient = QBRTCClient.getInstance(this);
-        //store in databse
+        //store in database
         call = new Call();
-        call.setCallId(0);
+
         call.setUser(dataManager.getUserDataManager().get(opponentsList.get(0).getId()));
         call.setCallType(qbConferenceType.getValue());
         call.setCreatedDate(DateUtilsCore.getCurrentTime());
+        call.setCallDuration(1245678);
         switch (startConversationReason) {
             case INCOME_CALL_FOR_ACCEPTION:
-                call.setStatus(0);
+                call.setStatus(1);
                 break;
             case OUTCOME_CALL_MADE:
-                call.setStatus(1);
+                call.setStatus(2);
                 break;
         }
 
@@ -605,6 +613,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     public void rejectCurrentSession() {
+        M.E("rejectCurrentSesstion");
         if (qbCallChatHelper != null && qbCallChatHelper.getCurrentRtcSession() != null) {
             qbCallChatHelper.getCurrentRtcSession().rejectCall(new HashMap<String, String>());
         }
@@ -612,11 +621,16 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     public void hangUpCurrentSession() {
+        M.E("stopIncomeCallTimer");
         ringtonePlayer.stop();
         if (qbCallChatHelper != null && qbCallChatHelper.getCurrentRtcSession() != null) {
             qbCallChatHelper.getCurrentRtcSession().hangUp(new HashMap<String, String>());
         }
         finish();
+    }
+
+    public void setMissedCallValue() {
+        call.setStatus(3);
     }
 
     private void startIncomeCallTimer(long time) {
@@ -625,7 +639,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     private void stopIncomeCallTimer() {
-        Log.d(TAG, "stopIncomeCallTimer");
+        M.E("stopIncomeCallTimer");
         showIncomingCallWindowTaskHandler.removeCallbacks(showIncomingCallWindowTask);
     }
 
@@ -708,7 +722,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     public void startTimer() {
-        Log.d(TAG, "startTimer() from CallActivity, timerChronometer = " + timerChronometer);
+        E("startTimer() from CallActivity, timerChronometer = " + timerChronometer);
         if (!isStarted) {
             timerChronometer.setVisibility(View.VISIBLE);
             timerChronometer.setBase(SystemClock.elapsedRealtime());

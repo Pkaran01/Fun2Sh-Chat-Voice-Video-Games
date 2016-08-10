@@ -16,11 +16,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.TypedValue;
 
 import com.quickblox.q_municate_core.utils.ConstsCore;
@@ -151,7 +151,7 @@ public class ImageUtils {
                 bos.write(buf, 0, length);
             }
         } catch (Exception e) {
-            throw new IOException("Can\'t save Storage API bitmap to a file!", e);
+            throw new IOException("Can\'t save Storage API previewImage to a file!", e);
         } finally {
             parcelFileDescriptor.close();
             bis.close();
@@ -214,7 +214,6 @@ public class ImageUtils {
             selectedBitmap = BitmapFactory.decodeFileDescriptor(descriptor.getFileDescriptor(), null, bitmapOptions);
         } catch (FileNotFoundException e) {
             ErrorUtils.showError(activity, e.getMessage());
-            Log.e("CRUD", e.getMessage());
         }
         return selectedBitmap;
     }
@@ -333,5 +332,12 @@ public class ImageUtils {
 
     private enum ScalingLogic {
         CROP, FIT
+    }
+
+    public static Bitmap getThumbnailFromVideo(String videoPath) {
+        if (videoPath.contains("file://")) {
+            videoPath = videoPath.replace("file://", "");
+        }
+        return ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Video.Thumbnails.MINI_KIND);
     }
 }

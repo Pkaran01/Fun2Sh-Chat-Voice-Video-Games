@@ -31,6 +31,8 @@ public class QBRemoveFriendCommand extends ServiceCommand {
 
         friendListHelper.removeFriend(friendId);
 
+
+
         Bundle result = new Bundle();
         result.putSerializable(QBServiceConsts.EXTRA_FRIEND_ID, friendId);
 

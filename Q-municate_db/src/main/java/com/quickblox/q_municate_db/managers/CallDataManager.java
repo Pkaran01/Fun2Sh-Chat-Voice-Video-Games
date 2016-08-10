@@ -34,6 +34,17 @@ public class CallDataManager extends BaseManager<Call> {
         notifyObservers(OBSERVE_KEY);
     }
 
+    public int deleteAllCallLog() {
+        try {
+            DeleteBuilder<Call, Long> deleteBuilder = dao.deleteBuilder();
+            return deleteBuilder.delete();
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+        notifyObservers(OBSERVE_KEY);
+        return 0;
+    }
+
     public List<Call> getAllSorted() {
         List<Call> callsList = Collections.emptyList();
         try {
@@ -43,6 +54,7 @@ public class CallDataManager extends BaseManager<Call> {
             userQueryBuilder.orderByRaw(User.Column.FULL_NAME + " COLLATE NOCASE");
 
             friendQueryBuilder.join(userQueryBuilder);
+            friendQueryBuilder.orderBy(Call.Column.ID, false);
 
             PreparedQuery<Call> preparedQuery = friendQueryBuilder.prepare();
 
@@ -51,6 +63,34 @@ public class CallDataManager extends BaseManager<Call> {
             ErrorUtils.logError(e);
         }
 
+        return callsList;
+    }
+
+    public List<Call> getAllByStatus(long type, long staus) {
+        List<Call> callsList = Collections.emptyList();
+        try {
+            QueryBuilder<Call, Long> friendQueryBuilder = dao.queryBuilder();
+
+            QueryBuilder<User, Long> userQueryBuilder = userDao.queryBuilder();
+            userQueryBuilder.orderByRaw(User.Column.FULL_NAME + " COLLATE NOCASE");
+
+            friendQueryBuilder.join(userQueryBuilder);
+            if (staus > 0 && type > 0) {
+                friendQueryBuilder.where().eq(Call.Column.STATUS, staus).or().eq(Call.Column.TYPE, type);
+            } else if (staus > 0) {
+                friendQueryBuilder.where().eq(Call.Column.STATUS, staus);
+            } else if (type > 0) {
+                friendQueryBuilder.where().eq(Call.Column.TYPE, type);
+            }
+            //friendQueryBuilder.join(userQueryBuilder);
+            friendQueryBuilder.orderBy(Call.Column.ID, false);
+
+            PreparedQuery<Call> preparedQuery = friendQueryBuilder.prepare();
+
+            callsList = dao.query(preparedQuery);
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
         return callsList;
     }
 

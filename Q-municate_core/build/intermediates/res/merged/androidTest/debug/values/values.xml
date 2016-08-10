@@ -278,7 +278,7 @@
     <integer name="call_startbitrate_value_default">1000</integer>
     <integer name="call_video_codec_default">0</integer>
     <integer name="cancel_button_image_alpha">127</integer>
-    <integer name="db_version">7</integer>
+    <integer name="db_version">8</integer>
     <integer name="google_play_services_version">8115000</integer>
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <string name="abc_action_bar_home_description">Navigate home</string>
@@ -307,7 +307,9 @@
     <string name="cast_notification_connected_message">Connected to <ns1:g id="name">%1$s</ns1:g></string>
     <string name="cast_notification_connecting_message">Connecting to <ns1:g id="name">%1$s</ns1:g></string>
     <string name="cast_notification_disconnect">Disconnect</string>
-    <string name="cht_contact_request_sent">Contact Request Sent</string>
+    <string name="cht_contact_request_acccepted">Contact request accepted</string>
+    <string name="cht_contact_request_received">Contact request received</string>
+    <string name="cht_contact_request_sent">Contact request sent</string>
     <string name="cht_notification_message">Notification message</string>
     <string name="cht_update_group_added_message">%1$s has added %2$s to the group chat</string>
     <string name="cht_update_group_create_message">%1$s has added %2$s</string>

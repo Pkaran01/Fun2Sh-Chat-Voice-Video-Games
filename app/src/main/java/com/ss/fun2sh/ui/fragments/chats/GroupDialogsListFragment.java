@@ -3,6 +3,8 @@ package com.ss.fun2sh.ui.fragments.chats;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -55,7 +57,7 @@ import java.util.Observer;
 import butterknife.Bind;
 import butterknife.OnItemClick;
 
-public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> {
+public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> implements SearchView.OnQueryTextListener {
 
     private static final String TAG = GroupDialogsListFragment.class.getSimpleName();
     private static final int LOADER_ID = GroupDialogsListFragment.class.hashCode();
@@ -119,14 +121,31 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dialogs_list_menu, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        // Do something when collapsed
+                        dialogsListAdapter.setFilter(ChatUtils.fillTitleForGroupDialogsList(getContext().getResources().getString(R.string.deleted_user),
+                                dataManager, dataManager.getDialogDataManager().getAllSorted()));
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        // Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                launchContactsFragment();
-                break;
             case R.id.action_more:
                 MainActivity.drawer.openDrawer(MainActivity.drawer_view);
                 break;
@@ -289,6 +308,32 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> {
 
     private void launchContactsFragment() {
         SearchFragment.start(getActivity());
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Dialog> filteredModelList = filter(ChatUtils.fillTitleForGroupDialogsList(getContext().getResources().getString(R.string.deleted_user),
+                dataManager, dataManager.getDialogDataManager().getAllSorted()), newText);
+        dialogsListAdapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    private List<Dialog> filter(List<Dialog> models, String query) {
+        query = query.toLowerCase();
+
+        final List<Dialog> filteredModelList = new ArrayList<>();
+        for (Dialog model : models) {
+            final String text = model.getTitle().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 
     private static class DialogsListLoader extends BaseLoader<List<Dialog>> {

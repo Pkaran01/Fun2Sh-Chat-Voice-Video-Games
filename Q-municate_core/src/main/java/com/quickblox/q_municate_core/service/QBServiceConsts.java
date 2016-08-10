@@ -209,6 +209,7 @@ public class QBServiceConsts {
     public static final String EXTRA_IS_TYPING = "is_typing";
     public static final String EXTRA_CALL_ACTIVITY = "call_activity";
     public static final String EXTRA_PAGE = "load_elements";
+    public static final String EXTRA_SEARCH_TYPE = "extra_search_type";
     public static final String EXTRA_USER_STATUS = "user_status";
     public static final String EXTRA_REGISTRATION_ID = "registration_id";
     public static final String EXTRA_IS_PUSH_SUBSCRIBED_ON_SERVER = "is_push_subscribed_on_server";

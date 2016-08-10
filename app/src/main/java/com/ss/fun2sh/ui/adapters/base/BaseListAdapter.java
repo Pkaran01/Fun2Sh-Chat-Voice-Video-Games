@@ -57,4 +57,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter {
     protected void displayGroupPhotoImage(String uri, ImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, ImageLoaderUtils.UIL_GROUP_AVATAR_DISPLAY_OPTIONS);
     }
+
+    public void setFilter(List<T> newData) {
+        objectsList.clear();
+        objectsList.addAll(newData);
+        notifyDataSetChanged();
+    }
 }

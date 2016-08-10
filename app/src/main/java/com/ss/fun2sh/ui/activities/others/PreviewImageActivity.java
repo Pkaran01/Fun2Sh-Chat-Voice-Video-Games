@@ -3,14 +3,11 @@ package com.ss.fun2sh.ui.activities.others;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
-import com.ss.fun2sh.ui.adapters.chats.BaseDialogMessagesAdapter;
 import com.ss.fun2sh.ui.views.TouchImageView;
-import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
 import butterknife.Bind;
 
@@ -48,7 +45,7 @@ public class PreviewImageActivity extends BaseLoggableActivity {
     }
 
     private void displayImage() {
-        imageTouchImageView.setImageBitmap(BaseDialogMessagesAdapter.bitmap);
+        imageTouchImageView.setImageBitmap(Const.previewImage);
         /*String imageUrl = getIntent().getStringExtra(EXTRA_IMAGE_URL);
         if (!TextUtils.isEmpty(imageUrl)) {
             ImageLoader.getInstance().displayImage(imageUrl, imageTouchImageView,

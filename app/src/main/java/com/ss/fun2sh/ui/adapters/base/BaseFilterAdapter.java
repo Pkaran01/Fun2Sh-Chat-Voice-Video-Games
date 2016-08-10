@@ -31,9 +31,10 @@ public abstract class BaseFilterAdapter<T, VH extends BaseClickListenerViewHolde
         query = query.toLowerCase();
         visibleList = new ArrayList<>();
         for (T item : super.getAllItems()) {
-            if (isMatch(item, query)) {
-                visibleList.add(item);
-            }
+            /*if (isMatch(item, query)) {
+
+            }*/
+            visibleList.add(item);
         }
         notifyDataSetChanged();
     }

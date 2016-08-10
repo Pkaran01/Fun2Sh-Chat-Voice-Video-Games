@@ -48,6 +48,7 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
     private View view;
     private long lastClickTime = 0l;
     private RingtonePlayer ringtonePlayer;
+    boolean missedCall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,9 +87,10 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
         startCallNotification();
     }
 
+    @Override
     public void onStop() {
         stopCallNotification();
-        super.onDestroy();
+        super.onStop();
         Log.d(TAG, "onDestroy() from IncomeCallFragment");
     }
 
@@ -112,7 +114,7 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
         setOpponentAvatarAndName();
     }
 
-    private void setOpponentAvatarAndName(){
+    private void setOpponentAvatarAndName() {
         User opponent = ((CallActivity) getActivity()).getOpponentAsUserFromDB(sessionDescription.getCallerID());
         ImageLoader.getInstance().displayImage(opponent.getAvatar(), avatarImageView, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
         callerName.setText(opponent.getFullName());
@@ -127,13 +129,17 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
         if (vibrator.hasVibrator()) {
             vibrator.vibrate(vibrationCycle, 1);
         }
+        missedCall = true;
     }
 
     private void stopCallNotification() {
         if (ringtonePlayer != null) {
             ringtonePlayer.stop();
         }
-
+        if (missedCall) {
+            //save for missed call
+            ((CallActivity) getActivity()).setMissedCallValue();
+        }
         if (vibrator != null) {
             vibrator.cancel();
         }
@@ -168,8 +174,8 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
 
     private void accept() {
         takeBtn.setClickable(false);
+        missedCall = false;
         stopCallNotification();
-
         ((CallActivity) getActivity())
                 .addConversationFragmentReceiveCall();
         Log.d(TAG, "Call is started");
@@ -178,7 +184,7 @@ public class IncomingCallFragment extends Fragment implements Serializable, View
     private void reject() {
         rejectBtn.setClickable(false);
         Log.d(TAG, "Call is rejected");
-
+        missedCall = false;
         stopCallNotification();
 
         ((CallActivity) getActivity()).rejectCurrentSession();

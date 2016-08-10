@@ -18,6 +18,7 @@ import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
+import com.ss.fun2sh.ui.activities.profile.FirstTimeUserProfileActivity;
 
 import butterknife.Bind;
 
@@ -99,12 +100,16 @@ public abstract class BaseAuthActivity extends BaseActivity {
 
     protected void startMainActivity(boolean importInitialized) {
         appSharedHelper.saveUsersImportInitialized(importInitialized);
-        startMainActivitySecondTime();
+        if (!PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.firstTimeProfile, false)) {
+            startMainActivity();
+        } else {
+            startMainActivitySecondTime();
+        }
     }
 
     protected void startMainActivity() {
-        MainActivity.start(BaseAuthActivity.this);
-        //FirstTimeUserProfileActivity.start(BaseAuthActivity.this);
+        //MainActivity.start(BaseAuthActivity.this);
+        FirstTimeUserProfileActivity.start(BaseAuthActivity.this);
         finish();
     }
 

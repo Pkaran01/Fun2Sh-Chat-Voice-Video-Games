@@ -6,11 +6,9 @@ import android.view.ViewGroup;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
-import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.State;
-import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -57,19 +55,10 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
     @Override
     public void onBindViewHolder(BaseClickListenerViewHolder<CombinationMessage> baseClickListenerViewHolder, int position) {
         final CombinationMessage combinationMessage = getItem(position);
-        boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
+        final boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
 
         ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), 1) > 0) {
-                    M.T(v.getContext(), "Added to favourite");
-                } else {
-                    M.E("Error in add to favourite");
-                }
-            }
-        });
+
         boolean friendsRequestMessage = DialogNotification.Type.FRIENDS_REQUEST.equals(
                 combinationMessage.getNotificationType());
         boolean friendsInfoRequestMessage = combinationMessage
@@ -104,6 +93,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
+
             displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
         } else {
             resetUI(viewHolder);
@@ -120,14 +110,17 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             }
 
         }
+
+
         if (ownMessage) {
             avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+            ownMessage(combinationMessage, viewHolder);
         } else {
             avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+            opponentMessage(combinationMessage, viewHolder);
         }
-
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);
             QBUpdateStatusMessageCommand.start(baseActivity, ChatUtils.createQBDialogFromLocalDialog(dataManager, dialog), combinationMessage, true);
@@ -147,6 +140,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             initListeners(viewHolder, position, combinationMessage.getDialogOccupant().getUser().getUserId());
         }
     }
+
 
     @Override
     public int getItemViewType(int position) {

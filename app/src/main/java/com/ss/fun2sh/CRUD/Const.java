@@ -1,5 +1,7 @@
 package com.ss.fun2sh.CRUD;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by CRUD Technology on 2/11/2016.
  */
@@ -8,7 +10,7 @@ public class Const {
 
     public static String NOTIF_IMGPATH = "http://image.dabank.co.uk/";
     public static String TIME_OUT = "No reply from server due to Internet Connection Problem";
-
+    public static Bitmap previewImage;
 
     public interface App_Ver {
         String isFirstTime = "isFirstTime";

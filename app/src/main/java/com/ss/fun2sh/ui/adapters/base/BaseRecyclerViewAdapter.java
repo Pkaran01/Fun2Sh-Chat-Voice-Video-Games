@@ -42,7 +42,7 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseClickListenerVie
 
     public void setList(List<T> items) {
         objectsList = items;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public void addItem(T item) {
@@ -75,6 +75,12 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseClickListenerVie
 
     public void clear() {
         objectsList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setFilter(List<T> newData) {
+        objectsList.clear();
+        objectsList.addAll(newData);
         notifyDataSetChanged();
     }
 

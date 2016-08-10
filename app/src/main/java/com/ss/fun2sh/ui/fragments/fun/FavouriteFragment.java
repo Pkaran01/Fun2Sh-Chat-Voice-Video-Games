@@ -3,9 +3,11 @@ package com.ss.fun2sh.ui.fragments.fun;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +24,13 @@ import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.chats.FavouriteAdapter;
 import com.ss.fun2sh.ui.fragments.base.BaseFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.quickblox.q_municate_core.utils.ChatUtils.getCombinationMessagesListFromMessagesList;
 
 
-public class FavouriteFragment extends BaseFragment {
+public class FavouriteFragment extends BaseFragment implements SearchView.OnQueryTextListener {
 
     FavouriteAdapter favouriteAdapter;
     RecyclerView messagesRecyclerView;
@@ -47,14 +50,30 @@ public class FavouriteFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dialogs_list_menu, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        // Do something when collapsed
+                        favouriteAdapter.setFilter(combinationMessagesList);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        // Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                // launchContactsFragment();
-                break;
             case R.id.action_more:
                 MainActivity.drawer.openDrawer(MainActivity.drawer_view);
                 break;
@@ -72,10 +91,12 @@ public class FavouriteFragment extends BaseFragment {
 
         messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messages_recycleview);
         combinationMessagesList = createCombinationMessagesList();
+        favouriteAdapter = new FavouriteAdapter(baseActivity, combinationMessagesList);
         if (combinationMessagesList.size() > 0) {
             initMessagesRecyclerView();
         } else {
-            TextView tv=(TextView)rootView.findViewById(R.id.empty_list_textview);
+            TextView tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
+            tv.setText("No favourite item found");
             tv.setVisibility(View.VISIBLE);
         }
         return rootView;
@@ -91,7 +112,6 @@ public class FavouriteFragment extends BaseFragment {
     protected void initMessagesRecyclerView() {
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         messagesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        favouriteAdapter = new FavouriteAdapter(baseActivity, combinationMessagesList);
         messagesRecyclerView.setAdapter(favouriteAdapter);
         scrollMessagesWithDelay();
     }
@@ -103,5 +123,30 @@ public class FavouriteFragment extends BaseFragment {
                 messagesRecyclerView.scrollToPosition(favouriteAdapter.getItemCount() - 1);
             }
         }, 300);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<CombinationMessage> filteredModelList = filter(combinationMessagesList, newText);
+        favouriteAdapter.setFilter(filteredModelList);
+        return true;
+    }
+
+    private List<CombinationMessage> filter(List<CombinationMessage> models, String query) {
+        query = query.toLowerCase();
+
+        final List<CombinationMessage> filteredModelList = new ArrayList<>();
+        for (CombinationMessage model : models) {
+            final String text = model.getDialogOccupant().getUser().getFullName().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
     }
 }

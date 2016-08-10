@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.exception.QBResponseException;
@@ -557,10 +556,8 @@ public class QBService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action;
-        Log.e(TAG, "service started with intent=" + intent);
         //Log.e(TAG, "service started with Action=" + intent.getAction());
         if (intent != null && (action = intent.getAction()) != null) {
-            Log.e(TAG, "service started with resultAction=" + action);
             ServiceCommand command = serviceCommandMap.get(action);
             if (command != null) {
                 startAsync(command, intent);
@@ -629,7 +626,6 @@ public class QBService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.e(TAG, "onReceive " + intent.getAction());
             String action = intent.getAction();
             if (action != null) {
                 ((QBBaseChatHelper) getHelper(PRIVATE_CHAT_HELPER)).init(AppSession.getSession().getUser());

@@ -2,14 +2,21 @@ package com.ss.fun2sh.ui.activities.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.QBPrivacyListsManager;
+import com.quickblox.chat.listeners.QBPrivacyListListener;
 import com.quickblox.chat.model.QBDialog;
+import com.quickblox.chat.model.QBPrivacyList;
+import com.quickblox.chat.model.QBPrivacyListItem;
 import com.quickblox.q_municate_core.core.command.Command;
 import com.quickblox.q_municate_core.qb.commands.chat.QBCreatePrivateChatCommand;
 import com.quickblox.q_municate_core.qb.commands.chat.QBDeleteChatCommand;
@@ -26,14 +33,22 @@ import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
+import com.ss.fun2sh.CRUD.Const;
+import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
+import com.ss.fun2sh.ui.activities.others.PreviewProfileImageActivity;
 import com.ss.fun2sh.ui.fragments.dialogs.base.TwoButtonsDialogFragment;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
+
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +57,9 @@ import java.util.Observer;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.ss.fun2sh.R.id.block_contact;
 
 public class UserProfileActivity extends BaseLoggableActivity {
 
@@ -54,6 +72,9 @@ public class UserProfileActivity extends BaseLoggableActivity {
 
     @Bind(R.id.timestamp_textview)
     TextView timestampTextView;
+
+    @Bind(block_contact)
+    TextView blockContact;
 
     @Bind(R.id.phone_view)
     View phoneView;
@@ -100,6 +121,9 @@ public class UserProfileActivity extends BaseLoggableActivity {
         userId = getIntent().getExtras().getInt(QBServiceConsts.EXTRA_FRIEND_ID);
         user = dataManager.getUserDataManager().get(userId);
         userObserver = new UserObserver();
+        if (dataManager.getUserDataManager().isBlocked(userId)) {
+            blockContact.setText(getString(R.string.user_unblock_contact));
+        }
     }
 
     private void initUIWithUsersData() {
@@ -138,23 +162,35 @@ public class UserProfileActivity extends BaseLoggableActivity {
 
     @OnClick(R.id.send_message_button)
     void sendMessage(View view) {
-        DialogOccupant dialogOccupant = dataManager.getDialogOccupantDataManager().getDialogOccupantForPrivateChat(user.getUserId());
-        if (dialogOccupant != null && dialogOccupant.getDialog() != null) {
-            PrivateDialogActivity.start(UserProfileActivity.this, user, dialogOccupant.getDialog());
+        if (!dataManager.getUserDataManager().isBlocked(userId)) {
+            DialogOccupant dialogOccupant = dataManager.getDialogOccupantDataManager().getDialogOccupantForPrivateChat(user.getUserId());
+            if (dialogOccupant != null && dialogOccupant.getDialog() != null) {
+                PrivateDialogActivity.start(UserProfileActivity.this, user, dialogOccupant.getDialog());
+            } else {
+                showProgress();
+                QBCreatePrivateChatCommand.start(this, user);
+            }
         } else {
-            showProgress();
-            QBCreatePrivateChatCommand.start(this, user);
+            Utility.blockContactMessage(this, "Unblock " + nameTextView.getText().toString() + " to send a message", userId);
         }
     }
 
     @OnClick(R.id.audio_call_button)
     void audioCall(View view) {
-        callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+        if (!dataManager.getUserDataManager().isBlocked(userId)) {
+            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+        } else {
+            Utility.blockContactMessage(this, "Unblock " + nameTextView.getText().toString() + " to place a FunChat voice call", userId);
+        }
     }
 
     @OnClick(R.id.video_call_button)
     void videoCall(View view) {
-        callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+        if (!dataManager.getUserDataManager().isBlocked(userId)) {
+            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+        } else {
+            Utility.blockContactMessage(this, "Unblock " + nameTextView.getText().toString() + " to place a FunChat video call", userId);
+        }
     }
 
     @OnClick(R.id.delete_chat_history_button)
@@ -165,9 +201,87 @@ public class UserProfileActivity extends BaseLoggableActivity {
         }
     }
 
-    @OnClick(R.id.block_contact)
+    @OnClick(block_contact)
     void blockContact(View view) {
         //Block Contact
+        blockContactMessage("Block " + nameTextView.getText().toString() + "? Blocked contacts will no longer be able to call you or send you messages");
+
+
+    }
+
+    private void blockContactMessage(String message) {
+        SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this, message, "OK", "CANCEL");
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(NetworkUtil.getConnectivityStatus(UserProfileActivity.this)) {
+                    UserProfileActivity.this.blockContact();
+                }else {
+                    M.T(UserProfileActivity.this,getString(R.string.dlg_internet_connection_is_missing));
+                }
+                sweetAlertDialog.dismiss();
+            }
+        });
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
+    }
+
+    private void blockContact() {
+        try {
+            QBPrivacyListsManager privacyListsManager = QBChatService.getInstance().getPrivacyListsManager();
+            privacyListsManager.addPrivacyListListener(new QBPrivacyListListener() {
+                @Override
+                public void setPrivacyList(String s, List<QBPrivacyListItem> list) {
+                    M.E("setPrivacyList");
+                }
+
+                @Override
+                public void updatedPrivacyList(String s) {
+                    M.E("updatedPrivacyList");
+                }
+            });
+            QBPrivacyList list = new QBPrivacyList();
+            list.setName("public");
+
+            ArrayList<QBPrivacyListItem> items = new ArrayList<QBPrivacyListItem>();
+
+            QBPrivacyListItem item1 = new QBPrivacyListItem();
+            if (dataManager.getUserDataManager().isBlocked(userId)) {
+                dataManager.getUserDataManager().updateFriend(userId, 0);
+                blockContact.setText(getString(R.string.user_block_contact));
+                item1.setAllow(true);
+            } else {
+                dataManager.getUserDataManager().updateFriend(userId, 1);
+                blockContact.setText(getString(R.string.user_unblock_contact));
+                item1.setAllow(false);
+            }
+            item1.setType(QBPrivacyListItem.Type.USER_ID);
+            item1.setValueForType(String.valueOf(userId));
+            items.add(item1);
+            list.setItems(items);
+            privacyListsManager.setPrivacyListAsDefault("public");
+            privacyListsManager.setPrivacyListAsActive("public");
+            privacyListsManager.setPrivacyList(list);
+        } catch (SmackException.NotConnectedException e) {
+            M.E(e.getMessage());
+        } catch (XMPPException.XMPPErrorException e) {
+            M.E(e.getMessage());
+        } catch (SmackException.NoResponseException e) {
+            hideProgress();
+            M.E(e.getMessage());
+        }
+    }
+
+
+    @OnClick(R.id.avatar_imageview)
+    void avatarImageview(View view) {
+        Const.previewImage = ((BitmapDrawable) avatarImageView.getDrawable()).getBitmap();
+        view.startAnimation(AnimationUtils.loadAnimation(UserProfileActivity.this, R.anim.chat_attached_file_click));
+        PreviewProfileImageActivity.start(UserProfileActivity.this, nameTextView.getText().toString());
     }
 
     @OnClick(R.id.remove_contact_and_chat_history_button)

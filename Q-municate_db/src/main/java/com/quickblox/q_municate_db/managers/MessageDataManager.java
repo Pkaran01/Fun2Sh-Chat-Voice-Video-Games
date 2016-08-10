@@ -174,6 +174,18 @@ public class MessageDataManager extends BaseManager<Message> {
         notifyObservers(OBSERVE_KEY);
     }
 
+    public void deleteMessageById(String msgId) {
+        try {
+            DeleteBuilder<Message, Long> deleteBuilder = dao.deleteBuilder();
+            deleteBuilder.where().eq(Message.Column.ID, msgId);
+            deleteBuilder.delete();
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+
+        notifyObservers(OBSERVE_KEY);
+    }
+
     public List<Message> getTempMessagesByDialogId(String dialogId) {
         List<Message> messagesList = new ArrayList<>();
         try {
@@ -218,11 +230,46 @@ public class MessageDataManager extends BaseManager<Message> {
     }
 
 
-    public int updateFav(String messaeId, long value) {
+    public int updateFav(String messageId, long value) {
         try {
             UpdateBuilder<Message, Long> updateBuilder = dao.updateBuilder();
             updateBuilder.updateColumnValue(Message.Column.isFavourite, value);
-            updateBuilder.where().eq(Message.Column.ID, messaeId);
+            updateBuilder.where().eq(Message.Column.ID, messageId);
+            return updateBuilder.update();
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+        return 0;
+    }
+
+    public Message getMessageById(String messageId) {
+        Message message = null;
+
+        try {
+            QueryBuilder<Message, Long> queryBuilder = dao.queryBuilder();
+            Where<Message, Long> where = queryBuilder.where();
+            where.and(
+                    where.eq(Message.Column.ID, messageId),
+                    where.eq(Message.Column.isFavourite, 1)
+            );
+            PreparedQuery<Message> preparedQuery = queryBuilder.prepare();
+            message = dao.queryForFirst(preparedQuery);
+        } catch (SQLException e) {
+            ErrorUtils.logError(e);
+        }
+
+        return message;
+    }
+
+    public boolean isFav(String messageId) {
+        return getMessageById(messageId) != null;
+    }
+
+    public int updateMessage(String messageId, String message) {
+        try {
+            UpdateBuilder<Message, Long> updateBuilder = dao.updateBuilder();
+            updateBuilder.updateColumnValue(Message.Column.BODY, message);
+            updateBuilder.where().eq(Message.Column.ID, messageId);
             return updateBuilder.update();
         } catch (SQLException e) {
             ErrorUtils.logError(e);

@@ -174,6 +174,7 @@
     <string name="user_delete_chat_history">Delete Chat History</string>
     <string name="user_remove_contact_and_chat_history">Remove Contact and Chat</string>
     <string name="user_block_contact">Block Contact</string>
+    <string name="user_unblock_contact">Unblock Contact</string>
     <string name="user_profile_remove_contact_and_chat_history">Do you really want to delete %1$s from your contact list with his chat?</string>
     <string name="user_profile_delete_chat_history">Do you really want to delete chat history with %1$s?</string>
     <string name="user_profile_success_contacts_deleting">You have deleted %1$s from your contacts</string>
@@ -185,6 +186,25 @@
     <string name="new_message_title">New Message</string>
     <string name="new_message_create_group">Create group</string>
     <string name="new_message_no_friends_for_new_message">You don\'t have any Friends for creating New Chat</string>
+    <string name="new_message_select_option">Select</string>
+
+    <string-array name="new_messages_opration">
+        <item>Add to favourite</item>
+        <item>Edit</item>
+        <item>Remove</item>
+        <item>Copy</item>
+    </string-array>
+
+    <string-array name="new_messages_opration_opponent">
+        <item>Add to favourite</item>
+        <item>Remove</item>
+        <item>Copy</item>
+    </string-array>
+
+    <string-array name="new_messages_fav">
+        <item>Remove from favourite</item>
+        <item>Copy</item>
+    </string-array>
 
 
     <!-- New Group Dialog -->

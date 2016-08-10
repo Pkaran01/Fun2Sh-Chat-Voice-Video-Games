@@ -1,5 +1,6 @@
 package com.ss.fun2sh.ui.adapters.friends;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
+import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Utility;
@@ -56,6 +58,10 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         }
 
         viewHolder.nameTextView.setText(Utility.capitalize(user.getFullName()));
+
+        if (DataManager.getInstance().getUserDataManager().isBlocked(user.getUserId())) {
+            viewHolder.nameTextView.setTextColor(Color.parseColor("#999999"));
+        }
 
         displayAvatarImage(user.getAvatar(), viewHolder.avatarImageView);
 
@@ -105,14 +111,18 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         if (isMe(user)) {
             online = true;
         }
-
-        if (online) {
-            viewHolder.labelTextView.setText(OnlineStatusUtils.getOnlineStatus(online));
-            viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.green));
-        } else {
-            viewHolder.labelTextView.setText(baseActivity.getString(R.string.last_seen,
-                    DateUtils.toTodayYesterdayShortDateWithoutYear2(user.getLastLogin()),
-                    DateUtils.formatDateSimpleTime(user.getLastLogin())));
+        if (!DataManager.getInstance().getUserDataManager().isBlocked(user.getUserId())) {
+            if (online) {
+                viewHolder.labelTextView.setText(OnlineStatusUtils.getOnlineStatus(online));
+                viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.green));
+            } else {
+                viewHolder.labelTextView.setText(baseActivity.getString(R.string.last_seen,
+                        DateUtils.toTodayYesterdayShortDateWithoutYear2(user.getLastLogin()),
+                        DateUtils.formatDateSimpleTime(user.getLastLogin())));
+                viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.dark_gray));
+            }
+        }else {
+            viewHolder.labelTextView.setText("Communication Blocked");
             viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.dark_gray));
         }
     }

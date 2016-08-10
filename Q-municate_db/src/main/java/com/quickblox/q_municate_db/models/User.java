@@ -15,6 +15,7 @@ import static com.quickblox.q_municate_db.models.User.Column.PHONE;
 import static com.quickblox.q_municate_db.models.User.Column.ROLE;
 import static com.quickblox.q_municate_db.models.User.Column.STATUS;
 import static com.quickblox.q_municate_db.models.User.Column.TABLE_NAME;
+import static com.quickblox.q_municate_db.models.User.Column.isBlocked;
 
 @DatabaseTable(tableName = TABLE_NAME)
 public class User implements Serializable {
@@ -64,11 +65,14 @@ public class User implements Serializable {
             columnName = LAST_LOGIN)
     private long lastLogin;
 
+    @DatabaseField(columnName = isBlocked)
+    private int isblocked = 0;
+
     public User() {
     }
 
     public User(Integer userId, Social social, Role role, String fullName, String email, String phone,
-            String avatar) {
+                String avatar) {
         this.userId = userId;
         this.social = social;
         this.role = role;
@@ -100,6 +104,14 @@ public class User implements Serializable {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public int getIsblocked() {
+        return isblocked;
+    }
+
+    public void setIsblocked(int isblocked) {
+        this.isblocked = isblocked;
     }
 
     @Override
@@ -224,5 +236,6 @@ public class User implements Serializable {
         String STATUS = "status";
         String ROLE = "role";
         String LAST_LOGIN = "last_login";
+        String isBlocked = "is_blocked";
     }
 }

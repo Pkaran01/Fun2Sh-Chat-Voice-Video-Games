@@ -1,6 +1,7 @@
 package com.ss.fun2sh.ui.fragments.fun;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
+import com.quickblox.q_municate_db.models.User;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
@@ -68,23 +70,27 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, final int position) {
-        holder.username.setText(callList.get(position).getUser().getFullName());
+        User user = DataManager.getInstance().getUserDataManager().get(callList.get(position).getUser().getUserId());
+        holder.username.setText(user.getFullName());
         holder.callTime.setText(Utility.getTimeAgo(callList.get(position).getCreatedDate() * 1000));
-        displayAvatarImage(callList.get(position).getUser().getAvatar(), holder.profile_image);
+        displayAvatarImage(user.getAvatar(), holder.profile_image);
         if (callList.get(position).getCallType() == 1) {
             holder.audio_call.setImageResource(R.drawable.ic_videocam_black_24dp);
         } else {
             holder.audio_call.setImageResource(R.drawable.ic_call_black_24dp);
         }
-        if (callList.get(position).getStatus() == 0) {
-            //incoming call
+        if (callList.get(position).getStatus() == 1) {
+            //incoming call blue
+            holder.username.setTextColor(Color.parseColor("#0048ff"));
             holder.callType.setImageResource(R.drawable.incoming);
-        } else if (callList.get(position).getStatus() == 1) {
-            //outgoing call
+        } else if (callList.get(position).getStatus() == 2) {
+            //outgoing call green
             holder.callType.setImageResource(R.drawable.outgoing);
-        } else {
-            // missed call
+            holder.username.setTextColor(context.getResources().getColor(R.color.green));
+        } else if (callList.get(position).getStatus() == 3){
+            // missed call rad
             holder.callType.setImageResource(R.drawable.missed_call);
+            holder.username.setTextColor(Color.parseColor("#ff0000"));
         }
     }
 
@@ -92,6 +98,12 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
     @Override
     public int getItemCount() {
         return callList.size();
+    }
+
+    public void setFilter(List<Call> newData) {
+        callList.clear();
+        callList.addAll(newData);
+        notifyDataSetChanged();
     }
 
     protected void displayAvatarImage(String uri, ImageView imageView) {

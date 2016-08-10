@@ -18,16 +18,13 @@ public class Call implements Serializable {
 
     @DatabaseField(
             generatedId = true,
-            allowGeneratedIdInsert = true,
             unique = true,
             columnName = ID)
-    private long callId;
+    private int callId;
 
     @DatabaseField(
             foreign = true,
             foreignAutoRefresh = true,
-            unique = true,
-            canBeNull = false,
             columnName = User.Column.ID)
     private User user;
 
@@ -47,11 +44,11 @@ public class Call implements Serializable {
             columnName = STATUS)
     private long status;
 
-    public long getCallId() {
+    public int getCallId() {
         return callId;
     }
 
-    public void setCallId(long callId) {
+    public void setCallId(int callId) {
         this.callId = callId;
     }
 
@@ -100,7 +97,7 @@ public class Call implements Serializable {
 
     public interface Column {
         String TABLE_NAME = "call";
-        public static final String ID = "_id";
+        public static final String ID = "call_id";
         public static final String CREATED_DATE = "created_date";
         public static final String TYPE = "call_type";
         public static final String STATUS = "status";

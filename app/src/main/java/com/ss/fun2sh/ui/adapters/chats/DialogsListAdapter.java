@@ -20,6 +20,7 @@ import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseListAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DialogsListAdapter extends BaseListAdapter<Dialog> {
@@ -87,20 +88,9 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
 
         Message message = dataManager.getMessageDataManager().getLastMessageWithTempByDialogId(dialogOccupantsIdsList);
         DialogNotification dialogNotification = dataManager.getDialogNotificationDataManager().getLastDialogNotificationByDialogId(dialogOccupantsIdsList);
-        boolean friendsRequestMessage = DialogNotification.Type.FRIENDS_REQUEST.equals(
-                dialogNotification.getType());
         if (Dialog.Type.PRIVATE.equals(dialog.getType())) {
-            if (friendsRequestMessage) {
-                viewHolder.lastMessageTextView.setText(
-                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_received), message, dialogNotification));
-            } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(
-                    dialogNotification.getType())) {
-                viewHolder.lastMessageTextView.setText(
-                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_acccepted), message, dialogNotification));
-            } else {
-                viewHolder.lastMessageTextView.setText(
-                        ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_sent), message, dialogNotification));
-            }
+            viewHolder.lastMessageTextView.setText(
+                    ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_contact_request_received), message, dialogNotification));
         } else {
             viewHolder.lastMessageTextView.setText(
                     ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_notification_message), message, dialogNotification));
@@ -109,6 +99,7 @@ public class DialogsListAdapter extends BaseListAdapter<Dialog> {
         viewHolder.timeTextView.setText(Utility.getTimeAgo(ChatUtils.getDialogMessageCreatedDate(true, message, dialogNotification) * 1000));
         return convertView;
     }
+
 
     private static class ViewHolder {
 

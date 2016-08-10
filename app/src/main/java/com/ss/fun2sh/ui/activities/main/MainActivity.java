@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +30,7 @@ import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.UserCustomData;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.Utils;
-import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
+import com.quickblox.q_municate_db.managers.DataManager;
 import com.ss.fun2sh.Activity.DashBoardActivity;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
@@ -48,6 +47,7 @@ import com.ss.fun2sh.ui.fragments.fun.FavouriteFragment;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
 import butterknife.Bind;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends BaseLoggableActivity {
 
@@ -99,7 +99,6 @@ public class MainActivity extends BaseLoggableActivity {
 
         setUpActionBarWithUpButton();
         checkGCMRegistration();
-        M.E("MainActivity pe" + CoreSharedHelper.getInstance().getPushRegistrationId());
         if (!isChatInitializedAndUserLoggedIn()) {
             loginChat();
         } else {
@@ -176,115 +175,137 @@ public class MainActivity extends BaseLoggableActivity {
             }
         });
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                                               @Override
-                                               public void onTabSelected(TabLayout.Tab tab) {
-                                                   viewPager.setCurrentItem(tab.getPosition());
-                                                   if (tab.getPosition() == 0) {
+        tabLayout.setOnTabSelectedListener(
+                new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        viewPager.setCurrentItem(tab.getPosition());
+                        if (tab.getPosition() == 0) {
 
-                                                       toolbartTitle.setText("Chats");
-                                                       navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.chatarray));
-                                                       navigation_drawer_list.setAdapter(navigationDrawerAdapter);
-                                                       navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                           @Override
-                                                           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                               if (position == 2) {
-                                                                   MyProfileActivity.start(MainActivity.this);
-                                                               } else if (position == 0) {
-                                                                   Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                   MainActivity.this.startActivity(intent);
+                            toolbartTitle.setText("Chats");
+                            navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.chatarray));
+                            navigation_drawer_list.setAdapter(navigationDrawerAdapter);
+                            navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position == 2) {
+                                        MyProfileActivity.start(MainActivity.this);
+                                    } else if (position == 0) {
+                                        Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        MainActivity.this.startActivity(intent);
 
-                                                               }
-                                                           }
-                                                       });
-                                                   } else if (tab.getPosition() == 1) {
-                                                       toolbartTitle.setText("Groups");
-                                                       navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.grouparray));
-                                                       navigation_drawer_list.setAdapter(navigationDrawerAdapter);
-                                                       navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                           @Override
-                                                           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                               if (position == 2) {
-                                                                   MyProfileActivity.start(MainActivity.this);
-                                                               } else if (position == 0) {
-                                                                   Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                   MainActivity.this.startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else if (tab.getPosition() == 1) {
+                            toolbartTitle.setText("Groups");
+                            navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.grouparray));
+                            navigation_drawer_list.setAdapter(navigationDrawerAdapter);
+                            navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position == 2) {
+                                        MyProfileActivity.start(MainActivity.this);
+                                    } else if (position == 0) {
+                                        Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        MainActivity.this.startActivity(intent);
 
-                                                               }
-                                                           }
-                                                       });
-                                                   } else if (tab.getPosition() == 2) {
-                                                       toolbartTitle.setText("Calls");
-                                                       navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.callarray));
-                                                       navigation_drawer_list.setAdapter(navigationDrawerAdapter);
-                                                       navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                           @Override
-                                                           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                               if (position == 3) {
-                                                                   MyProfileActivity.start(MainActivity.this);
-                                                               } else if (position == 0) {
-                                                                   Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                   MainActivity.this.startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else if (tab.getPosition() == 2) {
+                            toolbartTitle.setText("Calls");
+                            navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.callarray));
+                            navigation_drawer_list.setAdapter(navigationDrawerAdapter);
+                            navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position == 3) {
+                                        MyProfileActivity.start(MainActivity.this);
+                                    } else if (position == 0) {
+                                        Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        MainActivity.this.startActivity(intent);
+                                    } else if (position == 1) {
+                                        SweetAlertDialog sweetAlertDialog = M.dConfirem(MainActivity.this, "Do you really want to delete all call logs ?", "Yas", "No");
+                                        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                if (DataManager.getInstance().getCallDataManager().deleteAllCallLog() > 0) {
+                                                    M.T(MainActivity.this, "All call log deleted");
+                                                    sweetAlertDialog.dismiss();
+                                                    drawer.closeDrawer(GravityCompat.END);
+                                                    viewPager.setCurrentItem(0);
+                                                } else {
+                                                    M.E("Error in call deleted");
+                                                }
 
-                                                               }
-                                                           }
-                                                       });
-                                                   } else if (tab.getPosition() == 3) {
-                                                       toolbartTitle.setText("Favourite");
-                                                       navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.favroitearray));
-                                                       navigation_drawer_list.setAdapter(navigationDrawerAdapter);
-                                                       navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                           @Override
-                                                           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                               if (position == 3) {
-                                                                   MyProfileActivity.start(MainActivity.this);
-                                                               } else if (position == 0) {
-                                                                   Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                   MainActivity.this.startActivity(intent);
+                                            }
+                                        });
+                                        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                sweetAlertDialog.dismiss();
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else if (tab.getPosition() == 3) {
+                            toolbartTitle.setText("Favourite");
+                            navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.favroitearray));
+                            navigation_drawer_list.setAdapter(navigationDrawerAdapter);
+                            navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position == 3) {
+                                        MyProfileActivity.start(MainActivity.this);
+                                    } else if (position == 0) {
+                                        Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        MainActivity.this.startActivity(intent);
 
-                                                               }
-                                                           }
-                                                       });
-                                                   } else if (tab.getPosition() == 4) {
-                                                       toolbartTitle.setText("Contacts");
-                                                       navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.contactarray));
-                                                       navigation_drawer_list.setAdapter(navigationDrawerAdapter);
-                                                       navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                           @Override
-                                                           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                               if (position == 2) {
-                                                                   MyProfileActivity.start(MainActivity.this);
-                                                               } else if (position == 0) {
-                                                                   Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                                   MainActivity.this.startActivity(intent);
+                                    }
+                                }
+                            });
+                        } else if (tab.getPosition() == 4) {
+                            toolbartTitle.setText("Contacts");
+                            navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.contactarray));
+                            navigation_drawer_list.setAdapter(navigationDrawerAdapter);
+                            navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (position == 2) {
+                                        MyProfileActivity.start(MainActivity.this);
+                                    } else if (position == 0) {
+                                        Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        MainActivity.this.startActivity(intent);
 
-                                                               }
-                                                           }
-                                                       });
-                                                   }
+                                    }
+                                }
+                            });
+                        }
 
-                                               }
+                    }
 
-                                               @Override
-                                               public void onTabUnselected(TabLayout.Tab tab) {
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
 
-                                               }
+                    }
 
-                                               @Override
-                                               public void onTabReselected(TabLayout.Tab tab) {
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
 
-                                               }
-                                           }
+                    }
+                }
 
         );
     }
@@ -382,9 +403,9 @@ public class MainActivity extends BaseLoggableActivity {
     }
 
     private void loadLogoActionBar(String logoUrl, String staus) {
-        if(staus !=null || staus.length()>0) {
+        if (staus != null || staus.length() > 0) {
             textStatus.setText(staus);
-        }else {
+        } else {
             textStatus.setText(getString(R.string.dummy_status));
         }
         userName.setText(title);

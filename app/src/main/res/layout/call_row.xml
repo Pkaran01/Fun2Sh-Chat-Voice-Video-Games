@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
 
 
     <LinearLayout
@@ -33,7 +33,7 @@
                     android:layout_height="60dp"
                     android:src="@drawable/userimgdefault"
                     app:siBorderColor="@color/greencolorInner"
-                    app:siBorderWidth="2dp" />
+                    app:siBorderWidth="2dp"/>
 
 
             </LinearLayout>
@@ -59,7 +59,7 @@
                         android:gravity="center|left|bottom"
                         android:text="Frank Ocean"
                         android:textColor="@color/pinkColor"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
@@ -90,9 +90,7 @@
                 <ImageView
                     android:id="@+id/audio_call"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_call_black_24dp"/>
-                   <!-- android:background="@drawable/ic_call_blacick_24dp" />-->
+                    android:layout_height="wrap_content"/>
 
 
             </LinearLayout>
@@ -106,8 +104,7 @@
                 <ImageView
                     android:id="@+id/callType"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_videocam_black_24dp" />
+                    android:layout_height="wrap_content"/>
 
 
             </LinearLayout>
@@ -125,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/dotted"
-                android:layerType="software" />
+                android:layerType="software"/>
             <!--  android:src="@drawable/dotted"-->
 
         </LinearLayout>

@@ -20,4 +20,5 @@ dependencies {
     compile "com.google.android.gms:play-services:${rootProject.googlePlayServicesVersion}"
     compile "com.j256.ormlite:ormlite-android:${rootProject.ormliteAndroidVersion}"
     compile "com.j256.ormlite:ormlite-core:${rootProject.ormliteCoreVersion}"
+
 }

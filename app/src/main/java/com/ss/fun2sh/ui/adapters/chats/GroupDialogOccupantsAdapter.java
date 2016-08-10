@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
@@ -14,7 +15,6 @@ import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseListAdapter;
-import com.ss.fun2sh.ui.views.roundedimageview.RoundedImageView;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.listeners.UserOperationListener;
 
@@ -39,7 +39,7 @@ public class GroupDialogOccupantsAdapter extends BaseListAdapter<User> {
             convertView = layoutInflater.inflate(R.layout.item_dialog_friend, null);
             viewHolder = new ViewHolder();
 
-            viewHolder.avatarImageView = (RoundedImageView) convertView.findViewById(R.id.avatar_imageview);
+            viewHolder.avatarImageView = (HexagonImageView) convertView.findViewById(R.id.avatar_imageview);
             viewHolder.nameTextView = (TextView) convertView.findViewById(R.id.name_textview);
             viewHolder.onlineStatusTextView = (TextView) convertView.findViewById(R.id.status_textview);
             viewHolder.addFriendImageView = (ImageView) convertView.findViewById(R.id.add_friend_imagebutton);
@@ -120,7 +120,7 @@ public class GroupDialogOccupantsAdapter extends BaseListAdapter<User> {
 
     private static class ViewHolder {
 
-        RoundedImageView avatarImageView;
+        HexagonImageView avatarImageView;
         TextView nameTextView;
         ImageView addFriendImageView;
         TextView onlineStatusTextView;

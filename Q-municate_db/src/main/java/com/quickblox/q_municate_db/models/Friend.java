@@ -25,6 +25,8 @@ public class Friend implements Serializable {
             columnName = User.Column.ID)
     private User user;
 
+
+
     public Friend() {
     }
 

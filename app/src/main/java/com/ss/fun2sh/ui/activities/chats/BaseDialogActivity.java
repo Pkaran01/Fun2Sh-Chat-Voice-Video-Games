@@ -5,14 +5,21 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +30,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,11 +67,10 @@ import com.rockerhieu.emojicon.emoji.Emojicon;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
-import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseRecyclerViewAdapter;
-import com.ss.fun2sh.ui.fragments.dialogs.base.TwoButtonsDialogFragment;
 import com.ss.fun2sh.utils.KeyboardUtils;
 import com.ss.fun2sh.utils.helpers.ImagePickHelper;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
@@ -72,6 +79,8 @@ import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import com.ss.fun2sh.utils.listeners.OnImagePickedListener;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -82,6 +91,9 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.OnTouch;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener,
@@ -90,6 +102,11 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     private static final int TYPING_DELAY = 1000;
     private static final int DELAY_SCROLLING_LIST = 300;
     private static final int DELAY_SHOWING_SMILE_PANEL = 200;
+    private static final int REQUEST_TAKE_GALLERY_VIDEO = 555;
+    private static final int ACTION_TAKE_VIDEO = 100;
+    private static final int PICK_AUDIO_FILE = 7778;
+    private static final int PICK_FILE = 52525;
+    private static final int ACTION_RECORD_SOUND = 1436;
     protected Dialog dialog;
     protected Resources resources;
     protected DataManager dataManager;
@@ -129,6 +146,9 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     private BroadcastReceiver typingMessageBroadcastReceiver;
     private BroadcastReceiver updatingDialogBroadcastReceiver;
     private boolean loadMore;
+
+    //upload file
+    private Uri fileUri;
 
     @Override
     protected int getContentResId() {
@@ -221,13 +241,171 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
 
     @OnClick(R.id.attach_button)
     void attachFile(View view) {
-        //imagePickHelper.pickAnImage(this, ImageUtils.IMAGE_REQUEST_CODE);
-        M.T(BaseDialogActivity.this, "Coming Soon.");
+        new MaterialDialog.Builder(this)
+                .items(R.array.attach_file_option)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        if (which == 0) {
+                            //record video
+                            Intent cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                            // create a file to save the video
+                            fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+
+                            // set the image file name
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+
+                            // set the video image quality to high
+                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                            startActivityForResult(cameraIntent, ACTION_TAKE_VIDEO);
+                        } else if (which == 1) {
+                            //VIDEO FROM GALLERY
+                            Intent intent = new Intent();
+                            intent.setType("video/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+                        } else if (which == 2) {
+                            //AUDIO FROM SDCARD
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, PICK_AUDIO_FILE);
+                        } else if (which == 3) {
+                            //RECORD AUDIO
+                            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                            startActivityForResult(intent, ACTION_RECORD_SOUND);
+                        } else if (which == 4) {
+                            //File FROM SDCARD
+                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                            i.setType("*/*");
+                            startActivityForResult(i, PICK_FILE);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Create a file Uri for saving an image or video
+     */
+    private Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    /**
+     * Create a File for saving an image or video
+     */
+    private File getOutputMediaFile(int type) {
+        // Check that the SDCard is mounted
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "/Fun2Sh/FunChat Videos");
+        // Create the storage directory(MyCameraVideo) if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Toast.makeText(BaseDialogActivity.this, "Failed to create directory MyCameraVideo.",
+                        Toast.LENGTH_LONG).show();
+                return null;
+            }
+        }
+        // Create a media file name
+        // For unique file name appending current timeStamp with file name
+        java.util.Date date = new java.util.Date();
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(date.getTime());
+        File mediaFile;
+        if (type == MEDIA_TYPE_VIDEO) {
+            // For unique video file name appending current timeStamp with file name
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "FUNCHAT_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // After camera screen this code will excuted
+        if (requestCode == ACTION_TAKE_VIDEO) {
+            if (resultCode == RESULT_OK) {
+                M.E("Video File : " + data.getData());
+                startLoadAttachFile(new File(fileUri.getPath()));
+            }
+        } else if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK && data != null) {
+            sendFile(data.getData());
+        } else if (requestCode == PICK_AUDIO_FILE && resultCode == RESULT_OK && data != null) {
+            fileUri = Uri.parse(getRealPathFromURI(data.getData(), 1));
+            M.E(fileUri.getPath());
+            startLoadAttachFile(new File(fileUri.getPath()));
+        } else if (requestCode == PICK_FILE && resultCode == RESULT_OK && data != null) {
+//            fileUri = Uri.parse(getRealPathFromURI(data.getData(), 1));
+            try {
+                M.E(Utility.getFilePath(BaseDialogActivity.this, data.getData()));
+                startLoadAttachFile(new File(Utility.getFilePath(BaseDialogActivity.this, data.getData())));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            //startLoadAttachFile(new File(getRealPathFromURI(data.getData(), 2)));
+        } else if (requestCode == ACTION_RECORD_SOUND && resultCode == RESULT_OK && data != null) {
+            //Recorder
+
+        }
+    }
+
+
+    private void sendFile(Uri selectedVideoUri) {
+        try {
+            if (Build.VERSION.SDK_INT > 19) {
+                String wholeID = DocumentsContract.getDocumentId(selectedVideoUri);
+                // Split at colon, use second item in the array
+                String id = wholeID.split(":")[1];
+                String[] column = {MediaStore.Video.Media.DATA};
+                // where id is equal to
+                String sel = MediaStore.Video.Media._ID + "=?";
+                Cursor cursor = getContentResolver().
+                        query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                column, sel, new String[]{id}, null);
+                int columnIndex = cursor.getColumnIndex(column[0]);
+                if (cursor.moveToFirst()) {
+                    fileUri = Uri.parse(cursor.getString(columnIndex));
+                }
+                cursor.close();
+                // OI FILE Manager
+                //fileUri = getRealPathFromURI(selectedVideoUri);
+            } else {
+                fileUri = Uri.parse(getRealPathFromURI(selectedVideoUri, 0));
+            }
+            M.E(fileUri.toString());
+            // MEDIA GALLERY
+            startLoadAttachFile(new File(fileUri.getPath()));
+        } catch (Exception e) {
+            M.E(e.getMessage());
+        }
+    }
+
+    private String getRealPathFromURI(Uri contentUri, int type) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index;
+        if (type == 0) {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+        } else if (type == 1) {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        } else {
+            column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        }
+        cursor.moveToFirst();
+        String result = cursor.getString(column_index);
+        cursor.close();
+        return result;
     }
 
     @OnClick(R.id.camera_button)
     void attachCameraFile(View view) {
-        imagePickHelper.pickAnImage(this, ImageUtils.IMAGE_REQUEST_CODE);
+        if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
+            imagePickHelper.pickAnImage(BaseDialogActivity.this, ImageUtils.IMAGE_REQUEST_CODE);
+        } else {
+            Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to send a image", opponentUser.getUserId());
+        }
     }
 
     @Override
@@ -235,11 +413,8 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         if (isSmilesLayoutShowing()) {
             hideSmileLayout();
         } else {
-            // super.onBackPressed();
-            //  this.finish();
-            Intent inte = new Intent(this, MainActivity.class);
-            startActivity(inte);
-            finish();
+            super.onBackPressed();
+            this.finish();
         }
     }
 
@@ -290,6 +465,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     @Override
     public void onImagePicked(int requestCode, File file) {
         canPerformLogout.set(true);
+        //TODO karan call for attache file
         startLoadAttachFile(file);
     }
 
@@ -485,16 +661,23 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                 .getRoundIconDrawable(this, BitmapFactory.decodeResource(getResources(), drawableResId)));
     }
 
+    //TODO Karan send attachement
     protected void startLoadAttachFile(final File file) {
-        TwoButtonsDialogFragment.show(getSupportFragmentManager(), R.string.dialog_confirm_sending_attach,
-                new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
-                        showProgress();
-                        QBLoadAttachFileCommand.start(BaseDialogActivity.this, file);
-                    }
-                });
+        SweetAlertDialog sweetAlertDialog = M.dConfirem(this, "FunChat", getString(R.string.dialog_confirm_sending_attach), "ATTACH", "NO");
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+                showProgress();
+                QBLoadAttachFileCommand.start(BaseDialogActivity.this, file);
+            }
+        });
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
     }
 
     protected void startLoadDialogMessages(Dialog dialog, long lastDateLoad) {
@@ -565,8 +748,12 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         boolean error = false;
         try {
             if (privateMessage) {
-                ((QBPrivateChatHelper) baseChatHelper).sendPrivateMessage(
-                        messageEditText.getText().toString(), opponentUser.getUserId());
+                if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
+                    ((QBPrivateChatHelper) baseChatHelper).sendPrivateMessage(
+                            messageEditText.getText().toString(), opponentUser.getUserId());
+                } else {
+                    Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to send a message", opponentUser.getUserId());
+                }
             } else {
                 ((QBGroupChatHelper) baseChatHelper).sendGroupMessage(dialog.getRoomJid(),
                         messageEditText.getText().toString());

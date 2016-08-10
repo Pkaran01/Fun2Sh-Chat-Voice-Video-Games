@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
@@ -12,19 +12,44 @@
         android:scaleType="centerCrop"
         android:src="@drawable/backgroundforall_screens"/>
 
+    <LinearLayout
+        android:id="@+id/filter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <Spinner
+            android:id="@+id/callFilterByType"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/searcbycalltype"
+            android:padding="10dp"></Spinner>
+
+        <Spinner
+            android:id="@+id/callFilter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/searcbycallstatus"
+            android:padding="10dp"></Spinner>
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/call_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/filter"/>
 
     <TextView
         android:id="@+id/empty_list_textview"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/filter"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
         android:padding="10dp"
-        android:text="This module is coming soon."
         android:textColor="@color/dark_gray"
         android:textSize="25dp"
         android:visibility="gone"/>

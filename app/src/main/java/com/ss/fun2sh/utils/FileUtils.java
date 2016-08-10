@@ -19,7 +19,7 @@ import java.io.IOException;
 public class FileUtils {
 
     private static final String TAG = FileUtils.class.getSimpleName();
-    private static final String folderName = "/FunChat";
+    private static final String folderName = "/Fun2Sh/FunChat Images";
     private static final String fileType = ".jpg";
 
     private File filesFolder;

@@ -6,10 +6,8 @@ import android.view.ViewGroup;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
-import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.State;
-import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -56,16 +54,6 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
         String avatarUrl = null;
         String senderName;
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), 1) > 0) {
-                    M.T(v.getContext(), "Added to favourite");
-                } else {
-                    M.E("Error in add to favourite");
-                }
-            }
-        });
         if (viewHolder.verticalProgressBar != null) {
             viewHolder.verticalProgressBar.setProgressDrawable(baseActivity.getResources().getDrawable(R.drawable.vertical_progressbar));
         }
@@ -79,11 +67,13 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
             if (ownMessage) {
                 avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+                ownMessage(combinationMessage, viewHolder);
             } else {
                 senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
                 avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
                 viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
                 viewHolder.nameTextView.setText(senderName);
+                opponentMessage(combinationMessage, viewHolder);
             }
 
             if (combinationMessage.getAttachment() != null) {

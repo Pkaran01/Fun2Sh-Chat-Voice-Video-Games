@@ -32,9 +32,9 @@
 
     <include
         android:id="@+id/element_set_video_buttons"
+        layout="@layout/view_controls_video_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/view_controls_video_call"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/call_buttons_margin"
