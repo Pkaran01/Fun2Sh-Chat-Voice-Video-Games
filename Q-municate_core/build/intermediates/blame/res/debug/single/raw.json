@@ -1,26 +1,14 @@
 [
     {
-        "merged": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\gtm_analytics",
-        "source": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-analytics\\8.1.0\\res\\raw\\gtm_analytics"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\gtm_analytics",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-analytics\\8.1.0\\res\\raw\\gtm_analytics"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\beep.wav",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\src\\main\\res\\raw\\beep.wav"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\orm.properties",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\Fun2Sh\\Q-municate_db\\unspecified\\res\\raw\\orm.properties"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\orm.properties",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\Fun2Sh-master\\Q-municate_db\\unspecified\\res\\raw\\orm.properties"
-    },
-    {
-        "merged": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\orm.properties",
-        "source": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\Fun2Sh-master\\Q-municate_db\\unspecified\\res\\raw\\orm.properties"
-    },
-    {
-        "merged": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\beep.wav",
-        "source": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\src\\main\\res\\raw\\beep.wav"
-    },
-    {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\gtm_analytics",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-analytics\\8.1.0\\res\\raw\\gtm_analytics"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\raw\\beep.wav",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\src\\main\\res\\raw\\beep.wav"
     }
 ]

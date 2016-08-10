@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="F:\Fun2Sh-master\Fun2Sh-master\Q-municate_core\src\main\assets"/><source path="F:\Fun2Sh-master\Fun2Sh-master\Q-municate_core\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="F:\Fun2Sh-master\Fun2Sh-master\Q-municate_core\src\release\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="G:\Fun2Sh-master\Git\Fun2Sh\Q-municate_core\src\main\assets"/><source path="G:\Fun2Sh-master\Git\Fun2Sh\Q-municate_core\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="G:\Fun2Sh-master\Git\Fun2Sh\Q-municate_core\src\release\assets"/></dataSet></merger>

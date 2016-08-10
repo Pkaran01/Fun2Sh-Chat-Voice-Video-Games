@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "outputFile": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_db\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 93
                 },
                 "from": {
-                    "file": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 133
                 },
                 "from": {
-                    "file": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,69 +49,7 @@
                     "endOffset": 183
                 },
                 "from": {
-                    "file": "I:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 138,
-                        "endColumn": 49,
-                        "endOffset": 183
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 42,
-                    "endOffset": 93
-                },
-                "from": {
-                    "file": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 42,
-                        "endOffset": 93
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 3,
-                    "startColumn": 4,
-                    "startOffset": 98,
-                    "endColumn": 39,
-                    "endOffset": 133
-                },
-                "from": {
-                    "file": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 98,
-                        "endColumn": 39,
-                        "endOffset": 133
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 4,
-                    "startColumn": 4,
-                    "startOffset": 138,
-                    "endColumn": 49,
-                    "endOffset": 183
-                },
-                "from": {
-                    "file": "F:\\Fun2Sh-master\\Fun2Sh-master\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_db\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,

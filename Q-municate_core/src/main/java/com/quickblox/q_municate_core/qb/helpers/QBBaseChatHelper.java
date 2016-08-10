@@ -218,12 +218,23 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         // TODO temp value karan content type
         // String contentType = "image/jpeg";
         Log.e("QBBaseChatHelper", file.getContentType());
-        QBAttachment attachment = new QBAttachment(QBAttachment.PHOTO_TYPE);
+        String attachmentType = file.getContentType();
+        QBAttachment attachment;
+        if (attachmentType.contains("audio")) {
+            attachment = new QBAttachment(QBAttachment.AUDIO_TYPE);
+        } else if (attachmentType.contains("video")) {
+            attachment = new QBAttachment(QBAttachment.VIDEO_TYPE);
+        } else if (attachmentType.contains("image")) {
+            attachment = new QBAttachment(QBAttachment.PHOTO_TYPE);
+        } else {
+            attachment = new QBAttachment(attachmentType);
+        }
         attachment.setId(file.getUid());
         attachment.setName(file.getName());
-        attachment.setContentType(file.getContentType());
+        attachment.setContentType(attachmentType);
         attachment.setUrl(file.getPublicUrl());
         attachment.setSize(file.getSize());
+
 
         return attachment;
     }
