@@ -433,24 +433,23 @@ public class ChatUtils {
     }
 
     public static Attachment createLocalAttachment(QBAttachment qbAttachment) {
-        Log.e("Chat Utils karan", qbAttachment.getContentType());
-        String attachmentType = qbAttachment.getContentType();
+        String attachmentType = (qbAttachment.getType()) != null ? qbAttachment.getType() : "null";
         Attachment attachment = new Attachment();
         attachment.setAttachmentId(qbAttachment.getId());
         attachment.setRemoteUrl(qbAttachment.getUrl());
         attachment.setName(qbAttachment.getName());
-        if (attachmentType.contains("audio")) {
+        attachment.setSize(qbAttachment.getSize());
+        if (attachmentType.equals(QBAttachment.AUDIO_TYPE)) {
             attachment.setType(Attachment.Type.AUDIO);
-        } else if (attachmentType.contains("video")) {
+        } else if (attachmentType.equals(QBAttachment.VIDEO_TYPE)) {
             attachment.setType(Attachment.Type.VIDEO);
-        } else if (attachmentType.contains("image")) {
+        } else if (attachmentType.equals(QBAttachment.PHOTO_TYPE)) {
             attachment.setType(Attachment.Type.PICTURE);
-        } else if (attachmentType.equals("application/pdf")) {
+        } else if (attachmentType.equals("application/pdf") || (attachmentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
             attachment.setType(Attachment.Type.DOC);
         } else {
             attachment.setType(Attachment.Type.OTHER);
         }
-        attachment.setSize(qbAttachment.getSize());
         return attachment;
     }
 

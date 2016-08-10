@@ -9,6 +9,7 @@ import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.State;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -93,7 +94,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
-
+            M.E("adp " + combinationMessage.getAttachment().getType() + "kk");
             displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
         } else {
             resetUI(viewHolder);
@@ -113,14 +114,14 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
 
         if (ownMessage) {
-            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
             ownMessage(combinationMessage, viewHolder);
         } else {
-            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
             opponentMessage(combinationMessage, viewHolder);
         }
+
+        avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+        displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);
             QBUpdateStatusMessageCommand.start(baseActivity, ChatUtils.createQBDialogFromLocalDialog(dataManager, dialog), combinationMessage, true);

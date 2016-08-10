@@ -216,8 +216,6 @@ public abstract class QBBaseChatHelper extends BaseHelper {
 
     private QBAttachment getAttachment(QBFile file) {
         // TODO temp value karan content type
-        // String contentType = "image/jpeg";
-        Log.e("QBBaseChatHelper", file.getContentType());
         String attachmentType = file.getContentType();
         QBAttachment attachment;
         if (attachmentType.contains("audio")) {
@@ -234,8 +232,6 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         attachment.setContentType(attachmentType);
         attachment.setUrl(file.getPublicUrl());
         attachment.setSize(file.getSize());
-
-
         return attachment;
     }
 
@@ -340,8 +336,6 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     protected Message parseReceivedMessage(QBChatMessage qbChatMessage) {
         long dateSent = ChatUtils.getMessageDateSent(qbChatMessage);
         String attachUrl = ChatUtils.getAttachUrlIfExists(qbChatMessage);
-        String attachmentType = ChatUtils.getAttachTypeIfExists(qbChatMessage);
-        Log.e("karan type", attachmentType);
         String dialogId = (String) qbChatMessage.getProperty(ChatNotificationUtils.PROPERTY_DIALOG_ID);
 
         Message message = new Message();
@@ -366,17 +360,6 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         message.setDialogOccupant(dialogOccupant);
         if (qbChatMessage.getAttachments() != null && !qbChatMessage.getAttachments().isEmpty()) {
             Attachment attachment = new Attachment();
-            if (attachmentType.contains("audio")) {
-                attachment.setType(Attachment.Type.AUDIO);
-            } else if (attachmentType.contains("video")) {
-                attachment.setType(Attachment.Type.VIDEO);
-            } else if (attachmentType.contains("image")) {
-                attachment.setType(Attachment.Type.PICTURE);
-            } else if (attachmentType.equals("application/pdf")) {
-                attachment.setType(Attachment.Type.DOC);
-            } else {
-                attachment.setType(Attachment.Type.OTHER);
-            }
             attachment.setRemoteUrl(attachUrl);
             message.setAttachment(attachment);
         }
