@@ -3,7 +3,6 @@ package com.ss.fun2sh.ui.activities.chats;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -157,7 +156,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         int oldMessagesCount = messagesAdapter.getAllItems().size();
 
         this.combinationMessagesList = createCombinationMessagesList();
-        Log.d(TAG, "combinationMessagesList = " + combinationMessagesList);
+        //Log.d(TAG, "combinationMessagesList = " + combinationMessagesList);
         messagesAdapter.setList(combinationMessagesList);
         findLastFriendsRequest();
 

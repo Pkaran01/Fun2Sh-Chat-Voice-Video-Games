@@ -3,9 +3,12 @@ package com.ss.fun2sh.ui.adapters.chats;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +57,17 @@ import com.ss.fun2sh.utils.image.ImageUtils;
 import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import butterknife.Bind;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static android.os.Build.VERSION.SDK;
 
 public abstract class BaseDialogMessagesAdapter
         extends BaseRecyclerViewAdapter<CombinationMessage, BaseClickListenerViewHolder<CombinationMessage>> implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
@@ -164,6 +172,7 @@ public abstract class BaseDialogMessagesAdapter
         setViewVisibility(viewHolder.attachMessageRelativeLayout, View.GONE);
         setViewVisibility(viewHolder.progressRelativeLayout, View.GONE);
         setViewVisibility(viewHolder.textMessageView, View.GONE);
+        setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.GONE);
     }
 
     public void editMessage(final CombinationMessage msg) {
@@ -387,13 +396,16 @@ public abstract class BaseDialogMessagesAdapter
         RelativeLayout attachMessageRelativeLayout;
 
         @Nullable
+        @Bind(R.id.attachotherfile_message_relativelayout)
+        RelativeLayout attachOtherFileRelativeLayout;
+
+        @Nullable
         @Bind(R.id.message_textview)
         TextView messageTextView;
 
         @Nullable
         @Bind(R.id.attach_imageview)
         MaskedImageView attachImageView;
-
 
         @Bind(R.id.time_text_message_textview)
         TextView timeTextMessageTextView;
@@ -421,6 +433,18 @@ public abstract class BaseDialogMessagesAdapter
         @Nullable
         @Bind(R.id.reject_friend_imagebutton)
         ImageView rejectFriendImageView;
+
+        @Nullable
+        @Bind(R.id.download_button)
+        Button downloadButton;
+
+        @Nullable
+        @Bind(R.id.file_name)
+        TextView fileName;
+
+        @Nullable
+        @Bind(R.id.file_type)
+        TextView fileType;
 
         public ViewHolder(BaseDialogMessagesAdapter adapter, View view) {
             super(adapter, view);
@@ -503,4 +527,70 @@ public abstract class BaseDialogMessagesAdapter
             viewHolder.verticalProgressBar.setProgress(Math.round(100.0f * current / total));
         }
     }
+
+    //download file
+    class DownloadFileAsync extends AsyncTask<String, String, String> {
+        String foldername;
+
+        public DownloadFileAsync(String folderName) {
+            this.foldername = folderName;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            new File(Environment.getExternalStorageDirectory().toString() + this.foldername).mkdirs();
+
+        }
+
+        @Override
+        protected String doInBackground(String... aurl) {
+            int count;
+
+            try {
+
+                URL url = new URL(aurl[0]);
+                String filename = aurl[1];
+
+                File mypath = new File(Environment.getExternalStorageDirectory().toString(), foldername + filename);
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+
+                int lenghtOfFile = conexion.getContentLength();
+                Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
+
+                InputStream input = new BufferedInputStream(url.openStream());
+                OutputStream output = new FileOutputStream(mypath);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            } catch (Exception e) {
+            }
+            return null;
+
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            Log.d("ANDRO_ASYNC", progress[0]);
+
+        }
+
+        @Override
+        protected void onPostExecute(String unused) {
+
+        }
+    }
+
 }

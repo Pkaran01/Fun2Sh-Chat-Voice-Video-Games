@@ -1,11 +1,21 @@
 package com.ss.fun2sh.ui.adapters.chats;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
+import com.quickblox.auth.QBAuth;
+import com.quickblox.core.exception.BaseServiceException;
+import com.quickblox.core.server.BaseService;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
+import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.State;
@@ -14,9 +24,11 @@ import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.utils.DateUtils;
+import com.ss.fun2sh.utils.FileUtils;
 import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import com.ss.fun2sh.utils.listeners.FriendOperationListener;
 
+import java.io.File;
 import java.util.List;
 
 public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
@@ -86,16 +98,65 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             lastInfoRequestPosition = position;
         } else if (combinationMessage.getAttachment() != null) {
             resetUI(viewHolder);
-
-            setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
+            if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+                setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
+                displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+            } else {
+                setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
+                final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
+                viewHolder.fileName.setText(tokens[0]);
+                viewHolder.fileType.setText(tokens[1].toUpperCase());
+                final String directory;
+                if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
+                    directory = FileUtils.audioFolderName;
+                } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
+                    directory = FileUtils.videoFolderName;
+                } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
+                    directory = FileUtils.docFolderName;
+                } else {
+                    directory = FileUtils.otherFolderName;
+                }
+                final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
+                final boolean check = file.exists();
+                if (check)
+                    viewHolder.downloadButton.setText("OPEN");
+                viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //download file
+                        if (!check) {
+                            new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                        } else {
+                            MimeTypeMap myMime = MimeTypeMap.getSingleton();
+                            Intent newIntent = new Intent(Intent.ACTION_VIEW);
+                            String mimeType = myMime.getMimeTypeFromExtension(tokens[1]);
+                            newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+                            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            try {
+                                baseActivity.startActivity(newIntent);
+                            } catch (ActivityNotFoundException e) {
+                                Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                });
+                M.E(combinationMessage.getAttachment().getRemoteUrl());
+                try {
+                    String token;
+                    String privateUrl;
+                    token = QBAuth.getBaseService().getToken();
+                    privateUrl = String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), combinationMessage.getAttachment().getAttachmentId(), token);
+                    M.E(privateUrl);
+                } catch (BaseServiceException e) {
+                    e.printStackTrace();
+                }
+            }
             viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
             if (ownMessage && combinationMessage.getState() != null) {
                 setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
-            M.E("adp " + combinationMessage.getAttachment().getType() + "kk");
-            displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
         } else {
             resetUI(viewHolder);
 
@@ -120,6 +181,8 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         }
 
         avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+
+        M.E("avatar url" + avatarUrl);
         displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
