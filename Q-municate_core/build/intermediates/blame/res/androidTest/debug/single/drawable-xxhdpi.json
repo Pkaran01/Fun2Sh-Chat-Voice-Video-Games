@@ -40,12 +40,12 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_list_pressed_holo_dark.9.png"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_pressed_dark.9.png",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_pressed_dark.9.png"
-    },
-    {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\powered_by_google_dark.png",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-location\\8.1.0\\res\\drawable-xxhdpi\\powered_by_google_dark.png"
+    },
+    {
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_pressed_dark.9.png",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_pressed_dark.9.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_ic_menu_paste_mtrl_am_alpha.png",
@@ -68,28 +68,28 @@
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_ic_voice_search_api_mtrl_alpha.png"
     },
     {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_pressed_light.9.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_pressed_light.9.png"
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_switch_track_mtrl_alpha.9.png",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_switch_track_mtrl_alpha.9.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_btn_radio_to_on_mtrl_000.png",
         "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_btn_radio_to_on_mtrl_000.png"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_switch_track_mtrl_alpha.9.png",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_switch_track_mtrl_alpha.9.png"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_pressed_light.9.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_pressed_light.9.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\ic_cast_dark.png",
         "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-xxhdpi\\ic_cast_dark.png"
     },
     {
-        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\ic_cast_off_light.png",
-        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-xxhdpi\\ic_cast_off_light.png"
-    },
-    {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_list_focused_holo.9.png",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_list_focused_holo.9.png"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\ic_cast_off_light.png",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-xxhdpi\\ic_cast_off_light.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_ic_commit_search_api_mtrl_alpha.png",
@@ -176,24 +176,24 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_list_pressed_holo_light.9.png"
     },
     {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_btn_check_to_on_mtrl_015.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_btn_check_to_on_mtrl_015.png"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_icon_pressed_dark.9.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_icon_pressed_dark.9.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_textfield_default_mtrl_alpha.9.png",
         "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_textfield_default_mtrl_alpha.9.png"
     },
     {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_icon_pressed_dark.9.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_icon_pressed_dark.9.png"
-    },
-    {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_normal_dark.9.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_normal_dark.9.png"
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_btn_check_to_on_mtrl_015.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_btn_check_to_on_mtrl_015.png"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\abc_ab_share_pack_mtrl_alpha.9.png",
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-xxhdpi\\abc_ab_share_pack_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\common_signin_btn_text_normal_dark.9.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-xxhdpi\\common_signin_btn_text_normal_dark.9.png"
     },
     {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi\\ic_setting_light.png",

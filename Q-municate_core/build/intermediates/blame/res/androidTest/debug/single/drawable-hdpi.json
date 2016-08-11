@@ -4,12 +4,12 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_ic_ab_back_mtrl_am_alpha.png"
     },
     {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_btn_rating_star_on_mtrl_alpha.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_btn_rating_star_on_mtrl_alpha.png"
-    },
-    {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_list_longpressed_holo.9.png",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_list_longpressed_holo.9.png"
+    },
+    {
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_btn_rating_star_on_mtrl_alpha.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_btn_rating_star_on_mtrl_alpha.png"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\ic_setting_light.png",
@@ -28,12 +28,12 @@
         "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-hdpi\\ic_cast_light.png"
     },
     {
-        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\common_signin_btn_text_disabled_light.9.png",
-        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-hdpi\\common_signin_btn_text_disabled_light.9.png"
-    },
-    {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\ic_plusone_tall_off_client.png",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-plus\\8.1.0\\res\\drawable-hdpi\\ic_plusone_tall_off_client.png"
+    },
+    {
+        "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\common_signin_btn_text_disabled_light.9.png",
+        "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable-hdpi\\common_signin_btn_text_disabled_light.9.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_tab_indicator_mtrl_alpha.9.png",
@@ -84,12 +84,12 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_btn_radio_to_on_mtrl_015.png"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\ic_pause_dark.png",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-hdpi\\ic_pause_dark.png"
-    },
-    {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_ic_ab_back_mtrl_am_alpha.png",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable-hdpi\\abc_ic_ab_back_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\ic_pause_dark.png",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\drawable-hdpi\\ic_pause_dark.png"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi\\abc_list_selector_disabled_holo_dark.9.png",

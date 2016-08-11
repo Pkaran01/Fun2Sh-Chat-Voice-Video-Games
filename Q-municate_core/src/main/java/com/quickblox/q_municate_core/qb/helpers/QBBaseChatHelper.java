@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.quickblox.chat.QBChat;
 import com.quickblox.chat.QBChatService;
@@ -217,6 +216,7 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     private QBAttachment getAttachment(QBFile file) {
         // TODO temp value karan content type
         String attachmentType = file.getContentType();
+        Log.e("karan","getAttachment on sent");
         QBAttachment attachment;
         if (attachmentType.contains("audio")) {
             attachment = new QBAttachment(QBAttachment.AUDIO_TYPE);
@@ -229,20 +229,13 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         }
         attachment.setId(file.getUid());
         attachment.setName(file.getName());
+        Log.e("file name",file.getName());
         attachment.setContentType(attachmentType);
         attachment.setUrl(file.getPublicUrl());
         attachment.setSize(file.getSize());
         return attachment;
     }
 
-    public static String getMimeType(String url) {
-        String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
-        return type;
-    }
 
     public void sendTypingStatusToServer(int opponentId, boolean startTyping) {
         try {
@@ -335,6 +328,7 @@ public abstract class QBBaseChatHelper extends BaseHelper {
 
     protected Message parseReceivedMessage(QBChatMessage qbChatMessage) {
         long dateSent = ChatUtils.getMessageDateSent(qbChatMessage);
+        Log.e("parseReceivedMessagei", "parseReceivedMessage");
         String attachUrl = ChatUtils.getAttachUrlIfExists(qbChatMessage);
         String dialogId = (String) qbChatMessage.getProperty(ChatNotificationUtils.PROPERTY_DIALOG_ID);
 

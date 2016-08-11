@@ -4,12 +4,12 @@
         "source": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\mediarouter-v7\\22.2.0\\res\\layout\\mr_media_route_list_item.xml"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_list_menu_item_checkbox.xml",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_list_menu_item_checkbox.xml"
-    },
-    {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\select_dialog_singlechoice_material.xml",
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\select_dialog_singlechoice_material.xml"
+    },
+    {
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_list_menu_item_checkbox.xml",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_list_menu_item_checkbox.xml"
     },
     {
         "merged": "G:\\Fun2Sh-master\\Git\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_popup_menu_item_layout.xml",
@@ -24,16 +24,16 @@
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_action_bar_up_container.xml"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_activity_chooser_view.xml",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_activity_chooser_view.xml"
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_action_mode_bar.xml",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_action_mode_bar.xml"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_select_dialog_material.xml",
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_select_dialog_material.xml"
     },
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_action_mode_bar.xml",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_action_mode_bar.xml"
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\abc_activity_chooser_view.xml",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\layout\\abc_activity_chooser_view.xml"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\notification_template_media.xml",

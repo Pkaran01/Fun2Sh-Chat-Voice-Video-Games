@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -368,5 +369,15 @@ public class Utility {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static String[] removeElements(String[] input, String deleteMe) {
+        List result = new LinkedList();
+
+        for (String item : input)
+            if (!deleteMe.equals(item))
+                result.add(item);
+
+        return (String[]) result.toArray(input);
     }
 }

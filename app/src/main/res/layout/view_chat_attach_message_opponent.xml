@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/attach_message_relativelayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dp"
-    android:visibility="gone">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/attach_message_relativelayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:visibility="visible">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -22,35 +22,37 @@
 
         <LinearLayout
             android:layout_width="@dimen/chat_attach_width"
-            android:orientation="vertical"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:layout_height="wrap_content">
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/time_attach_message_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:padding="2dp"
+                android:text="05:05AM"
+                android:textColor="@color/black"
+                android:textSize="12dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@drawable/chat_b"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/time_attach_message_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:padding="2dp"
-                    android:text="05:05AM"
-                    android:textColor="@color/black"
-                    android:textSize="12dp" />
+                <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
+                    android:id="@+id/attach_imageview"
+                    android:layout_width="@dimen/chat_attach_width"
+                    android:layout_height="@dimen/chat_attach_height"
+                    android:layout_gravity="center"
+                    app:mask="@drawable/chat_b"
+                    android:scaleType="centerCrop"/>
             </LinearLayout>
-
-            <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
-                android:id="@+id/attach_imageview"
-                android:layout_width="@dimen/chat_attach_width"
-                android:layout_height="@dimen/chat_attach_height"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                app:mask="@drawable/chat_b" />
-
 
         </LinearLayout>
     </LinearLayout>

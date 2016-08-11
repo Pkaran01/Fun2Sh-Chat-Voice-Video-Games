@@ -231,7 +231,7 @@ public abstract class BaseDialogMessagesAdapter
     }
 
     protected void opponentMessage(final CombinationMessage combinationMessage, ViewHolder viewHolder) {
-        final String opration[] = resources.getStringArray(R.array.new_messages_opration_opponent);
+        final String opration[] = resources.getStringArray(R.array.new_messages_option_opponent);
         if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
             opration[0] = "Remove from favourite";
         }
@@ -309,7 +309,12 @@ public abstract class BaseDialogMessagesAdapter
     }
 
     protected void ownMessage(final CombinationMessage combinationMessage, ViewHolder viewHolder) {
-        final String opration[] = resources.getStringArray(R.array.new_messages_opration);
+        final String opration[];
+        if (combinationMessage.getAttachment() != null) {
+            opration = Utility.removeElements(resources.getStringArray(R.array.new_messages_option), "Edit");
+        } else {
+            opration = resources.getStringArray(R.array.new_messages_option);
+        }
         if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
             opration[0] = "Remove from favourite";
         }
@@ -330,7 +335,10 @@ public abstract class BaseDialogMessagesAdapter
                                         M.E("Error in add to favourite");
                                     }
                                     notifyDataSetChanged();
-                                } else if (which == 1) {
+                                }
+                                if (!opration[1].equals("Edit"))
+                                    which += 1;
+                                if (which == 1) {
                                     //Edit
                                     editMessage(combinationMessage);
                                 } else if (which == 2) {

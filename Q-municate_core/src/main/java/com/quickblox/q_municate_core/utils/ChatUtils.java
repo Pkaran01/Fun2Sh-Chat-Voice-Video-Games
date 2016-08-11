@@ -57,25 +57,9 @@ public class ChatUtils {
         return attachURL;
     }
 
-    public static String getAttachTypeIfExists(QBChatMessage chatMessage) {
-        String attachURL = ConstsCore.EMPTY_STRING;
-        Collection<QBAttachment> attachmentCollection = chatMessage.getAttachments();
-        if (attachmentCollection != null && attachmentCollection.size() > 0) {
-            attachURL = getAttachTypeFromMessage(attachmentCollection);
-        }
-        return attachURL;
-    }
 
 
-    public static String getAttachTypeFromMessage(Collection<QBAttachment> attachmentsCollection) {
-        if (attachmentsCollection != null) {
-            ArrayList<QBAttachment> attachmentsList = new ArrayList<QBAttachment>(attachmentsCollection);
-            if (!attachmentsList.isEmpty()) {
-                return attachmentsList.get(0).getContentType();
-            }
-        }
-        return ConstsCore.EMPTY_STRING;
-    }
+
 
     public static String getSelectedFriendsFullNamesFromMap(List<User> usersList) {
         if (usersList.isEmpty()) {
@@ -432,7 +416,9 @@ public class ChatUtils {
                 .concat(QBSettings.getInstance().getChatServerDomain());
     }
 
+    //TODO on recivie message crearte local attachemnt
     public static Attachment createLocalAttachment(QBAttachment qbAttachment) {
+        Log.e("karan","localAttacment on recive");
         String attachmentType = (qbAttachment.getType()) != null ? qbAttachment.getType() : "null";
         Attachment attachment = new Attachment();
         attachment.setAttachmentId(qbAttachment.getId());

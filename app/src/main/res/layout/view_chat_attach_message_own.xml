@@ -67,9 +67,11 @@
             android:id="@+id/avatar_imageview"
             android:layout_width="54dp"
             android:layout_height="54dp"
+            android:padding="1dp"
             android:src="@drawable/userimgdefault"
             app:siBorderColor="@color/greencolorInner"
             app:siBorderWidth="2dp"/>
+
 
 
     </LinearLayout>

@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
-import com.quickblox.auth.QBAuth;
-import com.quickblox.core.exception.BaseServiceException;
-import com.quickblox.core.server.BaseService;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
@@ -103,45 +100,45 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
             } else {
                 setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
-                final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
-                viewHolder.fileName.setText(tokens[0]);
-                viewHolder.fileType.setText(tokens[1].toUpperCase());
-                final String directory;
-                if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
-                    directory = FileUtils.audioFolderName;
-                } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
-                    directory = FileUtils.videoFolderName;
-                } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
-                    directory = FileUtils.docFolderName;
-                } else {
-                    directory = FileUtils.otherFolderName;
-                }
-                final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
-                final boolean check = file.exists();
-                if (check)
-                    viewHolder.downloadButton.setText("OPEN");
-                viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //download file
-                        if (!check) {
-                            new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
-                        } else {
-                            MimeTypeMap myMime = MimeTypeMap.getSingleton();
-                            Intent newIntent = new Intent(Intent.ACTION_VIEW);
-                            String mimeType = myMime.getMimeTypeFromExtension(tokens[1]);
-                            newIntent.setDataAndType(Uri.fromFile(file), mimeType);
-                            newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            try {
-                                baseActivity.startActivity(newIntent);
-                            } catch (ActivityNotFoundException e) {
-                                Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+                if (combinationMessage.getAttachment().getName() != null) {
+                    final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
+                    viewHolder.fileName.setText(tokens[0]);
+                    viewHolder.fileType.setText(tokens[1].toUpperCase());
+                    final String directory;
+                    if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
+                        directory = FileUtils.audioFolderName;
+                    } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
+                        directory = FileUtils.videoFolderName;
+                    } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
+                        directory = FileUtils.docFolderName;
+                    } else {
+                        directory = FileUtils.otherFolderName;
+                    }
+                    final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
+                    final boolean check = file.exists();
+                    if (check)
+                        viewHolder.downloadButton.setText("OPEN");
+                    viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //download file
+                            if (!check) {
+                                new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                            } else {
+                                MimeTypeMap myMime = MimeTypeMap.getSingleton();
+                                Intent newIntent = new Intent(Intent.ACTION_VIEW);
+                                String mimeType = myMime.getMimeTypeFromExtension(tokens[1]);
+                                newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+                                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                try {
+                                    baseActivity.startActivity(newIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+                                }
                             }
                         }
-                    }
-                });
-                M.E(combinationMessage.getAttachment().getRemoteUrl());
-                try {
+                    });
+                /*try {
                     String token;
                     String privateUrl;
                     token = QBAuth.getBaseService().getToken();
@@ -149,6 +146,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                     M.E(privateUrl);
                 } catch (BaseServiceException e) {
                     e.printStackTrace();
+                }*/
                 }
             }
             viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
@@ -157,6 +155,10 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
+
+            avatarUrl = dataManager.getUserDataManager().getFriendById(combinationMessage.getAttachment().getBlobId()).getAvatar();
+            M.E("avatar url " + avatarUrl);
+            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         } else {
             resetUI(viewHolder);
 
@@ -171,6 +173,9 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 viewHolder.messageDeliveryStatusImageView.setImageResource(android.R.color.transparent);
             }
 
+            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+
         }
 
 
@@ -180,10 +185,6 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             opponentMessage(combinationMessage, viewHolder);
         }
 
-        avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-
-        M.E("avatar url" + avatarUrl);
-        displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);

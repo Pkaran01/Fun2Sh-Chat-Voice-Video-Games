@@ -188,14 +188,14 @@
     <string name="new_message_no_friends_for_new_message">You don\'t have any Friends for creating New Chat</string>
     <string name="new_message_select_option">Select</string>
 
-    <string-array name="new_messages_opration">
+    <string-array name="new_messages_option">
         <item>Add to favourite</item>
         <item>Edit</item>
         <item>Remove</item>
         <item>Copy</item>
     </string-array>
 
-    <string-array name="new_messages_opration_opponent">
+    <string-array name="new_messages_option_opponent">
         <item>Add to favourite</item>
         <item>Remove</item>
         <item>Copy</item>
@@ -205,6 +205,7 @@
         <item>Remove from favourite</item>
         <item>Copy</item>
     </string-array>
+
 
 
     <!-- New Group Dialog -->

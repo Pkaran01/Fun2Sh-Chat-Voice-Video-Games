@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.chat.QBChatService;
@@ -42,7 +41,6 @@ import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
 import com.ss.fun2sh.ui.activities.others.PreviewProfileImageActivity;
-import com.ss.fun2sh.ui.fragments.dialogs.base.TwoButtonsDialogFragment;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
@@ -377,35 +375,44 @@ public class UserProfileActivity extends BaseLoggableActivity {
     }
 
     private void showRemoveContactAndChatHistoryDialog() {
-        TwoButtonsDialogFragment.show(getSupportFragmentManager(),
-                getString(R.string.user_profile_remove_contact_and_chat_history, user.getFullName()),
-                new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        super.onPositive(dialog);
-                        showProgress();
-                        if (isUserFriendOrUserRequest()) {
-                            QBRemoveFriendCommand.start(UserProfileActivity.this, user.getUserId());
-                        } else {
-                            deleteChat();
-                        }
-                    }
-                });
+        SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this,getString(R.string.user_profile_remove_contact_and_chat_history, user.getFullName()), "OK", "CANCEL");
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                showProgress();
+                if (isUserFriendOrUserRequest()) {
+                    QBRemoveFriendCommand.start(UserProfileActivity.this, user.getUserId());
+                } else {
+                    deleteChat();
+                }
+                sweetAlertDialog.dismiss();
+            }
+        });
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
     }
 
     private void showRemoveChatHistoryDialog() {
         if (isChatExists()) {
-            TwoButtonsDialogFragment.show(
-                    getSupportFragmentManager(),
-                    getString(R.string.user_profile_delete_chat_history, user.getFullName()),
-                    new MaterialDialog.ButtonCallback() {
-                        @Override
-                        public void onPositive(MaterialDialog dialog) {
-                            super.onPositive(dialog);
-                            showProgress();
-                            deleteChat();
-                        }
-                    });
+            SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this,getString(R.string.user_profile_delete_chat_history, user.getFullName()), "OK", "CANCEL");
+            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    showProgress();
+                    deleteChat();
+                    sweetAlertDialog.dismiss();
+                }
+            });
+            sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                }
+            });
         } else {
             ToastUtils.longToast(R.string.user_profile_chat_does_not_exists);
         }
