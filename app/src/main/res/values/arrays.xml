@@ -55,7 +55,7 @@
     <string-array name="contactarray">
         <item>Home</item>
         <item>Announcements</item>
-        <item>Blocked Contact</item>
+        <!--<item>Blocked Contact</item>-->
         <item>Settings</item>
     </string-array>
 

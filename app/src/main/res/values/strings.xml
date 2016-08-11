@@ -195,6 +195,12 @@
         <item>Copy</item>
     </string-array>
 
+    <string-array name="new_messages_own_attachment_option">
+        <item>Add to favourite</item>
+        <item>Remove</item>
+        <item>Copy</item>
+    </string-array>
+
     <string-array name="new_messages_option_opponent">
         <item>Add to favourite</item>
         <item>Remove</item>

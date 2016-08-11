@@ -67,7 +67,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         final CombinationMessage combinationMessage = getItem(position);
         final boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
 
-        ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
+        final ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
 
         boolean friendsRequestMessage = DialogNotification.Type.FRIENDS_REQUEST.equals(
                 combinationMessage.getNotificationType());
@@ -123,7 +123,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         public void onClick(View v) {
                             //download file
                             if (!check) {
-                                new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                new DownloadFileAsync(directory,viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                             } else {
                                 MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                 Intent newIntent = new Intent(Intent.ACTION_VIEW);
@@ -138,15 +138,6 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                             }
                         }
                     });
-                /*try {
-                    String token;
-                    String privateUrl;
-                    token = QBAuth.getBaseService().getToken();
-                    privateUrl = String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), combinationMessage.getAttachment().getAttachmentId(), token);
-                    M.E(privateUrl);
-                } catch (BaseServiceException e) {
-                    e.printStackTrace();
-                }*/
                 }
             }
             viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
@@ -156,9 +147,6 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
 
-            avatarUrl =  combinationMessage.getDialogOccupant().getUser().getAvatar();
-            M.E("avatar url " + avatarUrl);
-            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         } else {
             resetUI(viewHolder);
 
@@ -172,11 +160,8 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             } else if (ownMessage && combinationMessage.getState() == null) {
                 viewHolder.messageDeliveryStatusImageView.setImageResource(android.R.color.transparent);
             }
-
-            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
-
         }
+
 
 
         if (ownMessage) {
@@ -184,7 +169,9 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         } else {
             opponentMessage(combinationMessage, viewHolder);
         }
-
+        avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+        M.E("avator url " + avatarUrl);
+        displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);

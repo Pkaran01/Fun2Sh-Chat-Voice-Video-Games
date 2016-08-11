@@ -2,18 +2,21 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:emojicon="http://schemas.android.com/apk/res-auto"
               android:id="@+id/text_message_view"
-              android:layout_width="wrap_content"
-              android:layout_height="fill_parent"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="right"
               android:orientation="horizontal"
-              android:visibility="gone">
+              android:padding="5dp"
+              android:visibility="visible">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginRight="2dp"
-        android:layout_weight="1"
         android:layout_marginTop="10dp"
+        android:layout_weight="1"
+
         android:orientation="vertical">
 
 
@@ -44,6 +47,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_marginLeft="20dp"
             android:background="@drawable/chat_b2"
             android:orientation="horizontal"
@@ -67,7 +71,6 @@
 
 
     </LinearLayout>
-
 
     <com.github.siyamed.shapeimageview.HexagonImageView
         android:id="@+id/avatar_imageview"

@@ -55,7 +55,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
     @Override
     public void onBindViewHolder(BaseClickListenerViewHolder<CombinationMessage> baseClickListenerViewHolder, int position) {
-        ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
+        final ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
 
         final CombinationMessage combinationMessage = getItem(position);
         boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
@@ -115,7 +115,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                             public void onClick(View v) {
                                 //download file
                                 if (!check) {
-                                    new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                    new DownloadFileAsync(directory,viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                                 } else {
                                     MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                     Intent newIntent = new Intent(Intent.ACTION_VIEW);
@@ -130,15 +130,6 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                                 }
                             }
                         });
-                /*try {
-                    String token;
-                    String privateUrl;
-                    token = QBAuth.getBaseService().getToken();
-                    privateUrl = String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), combinationMessage.getAttachment().getAttachmentId(), token);
-                    M.E(privateUrl);
-                } catch (BaseServiceException e) {
-                    e.printStackTrace();
-                }*/
                     }
                 }
             } else {

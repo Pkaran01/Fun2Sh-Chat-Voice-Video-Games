@@ -1,79 +1,72 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/attach_message_relativelayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:visibility="visible">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/attach_message_relativelayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:visibility="gone">
+
+    <com.github.siyamed.shapeimageview.HexagonImageView
+        android:id="@+id/avatar_imageview"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        app:siBorderColor="@color/greencolorInner"
+        app:siBorderWidth="2dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/chat_attach_width"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.github.siyamed.shapeimageview.HexagonImageView
-            android:id="@+id/avatar_imageview"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:src="@drawable/userimgdefault"
-            app:siBorderColor="@color/greencolorInner"
-            app:siBorderWidth="2dp"/>
+        android:layout_marginLeft="2dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="@dimen/chat_attach_width"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
 
-                <TextView
-                    android:id="@+id/time_attach_message_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:padding="2dp"
-                    android:text="05:05AM"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"/>
-
-                <TextView
-                    android:id="@+id/name_textview"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="Karan kumar shahsad fsadfdsaf fgdfgdfg"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/text_size"
-                    android:textStyle="bold"
-                    android:visibility="gone"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/time_attach_message_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/chat_b"
-                android:orientation="horizontal"
-                android:padding="5dp">
+                android:layout_marginTop="5dp"
+                android:padding="2dp"
+                android:text="05:05AM"
+                android:textColor="@color/black"
+                android:textSize="12dp"/>
 
-                <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
-                    android:id="@+id/attach_imageview"
-                    android:layout_width="@dimen/chat_attach_width"
-                    android:layout_height="@dimen/chat_attach_height"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop"
-                    app:mask="@drawable/chat_b"/>
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/name_textview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/text_size"
+                android:textStyle="bold"
+                android:visibility="visible"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_b"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
+                android:id="@+id/attach_imageview"
+                android:layout_width="@dimen/chat_attach_width"
+                android:layout_height="@dimen/chat_attach_height"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                app:mask="@drawable/chat_b"/>
+        </LinearLayout>
+
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

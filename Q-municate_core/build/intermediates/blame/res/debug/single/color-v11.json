@@ -4,6 +4,14 @@
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color-v11\\abc_background_cache_hint_selector_material_dark.xml"
     },
     {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_dark.xml",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color-v11\\abc_background_cache_hint_selector_material_dark.xml"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
         "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
     }

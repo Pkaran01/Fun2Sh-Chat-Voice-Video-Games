@@ -1,78 +1,74 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/attach_message_relativelayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:visibility="visible">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/attach_message_relativelayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:gravity="right"
+    android:visibility="visible">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/attach_message_delivery_status_imageview"
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_status_mes_sent"/>
+
+            <TextView
+                android:id="@+id/time_attach_message_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:padding="1dp"
+                android:text="05:05AM"
+                android:textColor="@color/black"
+                android:textSize="12dp"/>
 
-                <ImageView
-                    android:id="@+id/attach_message_delivery_status_imageview"
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_status_mes_sent"/>
-
-                <TextView
-                    android:id="@+id/time_attach_message_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="1dp"
-                    android:text="05:05AM"
-                    android:textColor="@color/black"
-                    android:textSize="12dp"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/chat_b2"
-                >
-
-                <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
-                    android:id="@+id/attach_imageview"
-                    android:layout_width="@dimen/chat_attach_width"
-                    android:layout_height="@dimen/chat_attach_height"
-                    android:layout_margin="5dp"
-                    android:scaleType="centerCrop"
-                    app:mask="@drawable/chat_b2"
-                    />
-            </LinearLayout>
 
         </LinearLayout>
 
-        <com.github.siyamed.shapeimageview.HexagonImageView
-            android:id="@+id/avatar_imageview"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:padding="1dp"
-            android:src="@drawable/userimgdefault"
-            app:siBorderColor="@color/greencolorInner"
-            app:siBorderWidth="2dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_b2"
+            >
 
-
+            <com.ss.fun2sh.ui.views.maskedimageview.MaskedImageView
+                android:id="@+id/attach_imageview"
+                android:layout_width="@dimen/chat_attach_width"
+                android:layout_height="@dimen/chat_attach_height"
+                android:layout_margin="5dp"
+                android:scaleType="centerCrop"
+                app:mask="@drawable/chat_b2"
+                />
+        </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+
+    <com.github.siyamed.shapeimageview.HexagonImageView
+        android:id="@+id/avatar_imageview"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:padding="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/userimgdefault"
+        app:siBorderColor="@color/greencolorInner"
+        app:siBorderWidth="2dp"/>
+
+
+</LinearLayout>

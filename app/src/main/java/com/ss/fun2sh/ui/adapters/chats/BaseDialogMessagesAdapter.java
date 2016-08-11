@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -310,10 +311,10 @@ public abstract class BaseDialogMessagesAdapter
 
     protected void ownMessage(final CombinationMessage combinationMessage, ViewHolder viewHolder) {
         final String opration[];
-        if (combinationMessage.getAttachment() != null) {
-            opration = Utility.removeElements(resources.getStringArray(R.array.new_messages_option), "Edit");
-        } else {
+        if (combinationMessage.getAttachment() == null) {
             opration = resources.getStringArray(R.array.new_messages_option);
+        } else {
+            opration = resources.getStringArray(R.array.new_messages_own_attachment_option);
         }
         if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
             opration[0] = "Remove from favourite";
@@ -401,11 +402,11 @@ public abstract class BaseDialogMessagesAdapter
 
         @Nullable
         @Bind(R.id.attach_message_relativelayout)
-        RelativeLayout attachMessageRelativeLayout;
+        LinearLayout attachMessageRelativeLayout;
 
         @Nullable
         @Bind(R.id.attachotherfile_message_relativelayout)
-        RelativeLayout attachOtherFileRelativeLayout;
+        LinearLayout attachOtherFileRelativeLayout;
 
         @Nullable
         @Bind(R.id.message_textview)
@@ -539,8 +540,8 @@ public abstract class BaseDialogMessagesAdapter
     //download file
     class DownloadFileAsync extends AsyncTask<String, String, String> {
         String foldername;
-
-        public DownloadFileAsync(String folderName) {
+        ViewHolder viewHolder;
+        public DownloadFileAsync(String folderName, ViewHolder viewHolder) {
             this.foldername = folderName;
         }
 
@@ -597,7 +598,7 @@ public abstract class BaseDialogMessagesAdapter
 
         @Override
         protected void onPostExecute(String unused) {
-
+            viewHolder.downloadButton.setText("OPEN");
         }
     }
 

@@ -53,7 +53,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
         final CombinationMessage combinationMessage = getItem(position);
         boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
 
-        ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
+        final ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
 
 
         String avatarUrl = null;
@@ -124,7 +124,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                         public void onClick(View v) {
                             //download file
                             if (!check) {
-                                new DownloadFileAsync(directory).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                             } else {
                                 MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                 Intent newIntent = new Intent(Intent.ACTION_VIEW);
@@ -139,15 +139,6 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                             }
                         }
                     });
-                /*try {
-                    String token;
-                    String privateUrl;
-                    token = QBAuth.getBaseService().getToken();
-                    privateUrl = String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), combinationMessage.getAttachment().getAttachmentId(), token);
-                    M.E(privateUrl);
-                } catch (BaseServiceException e) {
-                    e.printStackTrace();
-                }*/
                 }
             }
             viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
@@ -178,7 +169,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
         } else {
             senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
             avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            setViewVisibility(viewHolder.nameTextView,View.VISIBLE);
+            setViewVisibility(viewHolder.nameTextView, View.VISIBLE);
             viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
             viewHolder.nameTextView.setText(senderName);
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
