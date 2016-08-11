@@ -156,7 +156,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
             }
 
-            avatarUrl = dataManager.getUserDataManager().getFriendById(combinationMessage.getAttachment().getBlobId()).getAvatar();
+            avatarUrl =  combinationMessage.getDialogOccupant().getUser().getAvatar();
             M.E("avatar url " + avatarUrl);
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         } else {

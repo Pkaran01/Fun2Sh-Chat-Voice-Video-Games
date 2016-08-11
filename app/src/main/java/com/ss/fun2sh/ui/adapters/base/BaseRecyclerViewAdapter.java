@@ -3,8 +3,8 @@ package com.ss.fun2sh.ui.adapters.base;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
 
+import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.users.model.QBUser;
@@ -105,7 +105,7 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseClickListenerVie
         this.onRecycleItemClickListener = onRecycleItemClickListener;
     }
 
-    protected void displayAvatarImage(String uri, ImageView imageView) {
+    protected void displayAvatarImage(String uri, HexagonImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
     }
 }

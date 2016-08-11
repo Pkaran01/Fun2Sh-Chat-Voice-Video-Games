@@ -93,6 +93,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <include layout="@layout/view_chat_attachotherfile_message_opponent"/>
         <include layout="@layout/view_chat_attach_message_opponent"/>
 
     </LinearLayout>
