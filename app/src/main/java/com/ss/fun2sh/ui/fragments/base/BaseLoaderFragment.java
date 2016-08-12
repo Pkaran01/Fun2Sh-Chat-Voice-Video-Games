@@ -29,4 +29,6 @@ public abstract class BaseLoaderFragment<T> extends BaseFragment implements Load
         if (loader != null)
             loader.onContentChanged();
     }
+
+
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -36,7 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -371,13 +371,5 @@ public class Utility {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public static String[] removeElements(String[] input, String deleteMe) {
-        List result = new LinkedList();
 
-        for (String item : input)
-            if (!deleteMe.equals(item))
-                result.add(item);
-
-        return (String[]) result.toArray(input);
-    }
 }

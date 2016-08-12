@@ -198,7 +198,7 @@
     <string-array name="new_messages_own_attachment_option">
         <item>Add to favourite</item>
         <item>Remove</item>
-        <item>Copy</item>
+        <item>Forward</item>
     </string-array>
 
     <string-array name="new_messages_option_opponent">
@@ -235,7 +235,7 @@
     <!-- Dialog -->
     <string name="dialog_hint_message">Type a message...</string>
     <string name="dialog_no_chats">Oops…\nYou don\'t have any chat.\n Please click on \'last\' tab to add or select a contact and start FunChat"</string>
-    <string name="dialog_no_group_chats">Oops…\nYou don\'t have any chats,\n tap \'+\' icon to create new group chat \nvia Friends Details page"</string>
+    <string name="dialog_no_group_chats">Oops…\nYou don\'t have any groups,create new group."</string>
     <string name="dialog_reply">Reply</string>
     <string name="dialog_user_is_not_friend">User is not your friend</string>
     <string name="dialog_confirm_sending_attach">Do you really want to send attachment?</string>

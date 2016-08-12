@@ -3,6 +3,7 @@ package com.quickblox.q_municate_core.qb.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.util.Log;
 
 import com.quickblox.chat.QBChatService;
@@ -166,7 +167,7 @@ public class QBCallChatHelper extends BaseHelper {
         public void onReceiveNewSession(QBRTCSession qbRtcSession) {
             Log.d(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
             CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, true);
-            if (currentQbRtcSession != null) {
+            if (currentQbRtcSession != null || isCallActive(context) ) {
                 Log.d(TAG, "onReceiveNewSession(). Stop new session. Device now is busy");
                 /*if (!qbRtcSession.equals(currentQbRtcSession)) {
                     qbRtcSession.rejectCall(null);
@@ -245,6 +246,15 @@ public class QBCallChatHelper extends BaseHelper {
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onSessionStartClose(qbRtcSession);
             }
+        }
+    }
+
+    public boolean isCallActive(Context context) {
+        AudioManager manager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (manager.getMode() == AudioManager.MODE_IN_CALL) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

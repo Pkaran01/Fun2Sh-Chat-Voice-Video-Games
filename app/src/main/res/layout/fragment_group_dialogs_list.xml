@@ -11,8 +11,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/createGroup"
@@ -47,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/createGroup"
-            android:divider="@null"/>
+            />
 
         <TextView
             android:id="@+id/empty_list_textview"

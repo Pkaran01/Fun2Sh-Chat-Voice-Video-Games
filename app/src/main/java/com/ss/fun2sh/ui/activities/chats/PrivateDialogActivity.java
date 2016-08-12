@@ -25,6 +25,7 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
@@ -37,6 +38,7 @@ import com.ss.fun2sh.utils.listeners.FriendOperationListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -75,6 +77,10 @@ public class PrivateDialogActivity extends BaseDialogActivity {
 
         addObservers();
         initMessagesRecyclerView();
+        if (Const.FORWARD_MESSAGE.length() > 0) {
+            startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
+            Const.FORWARD_MESSAGE = "";
+        }
     }
 
     @Override
@@ -204,7 +210,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
                 if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
                     callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
                 } else {
-                    Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat video call",  opponentUser.getUserId());
+                    Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat video call", opponentUser.getUserId());
                 }
                 break;
             default:

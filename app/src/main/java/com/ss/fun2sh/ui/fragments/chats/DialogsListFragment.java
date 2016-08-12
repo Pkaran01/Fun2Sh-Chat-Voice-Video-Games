@@ -6,7 +6,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.loader.BaseLoader;
@@ -99,6 +99,26 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
         dataManager = DataManager.getInstance();
         commonObserver = new CommonObserver();
         qbUser = AppSession.getSession().getUser();
+        dialogsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                if (baseActivity.checkNetworkAvailableWithError()) {
+                    new MaterialDialog.Builder(baseActivity)
+                            .items(R.array.deleteDilaog)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    if (which == 0) {
+                                        Dialog mdialog = dialogsListAdapter.getItem(position);
+                                        deleteDialog(mdialog);
+                                    }
+                                }
+                            })
+                            .show();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -145,26 +165,6 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
         return true;
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, view, menuInfo);
-        MenuInflater menuInflater = baseActivity.getMenuInflater();
-        menuInflater.inflate(R.menu.dialogs_list_ctx_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo adapterContextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                if (baseActivity.checkNetworkAvailableWithError()) {
-                    Dialog dialog = dialogsListAdapter.getItem(adapterContextMenuInfo.position);
-                    deleteDialog(dialog);
-                }
-                break;
-        }
-        return true;
-    }
 
     @Override
     public void onResume() {
@@ -295,7 +295,6 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
             emptyListTextView.setVisibility(View.VISIBLE);
         }
     }
-
 
 
     @Override

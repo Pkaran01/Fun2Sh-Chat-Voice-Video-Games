@@ -19,7 +19,6 @@ import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.utils.DateUtils;
-import com.ss.fun2sh.utils.FileUtils;
 import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 
 import java.io.File;
@@ -97,16 +96,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
                         viewHolder.fileName.setText(tokens[0]);
                         viewHolder.fileType.setText(tokens[1].toUpperCase());
-                        final String directory;
-                        if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
-                            directory = FileUtils.audioFolderName;
-                        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
-                            directory = FileUtils.videoFolderName;
-                        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
-                            directory = FileUtils.docFolderName;
-                        } else {
-                            directory = FileUtils.otherFolderName;
-                        }
+                        final String directory = getDirectoryName(combinationMessage);
                         final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
                         final boolean check = file.exists();
                         if (check)

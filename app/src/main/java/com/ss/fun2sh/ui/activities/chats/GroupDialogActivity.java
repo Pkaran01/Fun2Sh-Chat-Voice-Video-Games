@@ -16,11 +16,13 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.adapters.chats.GroupDialogMessagesAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class GroupDialogActivity extends BaseDialogActivity {
@@ -54,6 +56,10 @@ public class GroupDialogActivity extends BaseDialogActivity {
         }
 
         initMessagesRecyclerView();
+        if (Const.FORWARD_MESSAGE.length() > 0) {
+            startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
+            Const.FORWARD_MESSAGE = "";
+        }
     }
 
     @Override
@@ -153,7 +159,7 @@ public class GroupDialogActivity extends BaseDialogActivity {
         dialog = (Dialog) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_DIALOG);
         combinationMessagesList = createCombinationMessagesList();
         if (dialog != null)
-        title = dialog.getTitle();
+            title = dialog.getTitle();
     }
 
     public void sendMessage(View view) {

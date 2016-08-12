@@ -7,7 +7,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.loader.BaseLoader;
@@ -71,7 +71,7 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
 
     @Nullable
     @Bind(R.id.chats_listview)
-    ListView dialogsListView;
+    ListView groupDialogsListView;
 
     @Nullable
     @Bind(R.id.empty_list_textview)
@@ -98,7 +98,7 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
         activateButterKnife(view);
         initFields();
         initChatsDialogs();
-        registerForContextMenu(dialogsListView);
+        registerForContextMenu(groupDialogsListView);
         //if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
         if (false) {
             view = inflater.inflate(R.layout.fragment_upgrade, container, false);
@@ -112,6 +112,7 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
                 }
             });
         }
+        checkVisibilityEmptyLabel();
         return view;
     }
 
@@ -131,6 +132,26 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
             @Override
             public void onClick(View v) {
                 NewGroupDialogActivity.start(getActivity());
+            }
+        });
+        groupDialogsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                if (baseActivity.checkNetworkAvailableWithError()) {
+                    new MaterialDialog.Builder(baseActivity)
+                            .items(R.array.deleteDilaog)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    if (which == 0) {
+                                        Dialog mdialog = dialogsListAdapter.getItem(position);
+                                        deleteDialog(mdialog);
+                                    }
+                                }
+                            })
+                            .show();
+                }
+                return true;
             }
         });
     }
@@ -176,27 +197,6 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
                 break;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, view, menuInfo);
-        MenuInflater menuInflater = baseActivity.getMenuInflater();
-        menuInflater.inflate(R.menu.dialogs_list_ctx_menu, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo adapterContextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                if (baseActivity.checkNetworkAvailableWithError()) {
-                    Dialog dialog = dialogsListAdapter.getItem(adapterContextMenuInfo.position);
-                    deleteDialog(dialog);
-                }
-                break;
         }
         return true;
     }
@@ -282,7 +282,7 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
     private void initChatsDialogs() {
         List<Dialog> dialogsList = Collections.emptyList();
         dialogsListAdapter = new GroupDialogsListAdapter(baseActivity, dialogsList);
-        dialogsListView.setAdapter(dialogsListAdapter);
+        groupDialogsListView.setAdapter(dialogsListAdapter);
     }
 
     private void startPrivateChatActivity(Dialog dialog) {
@@ -345,6 +345,7 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
         final List<Dialog> filteredModelList = filter(ChatUtils.fillTitleForGroupDialogsList(getContext().getResources().getString(R.string.deleted_user),
                 dataManager, dataManager.getDialogDataManager().getAllSorted()), newText);
         dialogsListAdapter.setFilter(filteredModelList);
+        checkEmptyList(filteredModelList.size());
         return true;
     }
 
