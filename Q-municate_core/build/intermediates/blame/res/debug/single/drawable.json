@@ -1,15 +1,15 @@
 [
     {
-        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_ratingbar_full_material.xml",
-        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable\\abc_ratingbar_full_material.xml"
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\common_signin_btn_text_dark.xml",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable\\common_signin_btn_text_dark.xml"
     },
     {
         "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_switch_thumb_material.xml",
         "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable\\abc_switch_thumb_material.xml"
     },
     {
-        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\common_signin_btn_text_dark.xml",
-        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.1.0\\res\\drawable\\common_signin_btn_text_dark.xml"
+        "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_ratingbar_full_material.xml",
+        "source": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\22.2.0\\res\\drawable\\abc_ratingbar_full_material.xml"
     },
     {
         "merged": "F:\\Fun2Sh-master\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\debug\\drawable\\mr_ic_media_route_mono_dark.xml",

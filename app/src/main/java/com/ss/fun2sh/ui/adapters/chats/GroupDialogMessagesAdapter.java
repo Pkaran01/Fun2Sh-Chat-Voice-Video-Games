@@ -75,7 +75,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             if (ownMessage) {
                 ownMessage(combinationMessage, viewHolder);
             } else {
-                setFullName(combinationMessage,viewHolder);
+                setFullName(combinationMessage, viewHolder);
                 opponentMessage(combinationMessage, viewHolder);
             }
 
@@ -100,13 +100,13 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
                         final boolean check = file.exists();
                         if (check)
-                            viewHolder.downloadButton.setText("OPEN");
+                            viewHolder.downloadButton.setProgress(100);
                         viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 //download file
                                 if (!check) {
-                                    new DownloadFileAsync(directory,viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                    new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                                 } else {
                                     MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                     Intent newIntent = new Intent(Intent.ACTION_VIEW);

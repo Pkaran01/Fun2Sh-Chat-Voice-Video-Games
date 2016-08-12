@@ -8,7 +8,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/backgroundforall_screens"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
@@ -58,5 +58,5 @@
             android:text="@string/dialog_no_group_chats"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_size"/>
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

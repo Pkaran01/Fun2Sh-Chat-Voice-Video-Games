@@ -128,7 +128,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                     final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
                     final boolean check = file.exists();
                     if (check)
-                        viewHolder.downloadButton.setText("OPEN");
+                        viewHolder.downloadButton.setProgress(100);
                     viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

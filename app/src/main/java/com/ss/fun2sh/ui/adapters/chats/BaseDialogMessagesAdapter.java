@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.dd.CircularProgressButton;
 import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -42,6 +43,7 @@ import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.UserAccount;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
@@ -204,6 +206,8 @@ public abstract class BaseDialogMessagesAdapter
                         if (UserAccount.isEmpty(emailEditText)) {
                             QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
                             messageUpdateBuilder.updateText(emailEditText.getText().toString());
+                            messageUpdateBuilder.markRead();
+                            viewHolder.messageTextView.setText(emailEditText.getText().toString());
                             QBMessageUpdateBuilder.updateMessage(msg.getMessageId(), msg.getDialogOccupant().getDialog().getDialogId(), messageUpdateBuilder, new QBEntityCallback<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid, Bundle bundle) {
@@ -215,8 +219,6 @@ public abstract class BaseDialogMessagesAdapter
                                     dataManager.getMessageDataManager().updateMessage(msg.getMessageId(), emailEditText.getText().toString());
                                     M.T(baseActivity, "Message is updated");
                                     dialog.dismiss();
-                                    viewHolder.messageTextView.setText(emailEditText.getText().toString());
-                                    BaseDialogMessagesAdapter.this.notifyDataSetChanged();
                                 }
 
                                 @Override
@@ -230,9 +232,8 @@ public abstract class BaseDialogMessagesAdapter
                             UserAccount.EditTextPointer.setError("This can't be empty !");
                         }
                     }
-                }
-
-        );
+                });
+        BaseDialogMessagesAdapter.this.notifyDataSetChanged();
     }
 
     protected void opponentMessage(final CombinationMessage combinationMessage, ViewHolder viewHolder) {
@@ -546,7 +547,7 @@ public abstract class BaseDialogMessagesAdapter
 
         @Nullable
         @Bind(R.id.download_button)
-        Button downloadButton;
+        CircularProgressButton downloadButton;
 
         @Nullable
         @Bind(R.id.file_name)
@@ -645,14 +646,19 @@ public abstract class BaseDialogMessagesAdapter
 
         public DownloadFileAsync(String folderName, ViewHolder viewHolder) {
             this.foldername = folderName;
+            this.viewHolder = viewHolder;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                M.dError(baseActivity, "Unable to connect internet.");
+                viewHolder.downloadButton.setProgress(-1);
+                return;
+            }
             new File(getExternalStorageDirectory().toString() + this.foldername).mkdirs();
-            baseActivity.showProgress();
+            viewHolder.downloadButton.setProgress(0);
 
         }
 
@@ -696,14 +702,14 @@ public abstract class BaseDialogMessagesAdapter
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC", progress[0]);
+            viewHolder.downloadButton.setProgress(Integer.parseInt(progress[0]));
 
         }
 
         @Override
         protected void onPostExecute(String unused) {
             baseActivity.hideProgress();
-            viewHolder.downloadButton.setText("OPEN");
+            viewHolder.downloadButton.setProgress(100);
         }
     }
-
 }

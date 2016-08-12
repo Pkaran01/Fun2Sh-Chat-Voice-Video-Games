@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dp"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <com.github.siyamed.shapeimageview.HexagonImageView
         android:id="@+id/avatar_imageview_otherattach"
@@ -63,7 +63,6 @@
                 android:id="@+id/file_type"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="5dp"
                 android:layout_weight="2.5"
                 android:background="@color/black"
                 android:gravity="center"
@@ -87,12 +86,16 @@
                     android:text="app2.dex"
                     android:textSize="10dp"/>
 
-                <Button
+                <com.dd.CircularProgressButton
                     android:id="@+id/download_button"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
-                    android:text="Download"/>
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    app:cpb_textComplete="OPEN"
+                    app:cpb_textError="RETRY"
+                    app:cpb_textIdle="DOWNLOAD"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
