@@ -117,4 +117,5 @@ public abstract class BaseFragment extends Fragment implements UserStatusChangin
     public void onConnectedToService(QBService service) {
         // nothing by default
     }
+
 }

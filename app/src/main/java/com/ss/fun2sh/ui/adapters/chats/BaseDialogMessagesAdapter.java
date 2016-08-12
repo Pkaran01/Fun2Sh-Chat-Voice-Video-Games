@@ -37,6 +37,7 @@ import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.utils.ConstsCore;
 import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Const;
@@ -362,6 +363,25 @@ public abstract class BaseDialogMessagesAdapter
         });
     }
 
+    public void setFullName(CombinationMessage combinationMessage, ViewHolder viewHolder) {
+        String senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
+        if (combinationMessage.getAttachment() != null) {
+            if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+                setViewVisibility(viewHolder.nameTextViewAttach, View.VISIBLE);
+                viewHolder.nameTextViewAttach.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
+                viewHolder.nameTextViewAttach.setText(senderName);
+            } else {
+                setViewVisibility(viewHolder.nameTextViewOtherAttach, View.VISIBLE);
+                viewHolder.nameTextViewOtherAttach.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
+                viewHolder.nameTextViewOtherAttach.setText(senderName);
+            }
+        } else {
+            setViewVisibility(viewHolder.nameTextView, View.VISIBLE);
+            viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
+            viewHolder.nameTextView.setText(senderName);
+        }
+    }
+
     //    @Override
     //    public void onAbsolutePathExtFileReceived(String absolutePath) {
     //        chatUIHelperListener.onScreenResetPossibilityPerformLogout(false);
@@ -381,8 +401,24 @@ public abstract class BaseDialogMessagesAdapter
         HexagonImageView avatarImageView;
 
         @Nullable
+        @Bind(R.id.avatar_imageview_attach)
+        HexagonImageView avatarAttachImageView;
+
+        @Nullable
+        @Bind(R.id.avatar_imageview_otherattach)
+        HexagonImageView avatarOtherAttaheImageView;
+
+        @Nullable
         @Bind(R.id.name_textview)
         TextView nameTextView;
+
+        @Nullable
+        @Bind(R.id.name_textview_attach)
+        TextView nameTextViewAttach;
+
+        @Nullable
+        @Bind(R.id.name_textview_otherattach)
+        TextView nameTextViewOtherAttach;
 
         @Nullable
         @Bind(R.id.text_message_view)
@@ -395,6 +431,10 @@ public abstract class BaseDialogMessagesAdapter
         @Nullable
         @Bind(R.id.attach_message_delivery_status_imageview)
         ImageView attachDeliveryStatusImageView;
+
+        @Nullable
+        @Bind(R.id.otherattach_message_delivery_status_imageview)
+        ImageView otherAttachDeliveryStatusImageView;
 
         @Nullable
         @Bind(R.id.progress_relativelayout)
@@ -422,6 +462,10 @@ public abstract class BaseDialogMessagesAdapter
         @Nullable
         @Bind(R.id.time_attach_message_textview)
         TextView timeAttachMessageTextView;
+
+        @Nullable
+        @Bind(R.id.time_otherattach_message_textview)
+        TextView timeOtherAttachMessageTextView;
 
         @Nullable
         @Bind(R.id.vertical_progressbar)
@@ -541,6 +585,7 @@ public abstract class BaseDialogMessagesAdapter
     class DownloadFileAsync extends AsyncTask<String, String, String> {
         String foldername;
         ViewHolder viewHolder;
+
         public DownloadFileAsync(String folderName, ViewHolder viewHolder) {
             this.foldername = folderName;
         }
@@ -550,6 +595,7 @@ public abstract class BaseDialogMessagesAdapter
             super.onPreExecute();
 
             new File(Environment.getExternalStorageDirectory().toString() + this.foldername).mkdirs();
+            baseActivity.showProgress();
 
         }
 
@@ -598,6 +644,7 @@ public abstract class BaseDialogMessagesAdapter
 
         @Override
         protected void onPostExecute(String unused) {
+            baseActivity.hideProgress();
             viewHolder.downloadButton.setText("OPEN");
         }
     }

@@ -552,7 +552,6 @@ public class ChatUtils {
         String lastMessage = "";
 
         if (message == null && dialogNotification != null) {
-            Log.e("Notification type", dialogNotification.getType().toString());
             if (DialogNotification.Type.FRIENDS_REQUEST.equals(dialogNotification.getType())) {
                 defaultLasMessage = "Contact request sent";
             } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(dialogNotification.getType())) {

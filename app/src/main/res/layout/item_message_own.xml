@@ -13,7 +13,6 @@
     <include layout="@layout/view_chat_attach_message_own"/>
 
 
-
     <include layout="@layout/view_chat_attachotherfile_message_own"/>
 
 </LinearLayout>

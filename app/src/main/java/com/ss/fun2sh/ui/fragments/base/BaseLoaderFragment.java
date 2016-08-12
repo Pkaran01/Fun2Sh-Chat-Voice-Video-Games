@@ -26,6 +26,7 @@ public abstract class BaseLoaderFragment<T> extends BaseFragment implements Load
     }
 
     protected void onChangedData() {
-        loader.onContentChanged();
+        if (loader != null)
+            loader.onContentChanged();
     }
 }

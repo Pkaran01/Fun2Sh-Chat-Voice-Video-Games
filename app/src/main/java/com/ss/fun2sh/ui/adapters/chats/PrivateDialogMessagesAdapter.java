@@ -16,7 +16,6 @@ import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.State;
-import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -74,8 +73,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         boolean friendsInfoRequestMessage = combinationMessage
                 .getNotificationType() != null && !friendsRequestMessage;
 
-        String avatarUrl = null;
-
+        String avatarUrl =combinationMessage.getDialogOccupant().getUser().getAvatar();;
 
         if (viewHolder.verticalProgressBar != null) {
             viewHolder.verticalProgressBar.setProgressDrawable(baseActivity.getResources().getDrawable(R.drawable.vertical_progressbar));
@@ -98,6 +96,13 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
                 setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
                 displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+                displayAvatarImage(avatarUrl, viewHolder.avatarAttachImageView);
+                viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                if (ownMessage && combinationMessage.getState() != null) {
+                    setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
+                            combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                }
             } else {
                 setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                 if (combinationMessage.getAttachment().getName() != null) {
@@ -139,13 +144,16 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         }
                     });
                 }
-            }
-            viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
-            if (ownMessage && combinationMessage.getState() != null) {
-                setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
-                        combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);
+                viewHolder.timeOtherAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                if (ownMessage && combinationMessage.getState() != null) {
+                    setMessageStatus(viewHolder.otherAttachDeliveryStatusImageView, State.DELIVERED.equals(
+                            combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                }
             }
+
 
         } else {
             resetUI(viewHolder);
@@ -160,6 +168,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             } else if (ownMessage && combinationMessage.getState() == null) {
                 viewHolder.messageDeliveryStatusImageView.setImageResource(android.R.color.transparent);
             }
+            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         }
 
 
@@ -169,9 +178,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         } else {
             opponentMessage(combinationMessage, viewHolder);
         }
-        avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-        M.E("avator url " + avatarUrl);
-        displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);

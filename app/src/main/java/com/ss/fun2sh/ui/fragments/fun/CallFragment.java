@@ -42,6 +42,8 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
 
     }
 
+    TextView tv;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,15 +52,19 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
 
         callList = DataManager.getInstance().getCallDataManager().getAllSorted();
         callAdapter = new CallAdapter(getActivity(), callList);
-        if (callList.size() > 0) {
-            initCallRecyclerView(rootView);
-        } else {
-            TextView tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
+        tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
+        initCallRecyclerView(rootView);
+        checkEmptyList();
+        return rootView;
+    }
+
+    private void checkEmptyList() {
+        if (callList.size() <= 0) {
             tv.setText("No call log found");
             tv.setVisibility(View.VISIBLE);
+        } else {
+            tv.setVisibility(View.GONE);
         }
-
-        return rootView;
     }
 
     private void initCallRecyclerView(View rootView) {
@@ -77,7 +83,7 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
 
                 callList = DataManager.getInstance().getCallDataManager().getAllByStatus(callFilterByType.getSelectedItemPosition(), position);
 
-
+                checkEmptyList();
                 callAdapter.setFilter(callList);
                 callAdapter.notifyDataSetChanged();
             }
@@ -95,7 +101,7 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
                         // your code here
 
                         callList = DataManager.getInstance().getCallDataManager().getAllByStatus(position, callFilter.getSelectedItemPosition());
-
+                        checkEmptyList();
                         callAdapter.setFilter(callList);
                         callAdapter.notifyDataSetChanged();
                     }
@@ -155,7 +161,12 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Call> filteredModelList = filter(callList, newText);
-        callAdapter.setFilter(filteredModelList);
+        if (filteredModelList.size() > 0) {
+            callAdapter.setFilter(filteredModelList);
+        } else {
+            tv.setText("No call log found");
+            tv.setVisibility(View.VISIBLE);
+        }
         return true;
     }
 

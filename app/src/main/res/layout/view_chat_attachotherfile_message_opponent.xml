@@ -9,7 +9,7 @@
     android:visibility="gone">
 
     <com.github.siyamed.shapeimageview.HexagonImageView
-        android:id="@+id/avatar_imageview"
+        android:id="@+id/avatar_imageview_otherattach"
         android:layout_width="54dp"
         android:layout_height="54dp"
         app:siBorderColor="@color/greencolorInner"
@@ -29,7 +29,7 @@
 
 
             <TextView
-                android:id="@+id/time_attach_message_textview"
+                android:id="@+id/time_otherattach_message_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
@@ -38,7 +38,7 @@
                 android:textSize="12dp"/>
 
             <TextView
-                android:id="@+id/name_textview"
+                android:id="@+id/name_textview_otherattach"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -47,7 +47,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/text_size"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold"
                 android:visibility="visible"/>
         </LinearLayout>
@@ -84,8 +84,8 @@
                     android:layout_height="fill_parent"
                     android:layout_above="@+id/download_button"
                     android:gravity="center"
-                    android:textSize="10dp"
-                    android:text="app2.dex"/>
+                    android:text="app2.dex"
+                    android:textSize="10dp"/>
 
                 <Button
                     android:id="@+id/download_button"

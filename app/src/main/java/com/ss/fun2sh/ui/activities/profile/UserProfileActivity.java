@@ -118,6 +118,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
         canPerformLogout.set(true);
         userId = getIntent().getExtras().getInt(QBServiceConsts.EXTRA_FRIEND_ID);
         user = dataManager.getUserDataManager().get(userId);
+        title = user.getFullName() + " " + getString(R.string.user_profile_title);
         userObserver = new UserObserver();
         if (dataManager.getUserDataManager().isBlocked(userId)) {
             blockContact.setText(getString(R.string.user_unblock_contact));
@@ -160,6 +161,11 @@ public class UserProfileActivity extends BaseLoggableActivity {
 
     @OnClick(R.id.send_message_button)
     void sendMessage(View view) {
+        boolean isFriend = DataManager.getInstance().getFriendDataManager().existsByUserId(user.getUserId());
+        if (!isFriend) {
+            ToastUtils.longToast(R.string.dialog_user_is_not_friend);
+            return;
+        }
         if (!dataManager.getUserDataManager().isBlocked(userId)) {
             DialogOccupant dialogOccupant = dataManager.getDialogOccupantDataManager().getDialogOccupantForPrivateChat(user.getUserId());
             if (dialogOccupant != null && dialogOccupant.getDialog() != null) {
@@ -212,10 +218,10 @@ public class UserProfileActivity extends BaseLoggableActivity {
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(NetworkUtil.getConnectivityStatus(UserProfileActivity.this)) {
+                if (NetworkUtil.getConnectivityStatus(UserProfileActivity.this)) {
                     UserProfileActivity.this.blockContact();
-                }else {
-                    M.T(UserProfileActivity.this,getString(R.string.dlg_internet_connection_is_missing));
+                } else {
+                    M.T(UserProfileActivity.this, getString(R.string.dlg_internet_connection_is_missing));
                 }
                 sweetAlertDialog.dismiss();
             }
@@ -375,7 +381,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
     }
 
     private void showRemoveContactAndChatHistoryDialog() {
-        SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this,getString(R.string.user_profile_remove_contact_and_chat_history, user.getFullName()), "OK", "CANCEL");
+        SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this, getString(R.string.user_profile_remove_contact_and_chat_history, user.getFullName()), "OK", "CANCEL");
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -398,7 +404,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
 
     private void showRemoveChatHistoryDialog() {
         if (isChatExists()) {
-            SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this,getString(R.string.user_profile_delete_chat_history, user.getFullName()), "OK", "CANCEL");
+            SweetAlertDialog sweetAlertDialog = M.dConfirem(UserProfileActivity.this, getString(R.string.user_profile_delete_chat_history, user.getFullName()), "OK", "CANCEL");
             sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {

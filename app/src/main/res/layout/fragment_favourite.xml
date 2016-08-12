@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,12 +8,19 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/backgroundforall_screens" />
-
+    <Spinner
+        android:id="@+id/filterByType"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:entries="@array/filterbyfiletype"
+        android:padding="10dp"></Spinner>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_recycleview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterByType"
+        android:layout_height="fill_parent"
         android:scrollbars="vertical"/>
 
     <TextView
@@ -21,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
+        android:layout_below="@+id/filterByType"
         android:gravity="center_horizontal"
         android:padding="10dp"
         android:text="This module is coming soon."
@@ -28,4 +36,4 @@
         android:textSize="25dp"
         android:visibility="gone" />
 
-</FrameLayout>
+</RelativeLayout>

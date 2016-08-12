@@ -1,6 +1,5 @@
 package com.ss.fun2sh.ui.activities.main;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,9 +27,11 @@ import com.quickblox.q_municate_core.core.command.Command;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.UserCustomData;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_core.utils.Utils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.ss.fun2sh.Activity.DashBoardActivity;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.gcm.GSMHelper;
@@ -63,10 +63,8 @@ public class MainActivity extends BaseLoggableActivity {
     @Bind(R.id.toolbartTitle)
     TextView toolbartTitle;
     FragmentManager mFragmentManager;
-    ArrayAdapter<String> navigationadapter;
     ListView navigation_drawer_list;
     NavigationDrawerAdapter navigationDrawerAdapter;
-    Dialog navDialog;
     ViewPagerAdapter adapter;
     ImageView myCustomIcon;
     private TabLayout tabLayout;
@@ -397,6 +395,7 @@ public class MainActivity extends BaseLoggableActivity {
         UserCustomData userCustomData = Utils.customDataToObject(AppSession.getSession().getUser().getCustomData());
         if (!TextUtils.isEmpty(userCustomData.getAvatar_url())) {
             loadLogoActionBar(userCustomData.getAvatar_url(), userCustomData.getStatus());
+            PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.LAST_AVATAR_URL, userCustomData.getAvatar_url());
         } else {
             userImage.setImageResource(R.drawable.avatarprofile);
         }

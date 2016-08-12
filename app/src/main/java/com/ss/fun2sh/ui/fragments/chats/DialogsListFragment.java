@@ -44,7 +44,6 @@ import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.chats.DialogsListAdapter;
 import com.ss.fun2sh.ui.fragments.base.BaseLoaderFragment;
-import com.ss.fun2sh.ui.fragments.search.SearchFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -297,9 +296,7 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
         }
     }
 
-    private void launchContactsFragment() {
-        SearchFragment.start(getActivity());
-    }
+
 
     @Override
     public boolean onQueryTextSubmit(String query) {

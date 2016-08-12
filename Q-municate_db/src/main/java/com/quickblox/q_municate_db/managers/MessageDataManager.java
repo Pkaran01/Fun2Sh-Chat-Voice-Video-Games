@@ -229,7 +229,6 @@ public class MessageDataManager extends BaseManager<Message> {
         return messagesList;
     }
 
-
     public int updateFav(String messageId, long value) {
         try {
             UpdateBuilder<Message, Long> updateBuilder = dao.updateBuilder();

@@ -198,7 +198,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     protected void onResume() {
         isInFront = true;
         super.onResume();
-        if(wakeLock.isHeld()){
+        if (wakeLock.isHeld()) {
             wakeLock.release();
         }
 
@@ -367,7 +367,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (qbRtcSessionUserCallback != null) {
             qbRtcSessionUserCallback.onCallRejectByUser(session, userID, userInfo);
         }
-
+        M.T(CallActivity.this, userInfo.get("busy"));
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -418,11 +418,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public void onUserNoActions(QBRTCSession qbrtcSession, Integer integer) {
-        E("onUserNoActions");
-
         startIncomeCallTimer(0);
-        //missed call ka code
-
     }
 
     @Override
@@ -443,9 +439,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
                             finish();
                         }
                     }
-
                     Log.d(TAG, "Stop session");
-
                     if (qbCallChatHelper != null) {
                         qbCallChatHelper.releaseCurrentSession(CallActivity.this, CallActivity.this);
                     }

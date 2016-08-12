@@ -285,8 +285,6 @@ public class DashBoardActivity extends BaseLoggableActivity {
     }
 
     private void getPackageDetails() {
-
-//        M.T(DashBoardActivity.this,"getPackageDetails");
         new JSONParser(DashBoardActivity.this).parseVollyJSONObjectL(Const.URL.profilePackage, 1, Utility.getParam(), new Helper() {
             @Override
             public void backResponse(String response) {

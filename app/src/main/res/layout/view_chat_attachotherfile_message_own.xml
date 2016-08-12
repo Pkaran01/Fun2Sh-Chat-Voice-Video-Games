@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:gravity="right"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/attach_message_delivery_status_imageview"
+                android:id="@+id/otherattach_message_delivery_status_imageview"
                 android:layout_width="8dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
@@ -31,7 +31,7 @@
                 android:src="@drawable/ic_status_mes_sent"/>
 
             <TextView
-                android:id="@+id/time_attach_message_textview"
+                android:id="@+id/time_otherattach_message_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
@@ -92,7 +92,7 @@
     </LinearLayout>
 
     <com.github.siyamed.shapeimageview.HexagonImageView
-        android:id="@+id/avatar_imageview"
+        android:id="@+id/avatar_imageview_otherattach"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:padding="1dp"

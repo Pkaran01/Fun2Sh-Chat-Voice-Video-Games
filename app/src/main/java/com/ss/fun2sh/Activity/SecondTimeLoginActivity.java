@@ -1,6 +1,7 @@
 package com.ss.fun2sh.Activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.google.android.gcm.GCMRegistrar;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
@@ -17,6 +21,7 @@ import com.ss.fun2sh.CRUD.M;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +41,14 @@ public class SecondTimeLoginActivity extends AppCompatActivity {
         this.existingAccount = (ImageView) findViewById(R.id.existingAccount);
         this.userName = (TextView) findViewById(R.id.userName);
         userName.setText("Sign in as " + PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.userId));
+        final HexagonImageView imageView=(HexagonImageView) findViewById(R.id.userImage);
+        ImageLoader.getInstance().loadImage(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.LAST_AVATAR_URL,""), ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedBitmap) {
+                        imageView.setImageBitmap(loadedBitmap);
+                    }
+                });
         signInDifferentAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

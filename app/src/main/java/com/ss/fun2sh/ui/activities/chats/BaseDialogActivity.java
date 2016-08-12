@@ -241,46 +241,48 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
 
     @OnClick(R.id.attach_button)
     void attachFile(View view) {
-        new MaterialDialog.Builder(this)
-                .items(R.array.attach_file_option)
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        if (which == 0) {
-                            //record video
-                            Intent cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                            // create a file to save the video
-                            fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
-
-                            // set the image file name
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-                            // set the video image quality to high
-                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                            startActivityForResult(cameraIntent, ACTION_TAKE_VIDEO);
-                        } else if (which == 1) {
-                            //VIDEO FROM GALLERY
-                            Intent intent = new Intent();
-                            intent.setType("video/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
-                        } else if (which == 2) {
-                            //AUDIO FROM SDCARD
-                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(i, PICK_AUDIO_FILE);
-                        } else if (which == 3) {
-                            //RECORD AUDIO
-                            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                            startActivityForResult(intent, ACTION_RECORD_SOUND);
-                        } else if (which == 4) {
-                            //File FROM SDCARD
-                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                            i.setType("*/*");
-                            startActivityForResult(i, PICK_FILE);
+        if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
+            new MaterialDialog.Builder(this)
+                    .items(R.array.attach_file_option)
+                    .itemsCallback(new MaterialDialog.ListCallback() {
+                        @Override
+                        public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            if (which == 0) {
+                                //record video
+                                Intent cameraIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                // create a file to save the video
+                                fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
+                                // set the image file name
+                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                                // set the video image quality to high
+                                cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                                startActivityForResult(cameraIntent, ACTION_TAKE_VIDEO);
+                            } else if (which == 1) {
+                                //VIDEO FROM GALLERY
+                                Intent intent = new Intent();
+                                intent.setType("video/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+                            } else if (which == 2) {
+                                //AUDIO FROM SDCARD
+                                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(i, PICK_AUDIO_FILE);
+                            } else if (which == 3) {
+                                //RECORD AUDIO
+                                M.T(BaseDialogActivity.this, "Comeing soon");
+                            } else if (which == 4) {
+                                //File FROM SDCARD
+                                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                                i.setType("*/*");
+                                startActivityForResult(i, PICK_FILE);
+                            }
                         }
-                    }
-                })
-                .show();
+                    })
+                    .show();
+        } else {
+            Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to send a attachement", opponentUser.getUserId());
+        }
+
     }
 
     /**

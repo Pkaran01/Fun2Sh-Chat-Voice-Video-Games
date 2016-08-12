@@ -213,7 +213,6 @@
     </string-array>
 
 
-
     <!-- New Group Dialog -->
     <string name="new_group_title">New Group</string>
     <string name="new_group_no_friends_for_creating_group">No friends for creating group</string>
@@ -428,6 +427,7 @@
     </string-array>
     <string name="title_activity_first_time_user_profile">FirstTimeUserProfileActivity</string>
     <string name="dummy_status">Hey,I am enjoying FunChat with Fun2Sh</string>
+    <string name="premium_subscription">This is a Premium Feature. To enjoy this feature please upgrade your Fun2sh User Account to the Premium Subscription</string>
 
 
 </resources>

@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="5dp"
     android:gravity="right"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <com.github.siyamed.shapeimageview.HexagonImageView
-        android:id="@+id/avatar_imageview"
+        android:id="@+id/avatar_imageview_attach"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:padding="1dp"

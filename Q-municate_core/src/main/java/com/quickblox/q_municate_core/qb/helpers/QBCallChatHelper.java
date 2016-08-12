@@ -27,6 +27,7 @@ import org.webrtc.VideoCapturerAndroid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -167,9 +168,12 @@ public class QBCallChatHelper extends BaseHelper {
             CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, true);
             if (currentQbRtcSession != null) {
                 Log.d(TAG, "onReceiveNewSession(). Stop new session. Device now is busy");
-                if (!qbRtcSession.equals(currentQbRtcSession)) {
+                /*if (!qbRtcSession.equals(currentQbRtcSession)) {
                     qbRtcSession.rejectCall(null);
-                }
+                }*/
+                Map<String, String> infoMap = new HashMap<>();
+                infoMap.put("busy", "I'm on a call right now!");
+                qbRtcSession.rejectCall(infoMap);
             } else {
                 Log.d(TAG, "onReceiveNewSession(). init session.");
                 if (activityClass != null) {

@@ -2,6 +2,7 @@ package com.ss.fun2sh.ui.fragments.chats;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.quickblox.q_municate_core.qb.helpers.QBGroupChatHelper;
 import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_core.utils.DbUtils;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.DialogDataManager;
@@ -39,6 +42,8 @@ import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
+import com.ss.fun2sh.Activity.PackageUpgradeActivity;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.chats.GroupDialogActivity;
 import com.ss.fun2sh.ui.activities.chats.NewGroupDialogActivity;
@@ -57,18 +62,25 @@ import java.util.Observer;
 import butterknife.Bind;
 import butterknife.OnItemClick;
 
+import static com.ss.fun2sh.CRUD.Const.App_Ver.reg_type;
+
 public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> implements SearchView.OnQueryTextListener {
 
     private static final String TAG = GroupDialogsListFragment.class.getSimpleName();
     private static final int LOADER_ID = GroupDialogsListFragment.class.hashCode();
 
+    @Nullable
     @Bind(R.id.chats_listview)
     ListView dialogsListView;
 
+    @Nullable
     @Bind(R.id.empty_list_textview)
     TextView emptyListTextView;
+
+    @Nullable
     @Bind(R.id.createGroup)
     LinearLayout createGroup;
+
 
     private GroupDialogsListAdapter dialogsListAdapter;
     private DataManager dataManager;
@@ -81,15 +93,28 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_group_dialogs_list, container, false);
-
+        View view;
+        view = inflater.inflate(R.layout.fragment_group_dialogs_list, container, false);
         activateButterKnife(view);
         initFields();
         initChatsDialogs();
         registerForContextMenu(dialogsListView);
-
+        //if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
+        if (false) {
+            view = inflater.inflate(R.layout.fragment_upgrade, container, false);
+            Button packageUpgrade = (Button) view.findViewById(R.id.package_upgrade);
+            packageUpgrade.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle args = new Bundle();
+                    args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
+                    M.I(baseActivity, PackageUpgradeActivity.class, args);
+                }
+            });
+        }
         return view;
     }
+
 
     @Override
     public void initActionBar() {

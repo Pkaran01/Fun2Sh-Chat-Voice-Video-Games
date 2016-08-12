@@ -23,7 +23,7 @@ public class Const {
         String secondTimeLogin = "secondtimelogin";
         String firstTimeProfile = "firsttimeProfile";
         String QBPassword = "1234567890";
-
+        String LAST_AVATAR_URL = "last_avatar_url";
     }
 
     public interface URL {

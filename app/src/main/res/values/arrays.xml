@@ -88,4 +88,14 @@
         <item>FILE FROM SDCARD</item>
     </string-array>
 
+    <string-array name="filterbyfiletype">
+        <item>ALL</item>
+        <item>TEXT</item>
+        <item>IMAGE</item>
+        <item>VOICE</item>
+        <item>VIDEO</item>
+        <item>DOC</item>
+        <item>OTHER</item>
+    </string-array>
+
 </resources>

@@ -56,7 +56,8 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
         final ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
 
 
-        String avatarUrl = null;
+        String avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
+        ;
         String senderName;
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -93,12 +94,21 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
         if (viewHolder.verticalProgressBar != null) {
             viewHolder.verticalProgressBar.setProgressDrawable(baseActivity.getResources().getDrawable(R.drawable.vertical_progressbar));
         }
-
+        if (!ownMessage) {
+            setFullName(combinationMessage,viewHolder);
+        }
         if (combinationMessage.getAttachment() != null) {
             resetUI(viewHolder);
             if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
                 setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
                 displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+                displayAvatarImage(avatarUrl, viewHolder.avatarAttachImageView);
+                viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                if (ownMessage && combinationMessage.getState() != null) {
+                    setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
+                            combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                }
             } else {
                 setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                 if (combinationMessage.getAttachment().getName() != null) {
@@ -140,13 +150,15 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                         }
                     });
                 }
-            }
-            viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+                displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);
+                viewHolder.timeOtherAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
-            if (ownMessage && combinationMessage.getState() != null) {
-                setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
-                        combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                if (ownMessage && combinationMessage.getState() != null) {
+                    setMessageStatus(viewHolder.otherAttachDeliveryStatusImageView, State.DELIVERED.equals(
+                            combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                }
             }
+
 
         } else {
             resetUI(viewHolder);
@@ -161,17 +173,6 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
             } else if (ownMessage && combinationMessage.getState() == null) {
                 viewHolder.messageDeliveryStatusImageView.setImageResource(android.R.color.transparent);
             }
-
-        }
-        if (ownMessage) {
-            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
-        } else {
-            senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
-            avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-            setViewVisibility(viewHolder.nameTextView, View.VISIBLE);
-            viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
-            viewHolder.nameTextView.setText(senderName);
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         }
 

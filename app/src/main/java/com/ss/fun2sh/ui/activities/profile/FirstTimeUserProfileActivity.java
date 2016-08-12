@@ -296,6 +296,7 @@ public class FirstTimeUserProfileActivity extends BaseLoggableActivity implement
         View view = getLayoutInflater().inflate(R.layout.fileattach_dialog_top, null);
 
         final EditText txtStatusdialog = (EditText) view.findViewById(R.id.statusET);
+        txtStatusdialog.setText(statusOld);
         Button setStatusBT = (Button) view.findViewById(R.id.setStatusBT);
 
         final Dialog mBottomSheetDialog = new Dialog(FirstTimeUserProfileActivity.this, R.style.MaterialDialogSttusSheet);// R.style.MaterialDialogSheet

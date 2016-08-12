@@ -61,8 +61,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
         boolean notificationMessage = combinationMessage.getNotificationType() != null;
 
-        String avatarUrl = null;
-        String senderName;
+        String avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
         if (viewHolder.verticalProgressBar != null) {
             viewHolder.verticalProgressBar.setProgressDrawable(baseActivity.getResources().getDrawable(R.drawable.vertical_progressbar));
         }
@@ -75,14 +74,9 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             resetUI(viewHolder);
 
             if (ownMessage) {
-                avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
                 ownMessage(combinationMessage, viewHolder);
             } else {
-                senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
-                avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-                setViewVisibility(viewHolder.nameTextView,View.VISIBLE);
-                viewHolder.nameTextView.setTextColor(colorUtils.getRandomTextColorById(combinationMessage.getDialogOccupant().getUser().getUserId()));
-                viewHolder.nameTextView.setText(senderName);
+                setFullName(combinationMessage,viewHolder);
                 opponentMessage(combinationMessage, viewHolder);
             }
 
@@ -90,6 +84,13 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
                     setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
                     displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+                    displayAvatarImage(avatarUrl, viewHolder.avatarAttachImageView);
+                    viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                    if (ownMessage && combinationMessage.getState() != null) {
+                        setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
+                                combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                    }
                 } else {
                     setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                     if (combinationMessage.getAttachment().getName() != null) {
@@ -131,12 +132,20 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                             }
                         });
                     }
+                    displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);
+                    viewHolder.timeOtherAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                    if (ownMessage && combinationMessage.getState() != null) {
+                        setMessageStatus(viewHolder.otherAttachDeliveryStatusImageView, State.DELIVERED.equals(
+                                combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                    }
                 }
             } else {
                 setViewVisibility(viewHolder.textMessageView, View.VISIBLE);
                 viewHolder.timeTextMessageTextView.setText(
                         DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
                 viewHolder.messageTextView.setText(combinationMessage.getBody());
+                displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
             }
         }
 
@@ -149,6 +158,6 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             dataManager.getMessageDataManager().update(combinationMessage.toMessage(), false);
         }
 
-        displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
+
     }
 }
