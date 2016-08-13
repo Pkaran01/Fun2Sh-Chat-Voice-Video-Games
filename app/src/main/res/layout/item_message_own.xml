@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:gravity="right"
-    android:layout_marginLeft="5dp"
     android:orientation="vertical">
 
     <include layout="@layout/view_chat_progress_bars"/>

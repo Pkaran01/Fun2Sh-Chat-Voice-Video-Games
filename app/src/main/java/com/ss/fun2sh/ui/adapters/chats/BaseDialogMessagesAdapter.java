@@ -43,7 +43,6 @@ import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.UserAccount;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
@@ -255,7 +254,7 @@ public abstract class BaseDialogMessagesAdapter
                                 if (which == 0) {
                                     int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
                                     String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                    if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
+                                    if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
                                         M.T(baseActivity, message);
                                     } else {
                                         M.E("Error in add to favourite");
@@ -268,7 +267,8 @@ public abstract class BaseDialogMessagesAdapter
                                     //Copy
                                     if (combinationMessage.getAttachment() != null) {
                                         //forward images or file ka code
-                                        M.T(baseActivity, "Coming soon");
+                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
+                                        MainActivity.start(baseActivity);
                                     } else {
                                         Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
                                     }
@@ -319,10 +319,13 @@ public abstract class BaseDialogMessagesAdapter
 
     protected void ownMessage(final CombinationMessage combinationMessage, final ViewHolder viewHolder) {
         final String opration[];
+        M.E(combinationMessage.getMessageId());
         if (combinationMessage.getAttachment() == null) {
             opration = resources.getStringArray(R.array.new_messages_option);
             if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
                 opration[0] = "Remove from favourite";
+            } else {
+                opration[0] = "Add to favourite";
             }
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -335,7 +338,7 @@ public abstract class BaseDialogMessagesAdapter
                                     if (which == 0) {
                                         int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
                                         String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                        if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
+                                        if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
                                             M.T(baseActivity, message);
                                         } else {
                                             M.E("Error in add to favourite");
@@ -350,12 +353,7 @@ public abstract class BaseDialogMessagesAdapter
                                         removeMessage(combinationMessage);
                                     } else if (which == 3) {
                                         //Copy
-                                        if (combinationMessage.getAttachment() != null) {
-                                            //forward images or file ka code
-                                            M.T(baseActivity, "Coming soon");
-                                        } else {
-                                            Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
-                                        }
+                                        Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
                                     }
                                 }
                             })
@@ -367,6 +365,8 @@ public abstract class BaseDialogMessagesAdapter
             opration = resources.getStringArray(R.array.new_messages_own_attachment_option);
             if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
                 opration[0] = "Remove from favourite";
+            } else {
+                opration[0] = "Add to favourite";
             }
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -379,7 +379,7 @@ public abstract class BaseDialogMessagesAdapter
                                     if (which == 0) {
                                         int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
                                         String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                        if (DataManager.getInstance().getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
+                                        if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
                                             M.T(baseActivity, message);
                                         } else {
                                             M.E("Error in add to favourite");
@@ -392,7 +392,6 @@ public abstract class BaseDialogMessagesAdapter
                                         //Copy
                                         if (combinationMessage.getAttachment() != null) {
                                             //forward images or file ka code
-                                            //M.T(baseActivity, "Coming soon");
                                             Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
                                             MainActivity.start(baseActivity);
                                         } else {
@@ -435,6 +434,8 @@ public abstract class BaseDialogMessagesAdapter
             directory = FileUtils.videoFolderName;
         } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
             directory = FileUtils.docFolderName;
+        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+            directory = FileUtils.folderName + "/";
         } else {
             directory = FileUtils.otherFolderName;
         }
@@ -652,11 +653,6 @@ public abstract class BaseDialogMessagesAdapter
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                M.dError(baseActivity, "Unable to connect internet.");
-                viewHolder.downloadButton.setProgress(-1);
-                return;
-            }
             new File(getExternalStorageDirectory().toString() + this.foldername).mkdirs();
             viewHolder.downloadButton.setProgress(0);
 

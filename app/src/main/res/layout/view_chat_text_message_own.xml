@@ -7,7 +7,7 @@
               android:gravity="right"
               android:orientation="horizontal"
               android:padding="5dp"
-              android:visibility="gone">
+              android:visibility="visible">
 
 
     <LinearLayout
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
                 android:layout_weight="1"
-                android:padding="7dp"
+                android:padding="10dp"
                 android:text="hi how are you"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small"

@@ -26,6 +26,7 @@ import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.CRUD.Const;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
@@ -78,6 +79,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         addObservers();
         initMessagesRecyclerView();
         if (Const.FORWARD_MESSAGE.length() > 0) {
+            M.E(Const.FORWARD_MESSAGE);
             startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
             Const.FORWARD_MESSAGE = "";
         }

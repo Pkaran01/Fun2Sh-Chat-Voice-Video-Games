@@ -367,7 +367,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (qbRtcSessionUserCallback != null) {
             qbRtcSessionUserCallback.onCallRejectByUser(session, userID, userInfo);
         }
-        M.T(CallActivity.this, userInfo.get("busy"));
+        M.T(CallActivity.this, "User is buys on another call");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

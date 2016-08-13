@@ -54,11 +54,11 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
         callAdapter = new CallAdapter(getActivity(), callList);
         tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
         initCallRecyclerView(rootView);
-        checkEmptyList();
+        checkEmptyList(callList);
         return rootView;
     }
 
-    private void checkEmptyList() {
+    private void checkEmptyList(List<Call> callList) {
         if (callList.size() <= 0) {
             tv.setText("No call log found");
             tv.setVisibility(View.VISIBLE);
@@ -82,9 +82,8 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
                 // your code here
 
                 callList = DataManager.getInstance().getCallDataManager().getAllByStatus(callFilterByType.getSelectedItemPosition(), position);
-
-                checkEmptyList();
                 callAdapter.setFilter(callList);
+                checkEmptyList(callList);
                 callAdapter.notifyDataSetChanged();
             }
 
@@ -101,8 +100,8 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
                         // your code here
 
                         callList = DataManager.getInstance().getCallDataManager().getAllByStatus(position, callFilter.getSelectedItemPosition());
-                        checkEmptyList();
                         callAdapter.setFilter(callList);
+                        checkEmptyList(callList);
                         callAdapter.notifyDataSetChanged();
                     }
 
@@ -161,12 +160,8 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
     @Override
     public boolean onQueryTextChange(String newText) {
         final List<Call> filteredModelList = filter(callList, newText);
-        if (filteredModelList.size() > 0) {
-            callAdapter.setFilter(filteredModelList);
-        } else {
-            tv.setText("No call log found");
-            tv.setVisibility(View.VISIBLE);
-        }
+        callAdapter.setFilter(filteredModelList);
+        checkEmptyList(filteredModelList);
         return true;
     }
 

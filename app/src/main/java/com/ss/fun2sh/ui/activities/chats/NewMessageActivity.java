@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.q_municate_core.core.command.Command;
@@ -33,10 +34,13 @@ import java.util.List;
 
 import butterknife.Bind;
 
-public class NewMessageActivity extends BaseFragment{
+public class NewMessageActivity extends BaseFragment {
 
     @Bind(R.id.friends_recyclerview)
     RecyclerView friendsRecyclerView;
+
+    @Bind(R.id.empty_list_textview)
+    TextView emptyLlistTextview;
 
     private DataManager dataManager;
     private FriendsAdapter friendsAdapter;
@@ -46,7 +50,6 @@ public class NewMessageActivity extends BaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_friends, container, false);
-
         activateButterKnife(view);
         setHasOptionsMenu(true);
         initFields();
@@ -62,25 +65,18 @@ public class NewMessageActivity extends BaseFragment{
         removeActions();
     }
 
+    public void checkForNoFriend() {
+        if (friendsAdapter.isEmpty()) {
+            emptyLlistTextview.setVisibility(View.VISIBLE);
+        } else {
+            emptyLlistTextview.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.new_message_menu, menu);
-/*
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        final SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = null;
-
-        if (searchMenuItem != null) {
-            searchView = (SearchView) searchMenuItem.getActionView();
-        }
-
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView.setOnQueryTextListener(this);
-            searchView.setOnCloseListener(this);
-        }*/
     }
 
     @Override
@@ -98,24 +94,6 @@ public class NewMessageActivity extends BaseFragment{
         return true;
     }
 
-    /*@Override
-    public boolean onClose() {
-        cancelSearch();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String searchQuery) {
-        KeyboardUtils.hideKeyboard(getActivity());
-        search(searchQuery);
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String searchQuery) {
-        search(searchQuery);
-        return true;
-    }*/
 
     @Override
     public void onConnectedToService(QBService service) {
@@ -132,7 +110,7 @@ public class NewMessageActivity extends BaseFragment{
     }
 
     private void initFields() {
-        baseActivity.title = getString(R.string.new_message_title);
+        baseActivity.title = "Contacts";
         dataManager = DataManager.getInstance();
     }
 
@@ -142,6 +120,7 @@ public class NewMessageActivity extends BaseFragment{
         friendsAdapter.setFriendListHelper(friendListHelper);
         friendsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         friendsRecyclerView.setAdapter(friendsAdapter);
+        checkForNoFriend();
     }
 
     private void initCustomListeners() {
@@ -186,17 +165,6 @@ public class NewMessageActivity extends BaseFragment{
         PrivateDialogActivity.start(baseActivity, selectedUser, dialog);
     }
 
-    private void search(String searchQuery) {
-        if (friendsAdapter != null) {
-            friendsAdapter.setFilter(searchQuery);
-        }
-    }
-
-    private void cancelSearch() {
-        if (friendsAdapter != null) {
-            friendsAdapter.flushFilter();
-        }
-    }
 
     private class CreatePrivateChatSuccessAction implements Command {
 

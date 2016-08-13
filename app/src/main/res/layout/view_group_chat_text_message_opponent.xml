@@ -1,14 +1,13 @@
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/text_message_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
-    android:layout_centerInParent="true"
-    android:layout_marginTop="10dp"
-    android:id="@+id/text_message_view"
+    android:padding="5dp"
     android:orientation="vertical"
-    android:visibility="visible"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -23,23 +22,41 @@
             app:siBorderWidth="2dp"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/time_text_message_textview"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:text="05:05AM"
-                android:textColor="@color/black"
-                android:textSize="12dp"/>
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/time_text_message_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:text="05:05AM"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"/>
+                <TextView
+                    android:id="@+id/name_textview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:visibility="gone"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
             <include layout="@layout/view_chat_progress_bars"/>
 
             <GridLayout
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/chat_babble_margin"
                 android:background="@drawable/chat_b"
@@ -47,38 +64,19 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
+
+                <com.rockerhieu.emojicon.EmojiconTextView
+                    android:id="@+id/message_textview"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_textview"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:ellipsize="end"
-                        android:lines="1"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/text_size_small"
-                        android:textStyle="bold"/>
+                    android:layout_gravity="left"
+                    android:padding="10dp"
+                    android:text="this is dummy"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small"
+                    emojicon:emojiconSize="@dimen/chat_emoji_item_preview_size"/>
 
 
-                    <com.rockerhieu.emojicon.EmojiconTextView
-                        android:id="@+id/message_textview"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="5dp"
-                        android:text="this is dummy"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small"
-                        emojicon:emojiconSize="@dimen/chat_emoji_item_preview_size"/>
-
-                </LinearLayout>
             </GridLayout>
         </LinearLayout>
     </LinearLayout>

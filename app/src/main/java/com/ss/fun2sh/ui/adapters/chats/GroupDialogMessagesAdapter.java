@@ -15,6 +15,8 @@ import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.State;
+import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -106,7 +108,12 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                             public void onClick(View v) {
                                 //download file
                                 if (!check) {
-                                    new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                    if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                                        new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                    } else {
+                                        M.dError(baseActivity, "Unable to connect internet.");
+                                        viewHolder.downloadButton.setProgress(-1);
+                                    }
                                 } else {
                                     MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                     Intent newIntent = new Intent(Intent.ACTION_VIEW);

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.quickblox.q_municate_core.core.loader.BaseLoader;
 import com.quickblox.q_municate_core.models.AppSession;
@@ -23,7 +24,6 @@ import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.User;
 import com.ss.fun2sh.R;
-import com.ss.fun2sh.ui.activities.chats.GroupDialogActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
 import com.ss.fun2sh.ui.adapters.search.LocalSearchAdapter;
 import com.ss.fun2sh.ui.fragments.base.BaseLoaderFragment;
@@ -46,6 +46,9 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
 
     @Bind(R.id.dialogs_recyclerview)
     RecyclerView dialogsRecyclerView;
+
+    @Bind(R.id.empty_list_textview)
+    TextView emptyLlistTextview;
 
     private DataManager dataManager;
     private Observer commonObserver;
@@ -77,6 +80,13 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
         //No call for super(). Bug on API Level > 11.
     }
 
+    public void checkForNoFriend() {
+        if (localSearchAdapter.isEmpty()) {
+            emptyLlistTextview.setVisibility(View.VISIBLE);
+        } else {
+            emptyLlistTextview.setVisibility(View.GONE);
+        }
+    }
 
     @Override
     public void onResume() {
@@ -107,6 +117,7 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
     public void search(String searchQuery) {
         if (localSearchAdapter != null) {
             localSearchAdapter.setFilter(searchQuery);
+            checkForNoFriend();
         }
     }
 
@@ -155,7 +166,6 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
         localSearchAdapter.setFriendListHelper(friendListHelper);
         dialogsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         dialogsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        ;
         dialogsRecyclerView.setAdapter(localSearchAdapter);
     }
 
@@ -166,8 +176,6 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
             public void onItemClicked(View view, Dialog dialog, int position) {
                 if (dialog.getType() == Dialog.Type.PRIVATE) {
                     startPrivateChatActivity(dialog);
-                } else {
-                    startGroupChatActivity(dialog);
                 }
             }
         });
@@ -203,10 +211,6 @@ public class LocalSearchFragment extends BaseLoaderFragment<List<Dialog>> implem
         if (searchQuery != null) {
             search(searchQuery);
         }
-    }
-
-    private void startGroupChatActivity(Dialog dialog) {
-        GroupDialogActivity.start(baseActivity, dialog);
     }
 
     private static class DialogsListLoader extends BaseLoader<List<Dialog>> {

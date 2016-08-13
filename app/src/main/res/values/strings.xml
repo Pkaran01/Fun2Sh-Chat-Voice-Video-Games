@@ -230,6 +230,7 @@
     <!-- Add Friends To Group Dialog -->
     <string name="add_friends_to_group_title">Add Friends</string>
     <string name="add_friends_to_group_no_friends_for_adding">No Friends for adding</string>
+    <string name="contact_no_friends">Oops…\nYou don\'t have any friends,search new friend from global db."</string>
 
 
     <!-- Dialog -->

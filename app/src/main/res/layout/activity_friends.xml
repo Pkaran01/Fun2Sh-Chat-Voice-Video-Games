@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundforall_screens"
@@ -11,4 +11,16 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/empty_list_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/createGroup"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:text="@string/contact_no_friends"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_size"/>
+
+</RelativeLayout>

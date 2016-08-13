@@ -16,10 +16,13 @@ import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.State;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
+import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.FileUtils;
@@ -79,7 +82,8 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                                     //Copy
                                     if (combinationMessage.getAttachment() != null) {
                                         //forward images or file ka code
-                                        M.T(baseActivity, "Coming soon");
+                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
+                                        MainActivity.start(baseActivity);
                                     } else {
                                         Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
                                     }
@@ -95,7 +99,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
             viewHolder.verticalProgressBar.setProgressDrawable(baseActivity.getResources().getDrawable(R.drawable.vertical_progressbar));
         }
         if (!ownMessage) {
-            setFullName(combinationMessage,viewHolder);
+            setFullName(combinationMessage, viewHolder);
         }
         if (combinationMessage.getAttachment() != null) {
             resetUI(viewHolder);
@@ -134,7 +138,17 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                         public void onClick(View v) {
                             //download file
                             if (!check) {
-                                new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                                    if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                                        new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                    } else {
+                                        M.dError(baseActivity, "Unable to connect internet.");
+                                        viewHolder.downloadButton.setProgress(-1);
+                                    }
+                                } else {
+                                    M.dError(baseActivity, "Unable to connect internet.");
+                                    viewHolder.downloadButton.setProgress(-1);
+                                }
                             } else {
                                 MimeTypeMap myMime = MimeTypeMap.getSingleton();
                                 Intent newIntent = new Intent(Intent.ACTION_VIEW);

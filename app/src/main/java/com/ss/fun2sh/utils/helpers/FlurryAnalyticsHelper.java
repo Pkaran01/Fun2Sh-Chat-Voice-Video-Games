@@ -2,7 +2,7 @@ package com.ss.fun2sh.utils.helpers;
 
 import android.content.Context;
 
-import com.flurry.android.FlurryAgent;
+
 import com.quickblox.core.QBSettings;
 
 import java.util.HashMap;
@@ -14,8 +14,6 @@ import java.util.Map;
 public class FlurryAnalyticsHelper {
     public static void pushAnalyticsData(Context context) {
         // init Flurry
-        FlurryAgent.setLogEnabled(true);
-        FlurryAgent.init(context, "P8NWM9PBFCK2CWC8KZ59");
 
         Map<String, String> params = new HashMap<>();
 
@@ -24,6 +22,6 @@ public class FlurryAnalyticsHelper {
         params.put("chat_endpoint", QBSettings.getInstance().getChatServerDomain());
 
         //up to 10 params can be logged with each event
-        FlurryAgent.logEvent("connect_to_chat", params);
+
     }
 }

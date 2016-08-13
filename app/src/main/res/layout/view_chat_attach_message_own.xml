@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="5dp"
     android:gravity="right"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <LinearLayout
         android:layout_width="wrap_content"

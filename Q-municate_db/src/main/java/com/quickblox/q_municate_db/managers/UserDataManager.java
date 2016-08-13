@@ -1,7 +1,5 @@
 package com.quickblox.q_municate_db.managers;
 
-import android.util.Log;
-
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -136,7 +134,6 @@ public class UserDataManager extends BaseManager<User> {
             QueryBuilder<User, Long> queryBuilder = dao.queryBuilder();
             queryBuilder.where().eq(User.Column.ID, friendId).and().eq(User.Column.isBlocked, 1);
             PreparedQuery<User> preparedQuery = queryBuilder.prepare();
-            Log.e("query", preparedQuery.getStatement());
             message = dao.queryForFirst(preparedQuery);
         } catch (SQLException e) {
             ErrorUtils.logError(e);

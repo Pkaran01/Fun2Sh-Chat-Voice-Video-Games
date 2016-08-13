@@ -16,16 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.quickblox.q_municate_core.core.command.Command;
-import com.quickblox.q_municate_core.qb.commands.chat.QBLogoutAndDestroyChatCommand;
 import com.quickblox.q_municate_core.qb.commands.rest.QBLogoutCompositeCommand;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.Adapter.NavDrawerListAdapter;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
-import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.Model.NavDrawerItem;
 import com.ss.fun2sh.R;
@@ -170,11 +169,7 @@ public class DashBoardActivity extends BaseLoggableActivity {
                     }
                 } else if (position == 4) {
                     fragment = null;
-                    if (NetworkUtil.getConnectivityStatus(DashBoardActivity.this)) {
-                        M.I(DashBoardActivity.this, com.ss.fun2sh.ui.activities.authorization.SplashActivity.class, null);
-                    } else {
-                        M.dError(DashBoardActivity.this, "Unable to connect internet !");
-                    }
+                    M.I(DashBoardActivity.this, com.ss.fun2sh.ui.activities.authorization.SplashActivity.class, null);
                 } else if (position == 5) {
                     fragment = new FragHelp();
                     ft.addToBackStack("FragHelp");
@@ -271,7 +266,7 @@ public class DashBoardActivity extends BaseLoggableActivity {
 
     private void addActions() {
         addAction(QBServiceConsts.LOGOUT_SUCCESS_ACTION, new LogoutSuccessAction());
-       // addAction(QBServiceConsts.LOGOUT_CHAT_SUCCESS_ACTION, new LogoutSuccessAction());
+        // addAction(QBServiceConsts.LOGOUT_CHAT_SUCCESS_ACTION, new LogoutSuccessAction());
         addAction(QBServiceConsts.LOGOUT_FAIL_ACTION, failAction);
 
         updateBroadcastActionList();

@@ -80,6 +80,7 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
                 });
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -102,51 +103,47 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
         //if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.reg_type).equals("PREMIUM")) {
         if (true) {
             rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
-
             messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messages_recycleview);
-            combinationMessagesList = createCombinationMessagesList();
-            favouriteAdapter = new FavouriteAdapter(baseActivity, combinationMessagesList);
             filter = (Spinner) rootView.findViewById(R.id.filterByType);
             tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
-            checkEmpyList();
+            favouriteAdapter = new FavouriteAdapter(baseActivity, createCombinationMessagesList());
+            initMessagesRecyclerView();
             filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     // your code here
-                    List<CombinationMessage> temp;
                     if (position == 0) {
-                        temp = createCombinationMessagesList();
+                        combinationMessagesList = createCombinationMessagesList();
                     } else if (position == 1) {
-                        temp = filterTextMessage(combinationMessagesList);
+                        combinationMessagesList = filterTextMessage(createCombinationMessagesList());
                     } else if (position == 2) {
-                        temp = filterByType(combinationMessagesList, Attachment.Type.PICTURE);
+                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.PICTURE);
                     } else if (position == 3) {
-                        temp = filterByType(combinationMessagesList, Attachment.Type.AUDIO);
+                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.AUDIO);
                     } else if (position == 4) {
-                        temp = filterByType(combinationMessagesList, Attachment.Type.VIDEO);
+                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.VIDEO);
                     } else if (position == 5) {
-                        temp = filterByType(combinationMessagesList, Attachment.Type.DOC);
+                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.DOC);
                     } else if (position == 6) {
-                        temp = filterByType(combinationMessagesList, Attachment.Type.OTHER);
-                    } else {
-                        temp = createCombinationMessagesList();
+                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.OTHER);
                     }
-                    if (temp.size() > 0) {
-                        tv.setVisibility(View.GONE);
-                        favouriteAdapter.setFilter(temp);
-                    } else {
-                        tv.setText("No favourite item found");
-                        tv.setVisibility(View.VISIBLE);
+                    if (favouriteAdapter != null) {
+                        favouriteAdapter.setFilter(combinationMessagesList);
+                        checkEmpyList(combinationMessagesList);
                     }
-
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parentView) {
                     // your code here
+                    combinationMessagesList = createCombinationMessagesList();
+                    favouriteAdapter.setFilter(combinationMessagesList);
+                    checkEmpyList(combinationMessagesList);
                 }
 
             });
+            ;
+
         } else {
             rootView = inflater.inflate(R.layout.fragment_upgrade, container, false);
             Button packageUpgrade = (Button) rootView.findViewById(R.id.package_upgrade);
@@ -162,9 +159,9 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
         return rootView;
     }
 
-    private void checkEmpyList() {
-        if (combinationMessagesList.size() > 0) {
-            initMessagesRecyclerView();
+    private void checkEmpyList(List<CombinationMessage> combinationMessages) {
+        if (combinationMessages.size() > 0) {
+            tv.setVisibility(View.GONE);
         } else {
             tv.setText("No favourite item found");
             tv.setVisibility(View.VISIBLE);
@@ -202,14 +199,12 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         List<CombinationMessage> filterList = filter(combinationMessagesList, newText);
-        if (filterList.size() > 0) {
-            favouriteAdapter.setFilter(filterList);
-        } else {
-            tv.setText("No favourite item found");
-            tv.setVisibility(View.VISIBLE);
-        }
+        favouriteAdapter.setFilter(filterList);
+        checkEmpyList(filterList);
         return true;
     }
+
+
 
     private List<CombinationMessage> filter(List<CombinationMessage> models, String query) {
         query = query.toLowerCase();
