@@ -98,26 +98,26 @@ public class ChatNotificationUtils {
     }
 
     private static String attachmentNotificationMessage(Context context, QBChatMessage qbChatMessage) {
+        String message = context.getString(R.string.dlg_attached_last_message);
         Collection<QBAttachment> attachmentCollection = qbChatMessage.getAttachments();
         if (attachmentCollection != null && attachmentCollection.size() > 0) {
             ArrayList<QBAttachment> attachmentsList = new ArrayList<QBAttachment>(attachmentCollection);
             if (!attachmentsList.isEmpty()) {
                 QBAttachment attachment = attachmentsList.get(0);
                 if (attachment.getType().equals(Attachment.Type.PICTURE)) {
-                    return "Image";
+                    message = "Image";
                 } else if (attachment.getType().equals(Attachment.Type.AUDIO)) {
-                    return "Audio";
+                    message = "Audio";
                 } else if (attachment.getType().equals(Attachment.Type.VIDEO)) {
-                    return "Video";
+                    message = "Video";
                 } else if (attachment.getType().equals(Attachment.Type.DOC)) {
-                    return "Document";
+                    message = "Document";
                 } else {
-                    return context.getString(R.string.dlg_attached_last_message);
+                    message = context.getString(R.string.dlg_attached_last_message);
                 }
-
             }
         }
-        return context.getString(R.string.dlg_attached_last_message);
+        return message;
     }
 
     public static void updateDialogFromQBMessage(Context context, DataManager dataManager, QBChatMessage qbChatMessage, QBDialog qbDialog) {

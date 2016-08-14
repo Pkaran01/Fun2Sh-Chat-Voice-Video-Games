@@ -12,6 +12,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.command.Command;
+import com.quickblox.q_municate_core.models.AppSession;
+import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.friend.QBAcceptFriendCommand;
 import com.quickblox.q_municate_core.qb.commands.friend.QBRejectFriendCommand;
 import com.quickblox.q_municate_core.service.QBService;
@@ -36,6 +38,7 @@ import com.ss.fun2sh.ui.fragments.dialogs.base.TwoButtonsDialogFragment;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.listeners.FriendOperationListener;
+import com.ss.fun2sh.utils.listeners.simple.SimpleOnRecycleItemClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -153,6 +156,21 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         findLastFriendsRequest();
 
         messagesRecyclerView.setAdapter(messagesAdapter);
+        messagesAdapter.setOnRecycleItemClickListener(new SimpleOnRecycleItemClickListener<CombinationMessage>() {
+
+
+            @Override
+            public void onItemLongClicked(View view, CombinationMessage combinationMessage, int position) {
+                boolean ownMessage = !combinationMessage.isIncoming(AppSession.getSession().getUser().getId());
+                if (ownMessage) {
+                    //own
+                    ownMessage(combinationMessage);
+                } else {
+                    //opponent
+                    opponentMessage(combinationMessage);
+                }
+            }
+        });
         scrollMessagesToBottom();
     }
 

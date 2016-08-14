@@ -26,6 +26,8 @@ import com.ss.fun2sh.utils.listeners.FriendOperationListener;
 import java.io.File;
 import java.util.List;
 
+import static com.ss.fun2sh.CRUD.Utility.getDirectoryName;
+
 public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
     private static int EMPTY_POSITION = -1;
@@ -163,11 +165,11 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         }
 
 
-        if (ownMessage) {
-            ownMessage(combinationMessage, viewHolder);
+    /*    if (ownMessage) {
+            ownMessage(combinationMessage);
         } else {
             opponentMessage(combinationMessage, viewHolder);
-        }
+        }*/
 
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {

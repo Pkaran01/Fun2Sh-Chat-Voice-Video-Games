@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -21,9 +20,12 @@ import com.quickblox.chat.QBPrivacyListsManager;
 import com.quickblox.chat.listeners.QBPrivacyListListener;
 import com.quickblox.chat.model.QBPrivacyList;
 import com.quickblox.chat.model.QBPrivacyListItem;
+import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.Attachment;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.utils.FileUtils;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -369,6 +371,24 @@ public class Utility {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+
+
+    public static String getDirectoryName(CombinationMessage combinationMessage) {
+        String directory;
+        if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
+            directory = FileUtils.audioFolderName;
+        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
+            directory = FileUtils.videoFolderName;
+        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
+            directory = FileUtils.docFolderName;
+        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+            directory = FileUtils.folderName + "/";
+        } else {
+            directory = FileUtils.otherFolderName;
+        }
+        return directory;
     }
 
 

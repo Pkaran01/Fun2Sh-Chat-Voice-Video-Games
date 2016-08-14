@@ -216,7 +216,6 @@ public abstract class QBBaseChatHelper extends BaseHelper {
     private QBAttachment getAttachment(QBFile file) {
         // TODO temp value karan content type
         String attachmentType = file.getContentType();
-        Log.e("karan","getAttachment on sent");
         QBAttachment attachment;
         if (attachmentType.contains("audio")) {
             attachment = new QBAttachment(QBAttachment.AUDIO_TYPE);
@@ -229,13 +228,26 @@ public abstract class QBBaseChatHelper extends BaseHelper {
         }
         attachment.setId(file.getUid());
         attachment.setName(file.getName());
-        Log.e("file name",file.getName());
         attachment.setContentType(attachmentType);
         attachment.setUrl(file.getPublicUrl());
         attachment.setSize(file.getSize());
         return attachment;
     }
 
+    protected String getAttachemntMessage(QBFile file) {
+        String type = file.getContentType();
+        String message = context.getString(R.string.dlg_attached_last_message);
+        if (type.contains("audio")) {
+            message = "Audio";
+        } else if (type.contains("video")) {
+            message = "Video";
+        } else if (type.contains("image")) {
+            message = "Image";
+        } else {
+            message = context.getString(R.string.dlg_attached_last_message);
+        }
+        return message;
+    }
 
     public void sendTypingStatusToServer(int opponentId, boolean startTyping) {
         try {

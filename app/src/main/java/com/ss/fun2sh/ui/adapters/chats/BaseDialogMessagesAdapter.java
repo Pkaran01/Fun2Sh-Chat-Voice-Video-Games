@@ -1,27 +1,20 @@
 package com.ss.fun2sh.ui.adapters.chats;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.dd.CircularProgressButton;
 import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -29,11 +22,8 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.quickblox.auth.QBAuth;
-import com.quickblox.chat.QBChatService;
-import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.BaseServiceException;
 import com.quickblox.core.server.BaseService;
-import com.quickblox.q_municate_core.crud.QBMessageUpdateBuilder;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.utils.ConstsCore;
@@ -42,12 +32,8 @@ import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.UserAccount;
-import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
-import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.activities.others.PreviewImageActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.ui.adapters.base.BaseRecyclerViewAdapter;
@@ -71,7 +57,6 @@ import java.net.URLConnection;
 import java.util.List;
 
 import butterknife.Bind;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
@@ -181,232 +166,6 @@ public abstract class BaseDialogMessagesAdapter
         setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.GONE);
     }
 
-    public void editMessage(final CombinationMessage msg, final ViewHolder viewHolder) {
-        LayoutInflater inflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.dialog_editmessage, null);
-        Button loginButton = (Button) view.findViewById(R.id.loginButton);
-        ImageView close = (ImageView) view.findViewById(R.id.close);
-        final EditText emailEditText = (EditText) view.findViewById(R.id.dialog_message);
-        emailEditText.setText(msg.getBody());
-        final MaterialDialog dialog = new MaterialDialog.Builder(baseActivity)
-                .autoDismiss(false)
-                .customView(view, false)
-                .show();
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        loginButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (UserAccount.isEmpty(emailEditText)) {
-                            QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
-                            messageUpdateBuilder.updateText(emailEditText.getText().toString());
-                            messageUpdateBuilder.markRead();
-                            viewHolder.messageTextView.setText(emailEditText.getText().toString());
-                            QBMessageUpdateBuilder.updateMessage(msg.getMessageId(), msg.getDialogOccupant().getDialog().getDialogId(), messageUpdateBuilder, new QBEntityCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid, Bundle bundle) {
-
-                                }
-
-                                @Override
-                                public void onSuccess() {
-                                    dataManager.getMessageDataManager().updateMessage(msg.getMessageId(), emailEditText.getText().toString());
-                                    M.T(baseActivity, "Message is updated");
-                                    dialog.dismiss();
-                                }
-
-                                @Override
-                                public void onError(List<String> list) {
-
-                                }
-                            });
-
-                        } else {
-                            UserAccount.EditTextPointer.requestFocus();
-                            UserAccount.EditTextPointer.setError("This can't be empty !");
-                        }
-                    }
-                });
-        BaseDialogMessagesAdapter.this.notifyDataSetChanged();
-    }
-
-    protected void opponentMessage(final CombinationMessage combinationMessage, ViewHolder viewHolder) {
-        final String opration[] = resources.getStringArray(R.array.new_messages_option_opponent);
-        if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
-            opration[0] = "Remove from favourite";
-        }
-        if (combinationMessage.getAttachment() != null) {
-            opration[2] = "Forward";
-        }
-        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                new MaterialDialog.Builder(baseActivity)
-                        .items(opration)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
-                            @Override
-                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                if (which == 0) {
-                                    int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
-                                    String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                    if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
-                                        M.T(baseActivity, message);
-                                    } else {
-                                        M.E("Error in add to favourite");
-                                    }
-                                    notifyDataSetChanged();
-                                } else if (which == 1) {
-                                    //Remove
-                                    removeMessage(combinationMessage);
-                                } else if (which == 2) {
-                                    //Copy
-                                    if (combinationMessage.getAttachment() != null) {
-                                        //forward images or file ka code
-                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
-                                        MainActivity.start(baseActivity);
-                                    } else {
-                                        Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
-                                    }
-                                }
-                            }
-                        })
-                        .show();
-                return false;
-            }
-        });
-    }
-
-    private void removeMessage(final CombinationMessage combinationMessage) {
-        SweetAlertDialog sweetAlertDialog = M.dConfirem(baseActivity, "Delete message?", "DELETE", "CANCEL");
-        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                QBChatService.deleteMessage(combinationMessage.getMessageId(), new QBEntityCallback<Void>() {
-
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        sweetAlertDialog.dismiss();
-                        dataManager.getMessageDataManager().deleteMessageById(combinationMessage.getMessageId());
-                    }
-
-                    @Override
-                    public void onError(List<String> list) {
-
-                    }
-
-                });
-            }
-        });
-        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialog.dismiss();
-            }
-        });
-
-        notifyDataSetChanged();
-    }
-
-    protected void ownMessage(final CombinationMessage combinationMessage, final ViewHolder viewHolder) {
-        final String opration[];
-        M.E(combinationMessage.getMessageId());
-        if (combinationMessage.getAttachment() == null) {
-            opration = resources.getStringArray(R.array.new_messages_option);
-            if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
-                opration[0] = "Remove from favourite";
-            } else {
-                opration[0] = "Add to favourite";
-            }
-            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    new MaterialDialog.Builder(baseActivity)
-                            .items(opration)
-                            .itemsCallback(new MaterialDialog.ListCallback() {
-                                @Override
-                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if (which == 0) {
-                                        int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
-                                        String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                        if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
-                                            M.T(baseActivity, message);
-                                        } else {
-                                            M.E("Error in add to favourite");
-                                        }
-                                        notifyDataSetChanged();
-                                    }
-                                    if (which == 1) {
-                                        //Edit
-                                        editMessage(combinationMessage, viewHolder);
-                                    } else if (which == 2) {
-                                        //Remove
-                                        removeMessage(combinationMessage);
-                                    } else if (which == 3) {
-                                        //Copy
-                                        Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
-                                    }
-                                }
-                            })
-                            .show();
-                    return false;
-                }
-            });
-        } else {
-            opration = resources.getStringArray(R.array.new_messages_own_attachment_option);
-            if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
-                opration[0] = "Remove from favourite";
-            } else {
-                opration[0] = "Add to favourite";
-            }
-            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    new MaterialDialog.Builder(baseActivity)
-                            .items(opration)
-                            .itemsCallback(new MaterialDialog.ListCallback() {
-                                @Override
-                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if (which == 0) {
-                                        int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
-                                        String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                        if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
-                                            M.T(baseActivity, message);
-                                        } else {
-                                            M.E("Error in add to favourite");
-                                        }
-                                        notifyDataSetChanged();
-                                    } else if (which == 1) {
-                                        //Remove
-                                        removeMessage(combinationMessage);
-                                    } else if (which == 2) {
-                                        //Copy
-                                        if (combinationMessage.getAttachment() != null) {
-                                            //forward images or file ka code
-                                            Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
-                                            MainActivity.start(baseActivity);
-                                        } else {
-                                            Utility.msgInClipBoard(baseActivity, combinationMessage.getBody());
-                                        }
-                                    }
-                                }
-                            })
-                            .show();
-                    return false;
-                }
-            });
-        }
-    }
-
     public void setFullName(CombinationMessage combinationMessage, ViewHolder viewHolder) {
         String senderName = combinationMessage.getDialogOccupant().getUser().getFullName();
         if (combinationMessage.getAttachment() != null) {
@@ -426,21 +185,7 @@ public abstract class BaseDialogMessagesAdapter
         }
     }
 
-    public String getDirectoryName(CombinationMessage combinationMessage) {
-        String directory;
-        if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
-            directory = FileUtils.audioFolderName;
-        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
-            directory = FileUtils.videoFolderName;
-        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
-            directory = FileUtils.docFolderName;
-        } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
-            directory = FileUtils.folderName + "/";
-        } else {
-            directory = FileUtils.otherFolderName;
-        }
-        return directory;
-    }
+
     //    @Override
     //    public void onAbsolutePathExtFileReceived(String absolutePath) {
     //        chatUIHelperListener.onScreenResetPossibilityPerformLogout(false);

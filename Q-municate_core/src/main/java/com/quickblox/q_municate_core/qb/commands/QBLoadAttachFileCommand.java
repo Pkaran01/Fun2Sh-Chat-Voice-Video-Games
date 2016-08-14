@@ -35,7 +35,6 @@ public class QBLoadAttachFileCommand extends ServiceCommand {
         File file = (File) extras.getSerializable(QBServiceConsts.EXTRA_FILE);
 
         QBFile qbFile = privateChatHelper.loadAttachFile(file);
-
         Bundle result = new Bundle();
         result.putSerializable(QBServiceConsts.EXTRA_ATTACH_FILE, qbFile);
 

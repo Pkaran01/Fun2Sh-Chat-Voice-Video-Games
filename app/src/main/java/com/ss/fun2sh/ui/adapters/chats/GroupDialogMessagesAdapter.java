@@ -26,6 +26,8 @@ import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import java.io.File;
 import java.util.List;
 
+import static com.ss.fun2sh.CRUD.Utility.getDirectoryName;
+
 public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
     public GroupDialogMessagesAdapter(BaseActivity baseActivity, List<CombinationMessage> objectsList,
@@ -41,7 +43,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             case TYPE_REQUEST_MESSAGE:
                 return new ViewHolder(this, layoutInflater.inflate(R.layout.item_notification_message, viewGroup, false));
             case TYPE_OWN_MESSAGE:
-                return new ViewHolder(this, layoutInflater.inflate(R.layout.item_message_own, viewGroup, false));
+                return new ViewHolder(this, layoutInflater.inflate(R.layout.item_group_message_own, viewGroup, false));
             case TYPE_OPPONENT_MESSAGE:
                 return new ViewHolder(this, layoutInflater.inflate(R.layout.item_group_message_opponent, viewGroup, false));
             default:
@@ -53,6 +55,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
     public int getItemViewType(int position) {
         return getItemViewType(getItem(position));
     }
+
 
     @Override
     public void onBindViewHolder(BaseClickListenerViewHolder<CombinationMessage> baseClickListenerViewHolder, int position) {
@@ -74,11 +77,8 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
 
             resetUI(viewHolder);
 
-            if (ownMessage) {
-                ownMessage(combinationMessage, viewHolder);
-            } else {
+            if (!ownMessage) {
                 setFullName(combinationMessage, viewHolder);
-                opponentMessage(combinationMessage, viewHolder);
             }
 
             if (combinationMessage.getAttachment() != null) {

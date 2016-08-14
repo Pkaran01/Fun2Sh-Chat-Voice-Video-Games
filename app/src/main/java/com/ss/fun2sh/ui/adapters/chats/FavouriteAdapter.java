@@ -25,10 +25,11 @@ import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.utils.DateUtils;
-import com.ss.fun2sh.utils.FileUtils;
 
 import java.io.File;
 import java.util.List;
+
+import static com.ss.fun2sh.CRUD.Utility.getDirectoryName;
 
 public class FavouriteAdapter extends BaseDialogMessagesAdapter {
 
@@ -60,8 +61,6 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
 
 
         String avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
-        ;
-        String senderName;
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -119,17 +118,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                     final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
                     viewHolder.fileName.setText(tokens[0]);
                     viewHolder.fileType.setText(tokens[1].toUpperCase());
-                    final String directory;
-                    if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {
-                        directory = FileUtils.audioFolderName;
-                    } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.VIDEO)) {
-                        directory = FileUtils.videoFolderName;
-                    } else if (combinationMessage.getAttachment().getType().equals(Attachment.Type.DOC)) {
-                        directory = FileUtils.docFolderName;
-                    } else {
-                        directory = FileUtils.otherFolderName;
-                    }
-                    final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
+                    final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
                     final boolean check = file.exists();
                     if (check)
                         viewHolder.downloadButton.setProgress(100);
@@ -140,7 +129,7 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                             if (!check) {
                                 if (NetworkUtil.getConnectivityStatus(baseActivity)) {
                                     if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                                        new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                        new DownloadFileAsync(getDirectoryName(combinationMessage), viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                                     } else {
                                         M.dError(baseActivity, "Unable to connect internet.");
                                         viewHolder.downloadButton.setProgress(-1);
