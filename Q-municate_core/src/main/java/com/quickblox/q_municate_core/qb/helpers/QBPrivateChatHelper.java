@@ -66,7 +66,6 @@ public class QBPrivateChatHelper extends QBBaseChatHelper {
 
     public void sendPrivateMessageWithAttachImage(QBFile file, int userId) throws QBResponseException {
         //TODO Notification message
-        Log.e("CRUD", getAttachemntMessage(file));
         sendPrivateMessage(file, getAttachemntMessage(file), userId);
     }
 

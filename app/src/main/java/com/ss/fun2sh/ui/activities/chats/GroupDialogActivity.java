@@ -130,7 +130,7 @@ public class GroupDialogActivity extends BaseDialogActivity {
         try {
             ((QBGroupChatHelper) baseChatHelper).sendGroupMessageWithAttachImage(dialog.getRoomJid(), file);
         } catch (QBResponseException e) {
-            ErrorUtils.showError(this, e);
+            ErrorUtils.showError(this, "Unable to send file");
         }
     }
 

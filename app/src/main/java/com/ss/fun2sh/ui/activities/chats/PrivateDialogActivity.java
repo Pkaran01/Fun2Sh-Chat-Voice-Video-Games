@@ -136,7 +136,8 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         try {
             privateChatHelper.sendPrivateMessageWithAttachImage(file, opponentUser.getUserId());
         } catch (QBResponseException exc) {
-            ErrorUtils.showError(this, exc);
+            ErrorUtils.showError(this, "Unable to send file");
+
         }
     }
 
