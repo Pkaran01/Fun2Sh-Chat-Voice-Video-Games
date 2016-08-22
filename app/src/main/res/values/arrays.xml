@@ -30,6 +30,14 @@
         <item>20</item>
     </integer-array>
 
+    <integer-array name="local_land_view_coordinates_full_screen">
+        <item>75</item>
+        <item>75</item>
+        <item>20</item>
+        <item>30</item>
+    </integer-array>
+
+
     <string-array name="chatarray">
         <item>Home</item>
         <item>Announcement</item>
@@ -81,11 +89,12 @@
     </string-array>
 
     <string-array name="attach_file_option">
-        <item>RECORD VIDEO</item>
-        <item>VIDEO FROM GALLERY</item>
-        <item>AUDIO FROM SDCARD</item>
-        <item>RECORD AUDIO</item>
-        <item>FILE FROM SDCARD</item>
+        <item>Record video message</item>
+        <item>Video from gallery</item>
+        <item>Audio from SD Card</item>
+        <item>Record audio message</item>
+        <item>File from SD Card</item>
+        <item>File from gallery </item>
     </string-array>
 
     <string-array name="filterbyfiletype">

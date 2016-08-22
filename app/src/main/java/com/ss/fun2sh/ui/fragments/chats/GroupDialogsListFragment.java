@@ -99,8 +99,8 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
         initFields();
         initChatsDialogs();
         registerForContextMenu(groupDialogsListView);
-        //if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
-        if (false) {
+        if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
+        //if (false) {
             view = inflater.inflate(R.layout.fragment_upgrade, container, false);
             Button packageUpgrade = (Button) view.findViewById(R.id.package_upgrade);
             packageUpgrade.setOnClickListener(new View.OnClickListener() {

@@ -116,11 +116,12 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                     final boolean check = file.exists();
                     if (check)
                         viewHolder.downloadButton.setText("OPEN");
+
                     viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //download file
-                            if (!check) {
+                            if (!viewHolder.downloadButton.getText().equals("OPEN")) {
                                 new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                             } else {
                                 MimeTypeMap myMime = MimeTypeMap.getSingleton();
@@ -146,15 +147,11 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                             combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
                 }
             }
-
-
         } else {
             resetUI(viewHolder);
-
             setViewVisibility(viewHolder.textMessageView, View.VISIBLE);
             viewHolder.messageTextView.setText(combinationMessage.getBody());
             viewHolder.timeTextMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
-
             if (ownMessage && combinationMessage.getState() != null) {
                 setMessageStatus(viewHolder.messageDeliveryStatusImageView, State.DELIVERED.equals(
                         combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
@@ -163,14 +160,6 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             }
             displayAvatarImage(avatarUrl, viewHolder.avatarImageView);
         }
-
-
-    /*    if (ownMessage) {
-            ownMessage(combinationMessage);
-        } else {
-            opponentMessage(combinationMessage, viewHolder);
-        }*/
-
 
         if (!State.READ.equals(combinationMessage.getState()) && !ownMessage && baseActivity.isNetworkAvailable()) {
             combinationMessage.setState(State.READ);

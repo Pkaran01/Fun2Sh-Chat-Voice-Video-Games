@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/attachotherfile_message_relativelayout"
     android:layout_width="fill_parent"
@@ -13,7 +12,7 @@
         android:layout_width="54dp"
         android:layout_height="54dp"
         app:siBorderColor="@color/greencolorInner"
-        app:siBorderWidth="2dp"/>
+        app:siBorderWidth="2dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -35,7 +34,7 @@
                 android:padding="1dp"
                 android:text="05:05AM"
                 android:textColor="@color/black"
-                android:textSize="12dp"/>
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/name_textview_otherattach"
@@ -49,16 +48,15 @@
                 android:textColor="@color/blue"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="80dp"
             android:background="@drawable/chat_b"
-            android:padding="7dp"
             android:orientation="horizontal"
-            >
+            android:padding="7dp">
 
             <TextView
                 android:id="@+id/file_type"
@@ -70,8 +68,7 @@
                 android:text="PDF"
                 android:textColor="#fff"
                 android:textSize="15dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -85,18 +82,16 @@
                     android:layout_above="@+id/download_button"
                     android:gravity="center"
                     android:text="app2.dex"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
-                <com.dd.CircularProgressButton
+                <Button
                     android:id="@+id/download_button"
                     android:layout_width="fill_parent"
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
-                    android:textColor="@color/white"
-                    android:textSize="12dp"
-                    app:cpb_textComplete="OPEN"
-                    app:cpb_textError="RETRY"
-                    app:cpb_textIdle="DOWNLOAD"/>
+                    android:text="Download"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

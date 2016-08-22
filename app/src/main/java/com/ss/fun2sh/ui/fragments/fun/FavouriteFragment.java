@@ -25,6 +25,7 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Message;
 import com.ss.fun2sh.Activity.PackageUpgradeActivity;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
@@ -100,8 +101,8 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
                              Bundle savedInstanceState) {
 
         View rootView;
-        //if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.reg_type).equals("PREMIUM")) {
-        if (true) {
+        if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.reg_type).equals("PREMIUM")) {
+        //if (true) {
             rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
             messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messages_recycleview);
             filter = (Spinner) rootView.findViewById(R.id.filterByType);
@@ -163,7 +164,7 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
         if (combinationMessages.size() > 0) {
             tv.setVisibility(View.GONE);
         } else {
-            tv.setText("No favourite item found");
+            tv.setText("No favourites item found");
             tv.setVisibility(View.VISIBLE);
         }
     }

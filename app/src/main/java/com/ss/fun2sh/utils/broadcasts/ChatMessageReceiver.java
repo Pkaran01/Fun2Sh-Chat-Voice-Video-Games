@@ -18,19 +18,22 @@ public class ChatMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        M.E("--- onReceive()" + TAG);
+        //M.E("--- onReceive()" + TAG);
         String activityOnTop = SystemUtils.getNameActivityOnTopStack();
 
         if (!SystemUtils.isAppRunningNow() && !callActivityName.equals(activityOnTop)) {
             ChatNotificationHelper chatNotificationHelper = new ChatNotificationHelper(context);
+            try {
+                String message = intent.getStringExtra(QBServiceConsts.EXTRA_CHAT_MESSAGE);
+                User user = (User) intent.getSerializableExtra(QBServiceConsts.EXTRA_USER);
+                String dialogId = intent.getStringExtra(QBServiceConsts.EXTRA_DIALOG_ID);
 
-            String message = intent.getStringExtra(QBServiceConsts.EXTRA_CHAT_MESSAGE);
-            User user = (User) intent.getSerializableExtra(QBServiceConsts.EXTRA_USER);
-            String dialogId = intent.getStringExtra(QBServiceConsts.EXTRA_DIALOG_ID);
-
-            chatNotificationHelper.saveOpeningDialogData(user.getUserId(), dialogId);
-            chatNotificationHelper.saveOpeningDialog(true);
-            chatNotificationHelper.sendNotification(message);
+                chatNotificationHelper.saveOpeningDialogData(user.getUserId(), dialogId);
+                chatNotificationHelper.saveOpeningDialog(true);
+                chatNotificationHelper.sendNotification(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

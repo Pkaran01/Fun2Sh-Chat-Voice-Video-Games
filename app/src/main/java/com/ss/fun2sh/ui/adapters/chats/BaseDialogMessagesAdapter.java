@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -293,7 +294,7 @@ public abstract class BaseDialogMessagesAdapter
 
         @Nullable
         @Bind(R.id.download_button)
-        CircularProgressButton downloadButton;
+        Button downloadButton;
 
         @Nullable
         @Bind(R.id.file_name)
@@ -399,7 +400,7 @@ public abstract class BaseDialogMessagesAdapter
         protected void onPreExecute() {
             super.onPreExecute();
             new File(getExternalStorageDirectory().toString() + this.foldername).mkdirs();
-            viewHolder.downloadButton.setProgress(0);
+            baseActivity.showProgress();
 
         }
 
@@ -443,14 +444,14 @@ public abstract class BaseDialogMessagesAdapter
 
         protected void onProgressUpdate(String... progress) {
             Log.d("ANDRO_ASYNC", progress[0]);
-            viewHolder.downloadButton.setProgress(Integer.parseInt(progress[0]));
 
         }
 
         @Override
         protected void onPostExecute(String unused) {
             baseActivity.hideProgress();
-            viewHolder.downloadButton.setProgress(100);
+            viewHolder.downloadButton.setText("OPEN");
+            notifyDataSetChanged();
         }
     }
 }

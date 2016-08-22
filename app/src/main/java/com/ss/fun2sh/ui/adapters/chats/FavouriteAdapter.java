@@ -121,22 +121,18 @@ public class FavouriteAdapter extends BaseDialogMessagesAdapter {
                     final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
                     final boolean check = file.exists();
                     if (check)
-                        viewHolder.downloadButton.setProgress(100);
+                        viewHolder.downloadButton.setText("OPEN");
+
                     viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //download file
-                            if (!check) {
+                            if (!viewHolder.downloadButton.getText().equals("OPEN")) {
                                 if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                                    if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                                        new DownloadFileAsync(getDirectoryName(combinationMessage), viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
-                                    } else {
-                                        M.dError(baseActivity, "Unable to connect internet.");
-                                        viewHolder.downloadButton.setProgress(-1);
-                                    }
+                                    new DownloadFileAsync(getDirectoryName(combinationMessage), viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
                                 } else {
                                     M.dError(baseActivity, "Unable to connect internet.");
-                                    viewHolder.downloadButton.setProgress(-1);
+                                    viewHolder.downloadButton.setText("DOWNLOAD");
                                 }
                             } else {
                                 MimeTypeMap myMime = MimeTypeMap.getSingleton();

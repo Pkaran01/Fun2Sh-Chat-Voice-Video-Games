@@ -38,7 +38,6 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -1119,8 +1118,15 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                 //Copy
                                 if (combinationMessage.getAttachment() != null) {
                                     //forward images or file ka code
-                                    Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + Utility.getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
-                                    MainActivity.start(BaseDialogActivity.this);
+                                    final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
+                                    final boolean check = file.exists();
+                                    if (check) {
+                                        Const.FORWARD_MESSAGE = "";
+                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
+                                        MainActivity.start(BaseDialogActivity.this);
+                                    } else {
+                                        M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
+                                    }
                                 }
                             }
                         }
@@ -1158,8 +1164,15 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                             //Copy
                             if (combinationMessage.getAttachment() != null) {
                                 //forward images or file ka code
-                                Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
-                                MainActivity.start(BaseDialogActivity.this);
+                                final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
+                                final boolean check = file.exists();
+                                if (check) {
+                                    Const.FORWARD_MESSAGE = "";
+                                    Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
+                                    MainActivity.start(BaseDialogActivity.this);
+                                } else {
+                                    M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
+                                }
                             } else {
                                 Utility.msgInClipBoard(BaseDialogActivity.this, combinationMessage.getBody());
                             }
@@ -1175,25 +1188,8 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                QBChatService.deleteMessage(combinationMessage.getMessageId(), new QBEntityCallback<Void>() {
-
-                    @Override
-                    public void onSuccess(Void aVoid, Bundle bundle) {
-
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        sweetAlertDialog.dismiss();
-                        dataManager.getMessageDataManager().deleteMessageById(combinationMessage.getMessageId());
-                    }
-
-                    @Override
-                    public void onError(List<String> list) {
-
-                    }
-
-                });
+                sweetAlertDialog.dismiss();
+                dataManager.getMessageDataManager().deleteMessageById(combinationMessage.getMessageId());
             }
         });
         sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {

@@ -189,27 +189,27 @@
     <string name="new_message_select_option">Select</string>
 
     <string-array name="new_messages_option">
-        <item>Add to favourite</item>
-        <item>Edit</item>
-        <item>Remove</item>
-        <item>Copy</item>
+        <item>Add this message to Favourite</item>
+        <item>Edit this message</item>
+        <item>Remove this message</item>
+        <item>Copy this message</item>
     </string-array>
 
     <string-array name="new_messages_own_attachment_option">
-        <item>Add to favourite</item>
-        <item>Remove</item>
-        <item>Forward</item>
+        <item>Add this message to Favourite</item>
+        <item>Remove this message</item>
+        <item>Forward this message</item>
     </string-array>
 
     <string-array name="new_messages_option_opponent">
-        <item>Add to favourite</item>
-        <item>Remove</item>
-        <item>Copy</item>
+        <item>Add this message to Favourite</item>
+        <item>Remove this message</item>
+        <item>Copy this message</item>
     </string-array>
 
     <string-array name="new_messages_fav">
-        <item>Remove from favourite</item>
-        <item>Copy</item>
+        <item>Remove this message from favourite</item>
+        <item>Copy this message</item>
     </string-array>
 
 

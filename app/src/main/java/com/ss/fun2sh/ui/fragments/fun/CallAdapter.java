@@ -86,11 +86,14 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
         } else if (callList.get(position).getStatus() == 2) {
             //outgoing call green
             holder.callType.setImageResource(R.drawable.outgoing);
-            holder.username.setTextColor(context.getResources().getColor(R.color.green));
-        } else if (callList.get(position).getStatus() == 3){
+            holder.username.setTextColor(Color.parseColor("#1cba48"));
+        } else if (callList.get(position).getStatus() == 3) {
             // missed call rad
             holder.callType.setImageResource(R.drawable.missed_call);
             holder.username.setTextColor(Color.parseColor("#ff0000"));
+        } else if (callList.get(position).getStatus() == 4) {
+            holder.callType.setImageResource(R.drawable.call_faild);
+            holder.username.setTextColor(Color.parseColor("#800080"));
         }
     }
 

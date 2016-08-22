@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.exception.QBResponseException;
@@ -15,9 +16,11 @@ import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.helpers.QBGroupChatHelper;
 import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
+import com.ss.fun2sh.Activity.PackageUpgradeActivity;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
@@ -28,6 +31,8 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import static com.ss.fun2sh.CRUD.Const.App_Ver.reg_type;
 
 public class GroupDialogActivity extends BaseDialogActivity {
 
@@ -60,9 +65,21 @@ public class GroupDialogActivity extends BaseDialogActivity {
         }
 
         initMessagesRecyclerView();
-        if (Const.FORWARD_MESSAGE.length() > 0) {
+       /* if (Const.FORWARD_MESSAGE.length() > 0) {
             startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
-            Const.FORWARD_MESSAGE = "";
+        }*/
+        if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
+            //if (false) {
+            setContentView(R.layout.fragment_upgrade);
+            Button packageUpgrade = (Button) findViewById(R.id.package_upgrade);
+            packageUpgrade.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle args = new Bundle();
+                    args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
+                    M.I(GroupDialogActivity.this, PackageUpgradeActivity.class, args);
+                }
+            });
         }
     }
 

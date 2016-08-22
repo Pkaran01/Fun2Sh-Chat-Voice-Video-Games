@@ -1,6 +1,7 @@
 package com.ss.fun2sh.ui.fragments.call;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -127,8 +128,8 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         }
 
         initViews(view);
-        ((CallActivity)getActivity()).initActionBar();
-        ((CallActivity)getActivity()).setCallActionBarTitle(StartConversationReason.INCOME_CALL_FOR_ACCEPTION
+        ((CallActivity) getActivity()).initActionBar();
+        ((CallActivity) getActivity()).setCallActionBarTitle(StartConversationReason.INCOME_CALL_FOR_ACCEPTION
                 .equals(startConversationReason) ? callerName : opponents.get(0).getFullName());
         initButtonsListener();
         initSessionListener();
@@ -156,7 +157,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
     private void displayOpponentAvatar() {
         User opponent = ((CallActivity) getActivity()).getOpponentAsUserFromDB(opponents.get(0).getId());
-        if (StartConversationReason.INCOME_CALL_FOR_ACCEPTION.equals(startConversationReason) && !isVideoCall){
+        if (StartConversationReason.INCOME_CALL_FOR_ACCEPTION.equals(startConversationReason) && !isVideoCall) {
             avatarAndNameView.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(opponent.getAvatar(), avatarImageview, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
         } else if (StartConversationReason.OUTCOME_CALL_MADE.equals(startConversationReason)) {
@@ -167,7 +168,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
     }
 
 
-    private void actionsByConnectedToUser(){
+    private void actionsByConnectedToUser() {
         actionButtonsEnabled(true);
         ((CallActivity) getActivity()).startTimer();
         getActivity().invalidateOptionsMenu();
@@ -184,7 +185,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
     public void actionButtonsEnabled(boolean enability) {
 
-        if (isVideoCall){
+        if (isVideoCall) {
             cameraToggle.setEnabled(enability);
         }
         micToggleVideoCall.setEnabled(enability);
@@ -337,7 +338,6 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
                 actionButtonsEnabled(false);
                 handUpVideoCall.setEnabled(false);
                 Log.d(TAG, "Call is stopped");
-
                 ((CallActivity) getActivity()).hangUpCurrentSession();
                 handUpVideoCall.setEnabled(false);
                 handUpVideoCall.setActivated(false);
@@ -350,15 +350,15 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
             public void onClick(View v) {
                 toggleFullScreen();
                 elementSetVideoButtons.setVisibility(View.VISIBLE);
-                setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+                setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("log1","handler value1-");
+                        Log.e("log1", "handler value1-");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                                setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
                                 elementSetVideoButtons.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -368,15 +368,64 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         });
     }
 
-    void toggleFullScreen(){
-        if(isFullScreen){
-           // setLocalVideoViewVisible(false);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            remoteVideoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFullScreen();
+                    elementSetVideoButtons.setVisibility(View.VISIBLE);
+                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("log1", "handler value1-");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    elementSetVideoButtons.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+                    }, 6000);
+                }
+            });
+        } else {
+            remoteVideoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFullScreen();
+                    elementSetVideoButtons.setVisibility(View.VISIBLE);
+                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("log1", "handler value1-");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                                    elementSetVideoButtons.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+                    }, 6000);
+                }
+            });
+        }
+    }
+
+    void toggleFullScreen() {
+        if (isFullScreen) {
+            // setLocalVideoViewVisible(false);
             showSystemUI();
-            ((CallActivity)getActivity()).showCallActionBar();
+            ((CallActivity) getActivity()).showCallActionBar();
             elementSetVideoButtons.setVisibility(View.INVISIBLE);
             isFullScreen = false;
         } else {
-         //   setLocalVideoViewVisible(true);
+            //   setLocalVideoViewVisible(true);
             hideSystemUI();
             ((CallActivity) getActivity()).hideCallActionBar();
             elementSetVideoButtons.setVisibility(View.VISIBLE);
@@ -385,8 +434,8 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
     }
 
 
-    private void setLocalVideoViewVisible(boolean visible,int s[]){
-        if (remoteVideoView != null && localVideoTrack != null){
+    private void setLocalVideoViewVisible(boolean visible, int s[]) {
+        if (remoteVideoView != null && localVideoTrack != null) {
             if (visible) {
                 QBMediaStreamManager mediaStreamManager = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager();
                 int currentCameraId = mediaStreamManager.getCurrentCameraId();
@@ -455,7 +504,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         }
     }
 
-    private void toggleCamerainternal(QBMediaStreamManager mediaStreamManager){
+    private void toggleCamerainternal(QBMediaStreamManager mediaStreamManager) {
         toggleCameraOnUiThread(false);
         int currentCameraId = mediaStreamManager.getCurrentCameraId();
         Log.d(TAG, "Camera was switched!");
@@ -469,7 +518,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         }, TOGGLE_CAMERA_DELAY);
     }
 
-    private void toggleCameraOnUiThread(final boolean toggle){
+    private void toggleCameraOnUiThread(final boolean toggle) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -478,13 +527,13 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         });
     }
 
-    private void runOnUiThread(Runnable runnable){
+    private void runOnUiThread(Runnable runnable) {
         mainHandler.post(runnable);
     }
 
     private void toggleCamera(boolean isNeedEnableCam) {
         QBRTCSession currentSession = ((CallActivity) getActivity()).getCurrentSession();
-        if (currentSession != null && currentSession.getMediaStreamManager() != null){
+        if (currentSession != null && currentSession.getMediaStreamManager() != null) {
             currentSession.getMediaStreamManager().setVideoEnabled(isNeedEnableCam);
             getActivity().invalidateOptionsMenu();
         }
@@ -598,14 +647,13 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
     }
 
 
-
     private enum CameraState {
         NONE,
         DISABLED_FROM_USER,
         ENABLED_FROM_USER
     }
 
-    class FragmentLifeCycleHandler extends Handler{
+    class FragmentLifeCycleHandler extends Handler {
 
         @Override
         public void dispatchMessage(Message msg) {

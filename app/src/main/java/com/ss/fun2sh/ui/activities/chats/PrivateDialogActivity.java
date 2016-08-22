@@ -81,11 +81,10 @@ public class PrivateDialogActivity extends BaseDialogActivity {
 
         addObservers();
         initMessagesRecyclerView();
-        if (Const.FORWARD_MESSAGE.length() > 0) {
+      /*  if (Const.FORWARD_MESSAGE.length() > 0) {
             M.E(Const.FORWARD_MESSAGE);
             startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
-            Const.FORWARD_MESSAGE = "";
-        }
+        }*/
     }
 
     @Override

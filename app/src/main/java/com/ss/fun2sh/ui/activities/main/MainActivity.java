@@ -343,10 +343,10 @@ public class MainActivity extends BaseLoggableActivity {
         super.onResume();
         addActions();
         checkGCMRegistration();
-        if (Const.FORWARD_MESSAGE.length() > 0) {
+       /* if (Const.FORWARD_MESSAGE.length() > 0) {
             viewPager.setCurrentItem(0);
             tabLayout.getTabAt(0).getCustomView().setSelected(true);
-        }
+        }*/
     }
 
     private void actualizeCurrentTitle() {

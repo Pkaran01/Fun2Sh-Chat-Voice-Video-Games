@@ -155,8 +155,7 @@
         <activity
             android:name=".ui.activities.call.CallActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.fragments.search.SearchFragment"
             android:configChanges="keyboardHidden|orientation|screenSize"
