@@ -374,7 +374,6 @@ public class Utility {
     }
 
 
-
     public static String getDirectoryName(CombinationMessage combinationMessage) {
         String directory;
         if (combinationMessage.getAttachment().getType().equals(Attachment.Type.AUDIO)) {

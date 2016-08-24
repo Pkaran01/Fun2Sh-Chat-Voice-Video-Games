@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -12,6 +14,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,9 +33,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -60,6 +65,7 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.DialogDataManager;
 import com.quickblox.q_municate_db.managers.DialogNotificationDataManager;
 import com.quickblox.q_municate_db.managers.MessageDataManager;
+import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
@@ -79,6 +85,7 @@ import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseRecyclerViewAdapter;
+import com.ss.fun2sh.utils.FileUtils;
 import com.ss.fun2sh.utils.KeyboardUtils;
 import com.ss.fun2sh.utils.helpers.ImagePickHelper;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
@@ -87,6 +94,7 @@ import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import com.ss.fun2sh.utils.listeners.OnImagePickedListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -155,9 +163,14 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     private BroadcastReceiver typingMessageBroadcastReceiver;
     private BroadcastReceiver updatingDialogBroadcastReceiver;
     private boolean loadMore;
+    //Audio Recarder
+    private MediaRecorder recorder;
+    boolean isRecarding;
+    File audiofile;
 
     //upload file
     private Uri fileUri;
+
 
     @Override
     protected int getContentResId() {
@@ -217,8 +230,10 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         registerBroadcastReceivers();
 
         hideSmileLayout();
-
-
+        if (Const.FORWARD_MESSAGE != null) {
+            M.E(Const.FORWARD_MESSAGE);
+            startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
+        }
     }
 
     @OnTextChanged(R.id.message_edittext)
@@ -269,7 +284,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                             // set the image file name
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                             // set the video image quality to high
-                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
                             startActivityForResult(cameraIntent, ACTION_TAKE_VIDEO);
                         } else if (which == 1) {
                             //VIDEO FROM GALLERY
@@ -283,8 +298,79 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                             startActivityForResult(i, PICK_AUDIO_FILE);
                         } else if (which == 3) {
                             //RECORD AUDIO
-                            M.T(BaseDialogActivity.this, "Comeing soon");
+                            dialog.dismiss();
+                            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View recardingView = inflater.inflate(R.layout.recoarding_layout, null);
+                            final Button loginButton = (Button) recardingView.findViewById(R.id.loginButton);
+                            ImageView close = (ImageView) recardingView.findViewById(R.id.close);
+                            final Chronometer recardingTime = (Chronometer) recardingView.findViewById(R.id.chronometerRecarding);
+                            final MaterialDialog recardingDialog = new MaterialDialog.Builder(BaseDialogActivity.this)
+                                    .autoDismiss(false)
+                                    .customView(recardingView, false)
+                                    .show();
+                            close.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (recorder != null) {
+                                        recorder.stop();
+                                        recorder.release();
+                                        recardingTime.stop();
+                                        isRecarding = false;
+                                    }
+                                    recardingDialog.dismiss();
+                                }
+                            });
+                            loginButton.setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (isRecarding) {
+                                                recorder.stop();
+                                                recorder.release();
+                                                recardingTime.stop();
+                                                addRecordingToMediaLibrary();
+                                                isRecarding = false;
+                                                recardingDialog.dismiss();
+                                                startLoadAttachFile(audiofile);
+                                            } else {
+                                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+                                                        .format(new java.util.Date().getTime());
+                                                File dir = new File(Environment.getExternalStorageDirectory(), FileUtils.audioFolderName);
+                                                if (!dir.exists()) {
+                                                    if (!dir.mkdirs()) {
+                                                        Toast.makeText(BaseDialogActivity.this, "Failed to create directory MyCameraVideo.",
+                                                                Toast.LENGTH_LONG).show();
+                                                        return;
+                                                    }
+                                                }
+
+                                                try {
+                                                    audiofile = File.createTempFile("FUNCHAT_" + timeStamp + "", ".mp3", dir);
+                                                    //Creating MediaRecorder and specifying audio source, output format, encoder & output format
+                                                    recorder = new MediaRecorder();
+                                                    recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                                                    recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                                                    recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                                                    recorder.setOutputFile(audiofile.getAbsolutePath());
+                                                    recorder.prepare();
+                                                    recorder.start();
+                                                    recardingTime.start();
+                                                    recardingTime.setFormat("Recordeing - %s");
+                                                    isRecarding = true;
+                                                    loginButton.setText("ATTACH");
+                                                } catch (IOException e) {
+                                                    Log.e("asa", "external storage access error");
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    });
                         } else if (which == 4) {
+                            //File FROM SDCARD
+                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                            i.setType("*/*");
+                            startActivityForResult(i, PICK_FILE);
+                        } else if (which == 5) {
                             //File FROM SDCARD
                             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                             i.setType("*/*");
@@ -308,7 +394,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
      */
     private File getOutputMediaFile(int type) {
         // Check that the SDCard is mounted
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "/Fun2Sh/FunChat Videos");
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), FileUtils.videoFolderName);
         // Create the storage directory(MyCameraVideo) if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
@@ -333,10 +419,30 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         return mediaFile;
     }
 
+    protected void addRecordingToMediaLibrary() {
+        //creating content values of size 4
+        ContentValues values = new ContentValues(4);
+        long current = System.currentTimeMillis();
+        values.put(MediaStore.Audio.Media.TITLE, "audio" + audiofile.getName());
+        values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
+        values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
+        values.put(MediaStore.Audio.Media.DATA, audiofile.getAbsolutePath());
+
+        //creating content resolver and storing it in the external content uri
+        ContentResolver contentResolver = getContentResolver();
+        Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Uri newUri = contentResolver.insert(base, values);
+
+        //sending broadcast message to scan the media file so that it can be available
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+        //Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // After camera screen this code will excuted
+        Const.FORWARD_MESSAGE = null;
         if (requestCode == ACTION_TAKE_VIDEO) {
             if (resultCode == RESULT_OK) {
                 startLoadAttachFile(new File(fileUri.getPath()));
@@ -356,12 +462,8 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                 e.printStackTrace();
             }
             //startLoadAttachFile(new File(getRealPathFromURI(data.getData(), 2)));
-        } else if (requestCode == ACTION_RECORD_SOUND && resultCode == RESULT_OK && data != null) {
-            //Recorder
-
         }
     }
-
 
     private void sendFile(Uri selectedVideoUri) {
         try {
@@ -428,6 +530,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             hideSmileLayout();
         } else {
             super.onBackPressed();
+            Const.FORWARD_MESSAGE = null;
             this.finish();
         }
     }
@@ -568,6 +671,11 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         updateBroadcastActionList();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     protected void removeActions() {
         removeAction(QBServiceConsts.LOAD_ATTACH_FILE_SUCCESS_ACTION);
         removeAction(QBServiceConsts.LOAD_ATTACH_FILE_FAIL_ACTION);
@@ -689,6 +797,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
+                Const.FORWARD_MESSAGE = null;
                 sweetAlertDialog.dismiss();
             }
         });
@@ -970,6 +1079,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         @Override
         public void execute(Bundle bundle) {
             QBFile file = (QBFile) bundle.getSerializable(QBServiceConsts.EXTRA_ATTACH_FILE);
+            Const.FORWARD_MESSAGE = null;
             onFileLoaded(file);
             hideProgress();
         }
@@ -1058,7 +1168,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
                 opration[0] = "Remove from favourite";
             } else {
-                opration[0] = "Add to favourite";
+                opration[0] = "Add this message to Favourite";
             }
             new MaterialDialog.Builder(BaseDialogActivity.this)
                     .items(opration)
@@ -1067,9 +1177,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             if (which == 0) {
                                 int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
-                                String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                M.E("update " + update);
-                                M.E("messages " + message);
+                                String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Add this message to Favourite";
                                 if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
                                     M.T(BaseDialogActivity.this, message);
                                 } else {
@@ -1093,7 +1201,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             if (dataManager.getMessageDataManager().isFav(combinationMessage.getMessageId())) {
                 opration[0] = "Remove from favourite";
             } else {
-                opration[0] = "Add to favourite";
+                opration[0] = "Add this message to Favourite";
             }
             new MaterialDialog.Builder(BaseDialogActivity.this)
                     .items(opration)
@@ -1102,9 +1210,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                         public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             if (which == 0) {
                                 int update = (opration[0].equals("Remove from favourite")) ? 0 : 1;
-                                String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Added to favourite";
-                                M.E("update " + update);
-                                M.E("messages " + message);
+                                String message = (opration[0].equals("Remove from favourite")) ? "Remove from favourite" : "Add this message to Favourite";
                                 if (dataManager.getMessageDataManager().updateFav(combinationMessage.getMessageId(), update) > 0) {
                                     M.T(BaseDialogActivity.this, message);
                                 } else {
@@ -1118,11 +1224,22 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                 //Copy
                                 if (combinationMessage.getAttachment() != null) {
                                     //forward images or file ka code
-                                    final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
+                                    final File file;
+                                    String fileName;
+                                    if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+                                        Uri fileUri = Uri.parse(combinationMessage.getAttachment().getRemoteUrl());
+                                        fileName = fileUri.getLastPathSegment() + ".jpg";
+                                        file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), fileName);
+                                    } else {
+                                        file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
+                                        fileName = combinationMessage.getAttachment().getName();
+                                    }
+
                                     final boolean check = file.exists();
                                     if (check) {
-                                        Const.FORWARD_MESSAGE = "";
-                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
+                                        Const.FORWARD_MESSAGE = null;
+                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + fileName;
+                                        M.E(Const.FORWARD_MESSAGE);
                                         MainActivity.start(BaseDialogActivity.this);
                                     } else {
                                         M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
@@ -1142,7 +1259,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             opration[0] = "Remove from favourite";
         }
         if (combinationMessage.getAttachment() != null) {
-            opration[2] = "Forward";
+            opration[2] = "Forward this message";
         }
         new MaterialDialog.Builder(BaseDialogActivity.this)
                 .items(opration)
@@ -1164,14 +1281,28 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                             //Copy
                             if (combinationMessage.getAttachment() != null) {
                                 //forward images or file ka code
-                                final File file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
-                                final boolean check = file.exists();
-                                if (check) {
-                                    Const.FORWARD_MESSAGE = "";
-                                    Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + combinationMessage.getAttachment().getName();
-                                    MainActivity.start(BaseDialogActivity.this);
-                                } else {
-                                    M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
+                                if (combinationMessage.getAttachment() != null) {
+                                    //forward images or file ka code
+                                    final File file;
+                                    String fileName;
+                                    if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
+                                        Uri fileUri = Uri.parse(combinationMessage.getAttachment().getRemoteUrl());
+                                        fileName = fileUri.getLastPathSegment() + ".jpg";
+                                        file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), fileName);
+                                    } else {
+                                        file = new File(Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage), combinationMessage.getAttachment().getName());
+                                        fileName = combinationMessage.getAttachment().getName();
+                                    }
+
+                                    final boolean check = file.exists();
+                                    if (check) {
+                                        Const.FORWARD_MESSAGE = null;
+                                        Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + fileName;
+                                        M.E(Const.FORWARD_MESSAGE);
+                                        MainActivity.start(BaseDialogActivity.this);
+                                    } else {
+                                        M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
+                                    }
                                 }
                             } else {
                                 Utility.msgInClipBoard(BaseDialogActivity.this, combinationMessage.getBody());

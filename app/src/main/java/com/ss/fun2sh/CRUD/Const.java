@@ -9,7 +9,7 @@ public class Const {
 
 
     public static String NOTIF_IMGPATH = "http://image.dabank.co.uk/";
-    public static String FORWARD_MESSAGE = "";
+    public static String FORWARD_MESSAGE = null;
     public static String TIME_OUT = "No reply from server due to Internet Connection Problem";
     public static Bitmap previewImage;
 

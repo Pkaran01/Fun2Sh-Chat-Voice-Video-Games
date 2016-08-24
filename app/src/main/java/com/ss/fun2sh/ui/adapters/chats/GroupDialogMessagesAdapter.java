@@ -84,7 +84,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             if (combinationMessage.getAttachment() != null) {
                 if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
                     setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
-                    displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+                    displayAttachImageById(combinationMessage.getAttachment().getRemoteUrl(), viewHolder);
                     displayAvatarImage(avatarUrl, viewHolder.avatarAttachImageView);
                     viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
@@ -110,22 +110,13 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                                 //download file
                                 if (!viewHolder.downloadButton.getText().equals("OPEN")) {
                                     if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                                        new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
+                                        new DownloadFileAsync(directory, viewHolder, combinationMessage.getAttachment().getName()).execute(combinationMessage.getAttachment().getRemoteUrl());
                                     } else {
                                         M.dError(baseActivity, "Unable to connect internet.");
                                         viewHolder.downloadButton.setText("DOWNLOAD");
                                     }
                                 } else {
-                                    MimeTypeMap myMime = MimeTypeMap.getSingleton();
-                                    Intent newIntent = new Intent(Intent.ACTION_VIEW);
-                                    String mimeType = myMime.getMimeTypeFromExtension(tokens[1]);
-                                    newIntent.setDataAndType(Uri.fromFile(file), mimeType);
-                                    newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    try {
-                                        baseActivity.startActivity(newIntent);
-                                    } catch (ActivityNotFoundException e) {
-                                        Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
-                                    }
+                                    openFile(tokens[1], file);
                                 }
                             }
                         });

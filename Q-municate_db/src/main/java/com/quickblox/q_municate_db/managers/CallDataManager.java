@@ -76,7 +76,7 @@ public class CallDataManager extends BaseManager<Call> {
 
             friendQueryBuilder.join(userQueryBuilder);
             if (staus > 0 && type > 0) {
-                friendQueryBuilder.where().eq(Call.Column.STATUS, staus).or().eq(Call.Column.TYPE, type);
+                friendQueryBuilder.where().eq(Call.Column.STATUS, staus).and().eq(Call.Column.TYPE, type);
             } else if (staus > 0) {
                 friendQueryBuilder.where().eq(Call.Column.STATUS, staus);
             } else if (type > 0) {

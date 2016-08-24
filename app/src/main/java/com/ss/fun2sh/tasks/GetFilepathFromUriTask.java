@@ -70,6 +70,7 @@ public class GetFilepathFromUriTask extends BaseAsyncTask<Intent, Void, File> {
         } else {
             Log.d("test_rotation", "performInBackground(). 3");
             imageFilePath = ImageUtils.saveUriToFile(uri);
+            ImageUtils.getExifInterfaceOrientation(imageFilePath);
         }
 
         if (TextUtils.isEmpty(imageFilePath)) {

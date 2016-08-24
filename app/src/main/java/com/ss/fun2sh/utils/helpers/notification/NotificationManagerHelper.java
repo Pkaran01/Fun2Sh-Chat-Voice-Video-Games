@@ -45,7 +45,7 @@ public class NotificationManagerHelper {
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
-    private static int getNotificationIcon() {
+    public static int getNotificationIcon() {
         boolean whiteIcon = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
         return whiteIcon ? R.drawable.launcher_iconfunchat : R.drawable.launcher_iconfunchat;
     }

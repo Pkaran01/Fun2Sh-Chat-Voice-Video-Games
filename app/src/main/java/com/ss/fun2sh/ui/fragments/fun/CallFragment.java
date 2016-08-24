@@ -81,7 +81,7 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
 
-                callList = DataManager.getInstance().getCallDataManager().getAllByStatus(callFilterByType.getSelectedItemPosition(), position);
+                callList = DataManager.getInstance().getCallDataManager().getAllByStatus(callFilterByType.getSelectedItemPosition(), callFilter.getSelectedItemPosition());
                 callAdapter.setFilter(callList);
                 checkEmptyList(callList);
                 callAdapter.notifyDataSetChanged();
@@ -99,7 +99,7 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         // your code here
 
-                        callList = DataManager.getInstance().getCallDataManager().getAllByStatus(position, callFilter.getSelectedItemPosition());
+                        callList = DataManager.getInstance().getCallDataManager().getAllByStatus(callFilterByType.getSelectedItemPosition(), callFilter.getSelectedItemPosition());
                         callAdapter.setFilter(callList);
                         checkEmptyList(callList);
                         callAdapter.notifyDataSetChanged();

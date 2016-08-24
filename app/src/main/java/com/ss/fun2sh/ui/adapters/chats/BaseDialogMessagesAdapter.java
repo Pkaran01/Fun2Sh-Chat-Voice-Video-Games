@@ -1,20 +1,32 @@
 package com.ss.fun2sh.ui.adapters.chats;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dd.CircularProgressButton;
 import com.github.siyamed.shapeimageview.HexagonImageView;
@@ -53,6 +65,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -76,6 +89,7 @@ public abstract class BaseDialogMessagesAdapter
     protected QBUser currentUser;
 
     private FileUtils fileUtils;
+    //notification builder
 
 
     public BaseDialogMessagesAdapter(BaseActivity baseActivity, List<CombinationMessage> objectsList) {
@@ -110,19 +124,20 @@ public abstract class BaseDialogMessagesAdapter
     }
 
     protected void displayAttachImageById(String attachId, final ViewHolder viewHolder) {
-        String token;
+       /* *//*String token;*/
         String privateUrl;
         try {
-            token = QBAuth.getBaseService().getToken();
-            privateUrl = String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), attachId, token);
+            //   token = QBAuth.getBaseService().getToken();
+            privateUrl = attachId;//String.format("%s/blobs/%s?token=%s", BaseService.getServiceEndpointURL(), attachId, token);
             displayAttachImage(privateUrl, viewHolder);
-        } catch (BaseServiceException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 //        TODO it is necessary to convert the following code after the update to version 2.5 SDK
 //        String privateUrl = QBFile.getPrivateUrlForUID(attachId);
 //        displayAttachImage(privateUrl, viewHolder);
     }
+
 
     protected void displayAttachImage(String attachUrl, final ViewHolder viewHolder) {
         ImageLoader.getInstance().displayImage(attachUrl, viewHolder.attachImageView,
@@ -387,20 +402,29 @@ public abstract class BaseDialogMessagesAdapter
     }
 
     //download file
-    class DownloadFileAsync extends AsyncTask<String, String, String> {
-        String foldername;
+    class DownloadFileAsync extends AsyncTask<String, Integer, String> {
+        String foldername, fileName;
         ViewHolder viewHolder;
+        ProgressDialog progress;
 
-        public DownloadFileAsync(String folderName, ViewHolder viewHolder) {
+        public DownloadFileAsync(String folderName, ViewHolder viewHolder, String fileName) {
             this.foldername = folderName;
             this.viewHolder = viewHolder;
+            this.fileName = fileName;
+            progress = new ProgressDialog(baseActivity);
+            progress.setMessage("Downloading :" + fileName);
+            progress.setCanceledOnTouchOutside(false);
+            progress.setCancelable(false);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setMax(100);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             new File(getExternalStorageDirectory().toString() + this.foldername).mkdirs();
-            baseActivity.showProgress();
+            //baseActivity.showProgress();
+            progress.show();
 
         }
 
@@ -411,28 +435,21 @@ public abstract class BaseDialogMessagesAdapter
             try {
 
                 URL url = new URL(aurl[0]);
-                String filename = aurl[1];
-
+                String filename = fileName;
                 File mypath = new File(getExternalStorageDirectory().toString(), foldername + filename);
                 URLConnection conexion = url.openConnection();
                 conexion.connect();
-
                 int lenghtOfFile = conexion.getContentLength();
-                Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
-
+                //Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
                 InputStream input = new BufferedInputStream(url.openStream());
                 OutputStream output = new FileOutputStream(mypath);
-
                 byte data[] = new byte[1024];
-
                 long total = 0;
-
                 while ((count = input.read(data)) != -1) {
                     total += count;
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    publishProgress((int) ((total * 100) / lenghtOfFile));
                     output.write(data, 0, count);
                 }
-
                 output.flush();
                 output.close();
                 input.close();
@@ -442,16 +459,31 @@ public abstract class BaseDialogMessagesAdapter
 
         }
 
-        protected void onProgressUpdate(String... progress) {
-            Log.d("ANDRO_ASYNC", progress[0]);
-
+        protected void onProgressUpdate(Integer... progress) {
+            Log.d("ANDRO_ASYNC", "" + progress[0]);
+            this.progress.setProgress(progress[0]);
         }
 
         @Override
         protected void onPostExecute(String unused) {
-            baseActivity.hideProgress();
+            // baseActivity.hideProgress();
+            progress.dismiss();
             viewHolder.downloadButton.setText("OPEN");
             notifyDataSetChanged();
         }
     }
+
+    protected void openFile(String token, File file) {
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        String mimeType = myMime.getMimeTypeFromExtension(token);
+        newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            baseActivity.startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

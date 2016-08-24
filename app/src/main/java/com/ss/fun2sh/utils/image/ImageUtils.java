@@ -175,20 +175,33 @@ public class ImageUtils {
         return file;
     }
 
-    private static int getExifInterfaceOrientation(String pathToFile) {
+    public static void getExifInterfaceOrientation(String pathToFile) {
         int orientation = ConstsCore.NOT_INITIALIZED_VALUE;
 
         try {
             ExifInterface exifInterface = new ExifInterface(pathToFile);
             orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ConstsCore.NOT_INITIALIZED_VALUE);
+            Bitmap bitmap = getBitmapFromFile(pathToFile);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotateImage(bitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotateImage(bitmap, 180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotateImage(bitmap, 270);
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    break;
+            }
         } catch (Exception e) {
             ErrorUtils.logError(e);
         }
-
-        return orientation;
     }
 
-    public static void checkForRotation(String imagePath) {
+    public static void checkForRotation(String imagePath, int degree) {
         Bitmap bitmap = getBitmapFromFile(imagePath);
         if (bitmap.getHeight() > bitmap.getWidth()) {
             rotateImage(bitmap, 90);
@@ -206,6 +219,7 @@ public class ImageUtils {
     public static Bitmap getBitmapFromFile(String filePath) {
         return BitmapFactory.decodeFile(filePath, getBitmapOption());
     }
+
     public Bitmap getBitmap(Uri originalUri) {
         BitmapFactory.Options bitmapOptions = getBitmapOption();
         Bitmap selectedBitmap = null;
@@ -229,7 +243,7 @@ public class ImageUtils {
     }
 
     private static Bitmap createScaledBitmap(Bitmap unscaledBitmap, int dstWidth, int dstHeight,
-            ScalingLogic scalingLogic) {
+                                             ScalingLogic scalingLogic) {
         Rect srcRect = calculateSrcRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth,
                 dstHeight, scalingLogic);
         Rect dstRect = calculateDstRect(unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), dstWidth,
@@ -241,7 +255,7 @@ public class ImageUtils {
     }
 
     private static Rect calculateSrcRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight,
-            ScalingLogic scalingLogic) {
+                                         ScalingLogic scalingLogic) {
         if (scalingLogic == ScalingLogic.CROP) {
             final float srcAspect = (float) srcWidth / (float) srcHeight;
             final float dstAspect = (float) dstWidth / (float) dstHeight;
@@ -262,7 +276,7 @@ public class ImageUtils {
     }
 
     public static Rect calculateDstRect(int srcWidth, int srcHeight, int dstWidth, int dstHeight,
-            ScalingLogic scalingLogic) {
+                                        ScalingLogic scalingLogic) {
         if (scalingLogic == ScalingLogic.FIT) {
             final float srcAspect = (float) srcWidth / (float) srcHeight;
             final float dstAspect = (float) dstWidth / (float) dstHeight;

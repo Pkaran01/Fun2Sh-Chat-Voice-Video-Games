@@ -16,6 +16,8 @@ import com.quickblox.q_municate_db.models.Attachment;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.State;
+import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -97,7 +99,7 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
             resetUI(viewHolder);
             if (combinationMessage.getAttachment().getType().equals(Attachment.Type.PICTURE)) {
                 setViewVisibility(viewHolder.progressRelativeLayout, View.VISIBLE);
-                displayAttachImageById(combinationMessage.getAttachment().getAttachmentId(), viewHolder);
+                displayAttachImageById(combinationMessage.getAttachment().getRemoteUrl(), viewHolder);
                 displayAvatarImage(avatarUrl, viewHolder.avatarAttachImageView);
                 viewHolder.timeAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
@@ -122,18 +124,14 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         public void onClick(View v) {
                             //download file
                             if (!viewHolder.downloadButton.getText().equals("OPEN")) {
-                                new DownloadFileAsync(directory, viewHolder).execute(combinationMessage.getAttachment().getRemoteUrl(), combinationMessage.getAttachment().getName());
-                            } else {
-                                MimeTypeMap myMime = MimeTypeMap.getSingleton();
-                                Intent newIntent = new Intent(Intent.ACTION_VIEW);
-                                String mimeType = myMime.getMimeTypeFromExtension(tokens[1]);
-                                newIntent.setDataAndType(Uri.fromFile(file), mimeType);
-                                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                try {
-                                    baseActivity.startActivity(newIntent);
-                                } catch (ActivityNotFoundException e) {
-                                    Toast.makeText(baseActivity, "No handler for this type of file.", Toast.LENGTH_LONG).show();
+                                if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                                    new DownloadFileAsync(directory, viewHolder, combinationMessage.getAttachment().getName()).execute(combinationMessage.getAttachment().getRemoteUrl());
+                                } else {
+                                    M.dError(baseActivity, "Unable to connect internet.");
+                                    viewHolder.downloadButton.setText("DOWNLOAD");
                                 }
+                            } else {
+                                openFile(tokens[1], file);
                             }
                         }
                     });
