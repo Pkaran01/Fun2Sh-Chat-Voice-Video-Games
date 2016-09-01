@@ -3,6 +3,7 @@ package com.quickblox.q_municate_core.qb.commands;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.quickblox.content.model.QBFile;
 import com.quickblox.q_municate_core.core.command.ServiceCommand;
@@ -19,7 +20,7 @@ public class QBLoadAttachFileCommand extends ServiceCommand {
     private final QBPrivateChatHelper privateChatHelper;
 
     public QBLoadAttachFileCommand(Context context, QBPrivateChatHelper privateChatHelper,
-            String successAction, String failAction) {
+                                   String successAction, String failAction) {
         super(context, successAction, failAction);
         this.privateChatHelper = privateChatHelper;
     }

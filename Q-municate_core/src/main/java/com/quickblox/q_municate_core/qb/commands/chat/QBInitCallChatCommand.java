@@ -31,10 +31,10 @@ public class QBInitCallChatCommand extends ServiceCommand {
     public Bundle perform(Bundle extras) throws Exception {
         if (extras == null || extras.getSerializable(QBServiceConsts.EXTRA_CALL_ACTIVITY) == null) { // global init
             qbCallChatHelper.init(QBChatService.getInstance());
-            Log.d("test_crash_1", "+++ perform 1 +++");
+            Log.e("test_crash_1", "+++ perform 1 +++");
         } else {
             // init call activity
-            Log.d("test_crash_1", "+++ perform 2 +++");
+            Log.e("test_crash_1", "+++ perform 2 +++");
             qbCallChatHelper.initActivityClass((Class<? extends Activity>) extras.getSerializable(
                     QBServiceConsts.EXTRA_CALL_ACTIVITY));
         }

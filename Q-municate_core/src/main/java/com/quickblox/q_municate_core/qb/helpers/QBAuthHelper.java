@@ -76,7 +76,7 @@ public class QBAuthHelper extends BaseHelper {
 
         saveOwnerUser(qbUser);
 
-        AppSession.startSession(LoginType.FACEBOOK, qbUser, token);
+        AppSession.startSession(LoginType.EMAIL, qbUser, token);
 
         return qbUser;
     }

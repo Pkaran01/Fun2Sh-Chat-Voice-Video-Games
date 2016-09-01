@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -65,6 +66,21 @@ public class Utility {
         return strDate;
     }
 
+    public static String getTodayDate() {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");//dd/MM/yyyy
+        Calendar cal = Calendar.getInstance();
+        String strDate = sdfDate.format(cal.getTime());
+        return strDate;
+    }
+
+    public static String getAfter15DayDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date()); // Now use today date.
+        c.add(Calendar.DATE, 30); // Adding 30 days
+        String output = sdf.format(c.getTime());
+        return output;
+    }
 
     public static void loginVideo(VideoView videoView, Context cx) {
         String path = "android.resource://" + cx.getPackageName() + "/" + R.raw.login;

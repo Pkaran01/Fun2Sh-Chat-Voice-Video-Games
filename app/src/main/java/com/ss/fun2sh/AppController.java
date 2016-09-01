@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.crashlytics.android.Crashlytics;
 import com.karumi.dexter.Dexter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.chat.QBChatService;
@@ -20,7 +19,6 @@ import com.ss.fun2sh.utils.StringObfuscator;
 import com.ss.fun2sh.utils.helpers.SharedHelper;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
-import io.fabric.sdk.android.Fabric;
 
 public class AppController extends Application {
 
@@ -35,7 +33,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
         Dexter.initialize(this);
         initApplication();
         new PrefsHelper(this);

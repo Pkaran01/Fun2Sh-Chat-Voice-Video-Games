@@ -227,6 +227,7 @@ public abstract class QBBaseChatHelper extends BaseHelper {
             attachment = new QBAttachment(attachmentType);
         }
         attachment.setId(file.getUid());
+        Log.e("CRUD onQbBaseChatHelper", file.getName() + "");
         attachment.setName(file.getName());
         attachment.setContentType(attachmentType);
         attachment.setUrl(file.getPublicUrl());
@@ -243,6 +244,8 @@ public abstract class QBBaseChatHelper extends BaseHelper {
             message = "Video";
         } else if (type.contains("image")) {
             message = "Image";
+        } else if (type.contains("pdf") || type.contains("msword") || type.contains("wordprocessingml")) {
+            message = "Document";
         } else {
             message = context.getString(R.string.dlg_attached_last_message);
         }

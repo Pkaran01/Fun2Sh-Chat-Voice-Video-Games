@@ -70,7 +70,6 @@
 
     <string-array name="favroitearray">
         <item>Home</item>
-        <item>Refresh</item>
         <item>Announcements</item>
         <item>Settings</item>
     </string-array>
@@ -90,11 +89,10 @@
 
     <string-array name="attach_file_option">
         <item>Record video message</item>
-        <item>Video from gallery</item>
-        <item>Audio from SD Card</item>
         <item>Record audio message</item>
-        <item>File from SD Card</item>
-        <item>File from gallery </item>
+        <item>Send a video file</item>
+        <item>Send a audio file</item>
+        <item>Send other file</item>
     </string-array>
 
     <string-array name="filterbyfiletype">

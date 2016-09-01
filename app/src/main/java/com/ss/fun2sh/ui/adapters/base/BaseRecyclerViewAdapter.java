@@ -90,7 +90,12 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseClickListenerVie
     }
 
     public T getItem(int position) {
-        return objectsList.get(position);
+        try {
+            return objectsList.get(position);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return objectsList.get(0);
     }
 
     public List<T> getAllItems() {

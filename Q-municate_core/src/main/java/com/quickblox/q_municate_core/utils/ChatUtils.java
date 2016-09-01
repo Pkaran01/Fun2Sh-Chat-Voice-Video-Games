@@ -28,6 +28,7 @@ import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.QBUsers;
 import com.quickblox.users.model.QBUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,9 +57,6 @@ public class ChatUtils {
         }
         return attachURL;
     }
-
-
-
 
 
     public static String getSelectedFriendsFullNamesFromMap(List<User> usersList) {
@@ -418,24 +416,44 @@ public class ChatUtils {
 
     //TODO on recivie message crearte local attachemnt
     public static Attachment createLocalAttachment(QBAttachment qbAttachment) {
-        Log.e("karan","localAttacment on recive");
         String attachmentType = (qbAttachment.getType()) != null ? qbAttachment.getType() : "null";
         Attachment attachment = new Attachment();
         attachment.setAttachmentId(qbAttachment.getId());
         attachment.setRemoteUrl(qbAttachment.getUrl());
-        attachment.setName(qbAttachment.getName());
+        Log.e("CRUD createLocal", "start");
+        Log.e("CRUD createLocal", qbAttachment.getName() + "");
+        Log.e("CRUD createLocal", qbAttachment.getId() + "");
+        Log.e("CRUD createLocal", qbAttachment.getType() + "");
+        Log.e("CRUD createLocal", qbAttachment.getContentType() + "");
+        Log.e("CRUD createLocal", qbAttachment.getSize() + "");
+        Log.e("CRUD createLocal", qbAttachment.toString() + "");
+        Log.e("CRUD createLocal", "end");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+                .format(new java.util.Date().getTime());
+        String fileName;
         attachment.setSize(qbAttachment.getSize());
         if (attachmentType.equals(QBAttachment.AUDIO_TYPE)) {
             attachment.setType(Attachment.Type.AUDIO);
+            fileName = "FUNCHAT_" + timeStamp + "" + ".mp3";
         } else if (attachmentType.equals(QBAttachment.VIDEO_TYPE)) {
             attachment.setType(Attachment.Type.VIDEO);
+            fileName = "FUNCHAT_" + timeStamp + "" + ".mp4";
         } else if (attachmentType.equals(QBAttachment.PHOTO_TYPE)) {
             attachment.setType(Attachment.Type.PICTURE);
-        } else if (attachmentType.equals("application/pdf") || (attachmentType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))) {
+            fileName = "FUNCHAT_" + timeStamp + "" + ".jpg";
+        } else if (attachmentType.contains("pdf") || attachmentType.contains("msword") || attachmentType.contains("wordprocessingml")) {
             attachment.setType(Attachment.Type.DOC);
+            fileName = (attachmentType.contains("pdf")) ? "FUNCHAT_" + timeStamp + "" + ".pdf" : attachmentType.contains("msword") ? "FUNCHAT_" + timeStamp + "" + ".doc" : "FUNCHAT_" + timeStamp + "" + ".docx";
         } else {
             attachment.setType(Attachment.Type.OTHER);
+            fileName = "FUNCHAT_" + timeStamp + "" + ((attachmentType.contains("zip")) ? ".zip" : (attachmentType.contains("apk")) ? ".apk" : (attachmentType.contains("x-rar-compressed")) ? ".rar" : "");
         }
+        if (qbAttachment.getName() != null) {
+            attachment.setName(qbAttachment.getName());
+        } else {
+            attachment.setName(fileName);
+        }
+        Log.e("CRUD createLocal", attachment.getName() + "");
         return attachment;
     }
 
@@ -565,6 +583,8 @@ public class ChatUtils {
                 lastMessage = message.getBody();
             } else if (DialogNotification.Type.FRIENDS_ACCEPT.equals(dialogNotification.getType())) {
                 lastMessage = "Contact request accepted";
+            } else if (DialogNotification.Type.FRIENDS_REMOVE.equals(dialogNotification.getType())) {
+                lastMessage = "Contact deleted";
             } else {
                 lastMessage = defaultLasMessage;
             }

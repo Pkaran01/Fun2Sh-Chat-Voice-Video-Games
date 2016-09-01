@@ -1,6 +1,7 @@
 package com.quickblox.q_municate_core.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBChatMessage;
@@ -22,7 +23,7 @@ import java.util.List;
 public class DbUtils {
 
     public static DialogOccupant saveDialogOccupantIfUserNotExists(DataManager dataManager,
-            String dialogId, int userId, DialogOccupant.Status status) {
+                                                                   String dialogId, int userId, DialogOccupant.Status status) {
         QBRestHelper.loadAndSaveUser(userId);
 
         User user = DataManager.getInstance().getUserDataManager().get(userId);
@@ -44,7 +45,7 @@ public class DbUtils {
     }
 
     public static void saveDialogsToCache(DataManager dataManager, List<QBDialog> qbDialogsList,
-            QBDialog currentDialog) {
+                                          QBDialog currentDialog) {
         dataManager.getDialogDataManager().createOrUpdateAll(ChatUtils.createLocalDialogsList(qbDialogsList));
 
         saveDialogsOccupants(dataManager, qbDialogsList);
@@ -53,7 +54,7 @@ public class DbUtils {
     }
 
     public static void saveTempMessages(DataManager dataManager, List<QBDialog> qbDialogsList,
-            QBDialog currentDialog) {
+                                        QBDialog currentDialog) {
         dataManager.getMessageDataManager()
                 .createOrUpdateAll(ChatUtils.createTempLocalMessagesList(dataManager, qbDialogsList, currentDialog));
     }
@@ -87,7 +88,7 @@ public class DbUtils {
     }
 
     public static void updateStatusNotificationMessageLocal(DataManager dataManager,
-            DialogNotification dialogNotification) {
+                                                            DialogNotification dialogNotification) {
         dataManager.getDialogNotificationDataManager().update(dialogNotification, false);
     }
 
@@ -100,7 +101,7 @@ public class DbUtils {
     }
 
     public static void saveMessagesToCache(Context context, DataManager dataManager,
-            List<QBChatMessage> qbMessagesList, String dialogId) {
+                                           List<QBChatMessage> qbMessagesList, String dialogId) {
         for (int i = 0; i < qbMessagesList.size(); i++) {
             QBChatMessage qbChatMessage = qbMessagesList.get(i);
             boolean notify = i == qbMessagesList.size() - 1;
@@ -111,7 +112,7 @@ public class DbUtils {
     }
 
     public static void saveMessageOrNotificationToCache(Context context, DataManager dataManager,
-            String dialogId, QBChatMessage qbChatMessage, State state, boolean notify) {
+                                                        String dialogId, QBChatMessage qbChatMessage, State state, boolean notify) {
         DialogOccupant dialogOccupant;
         if (qbChatMessage.getSenderId() == null) {
             dialogOccupant = dataManager.getDialogOccupantDataManager()
@@ -146,7 +147,7 @@ public class DbUtils {
     }
 
     public static void updateDialogModifiedDate(DataManager dataManager, String dialogId, long modifiedDate,
-            boolean notify) {
+                                                boolean notify) {
         Dialog dialog = dataManager.getDialogDataManager().getByDialogId(dialogId);
         updateDialogModifiedDate(dataManager, dialog, modifiedDate, notify);
     }
@@ -157,7 +158,7 @@ public class DbUtils {
     }
 
     private static void updateDialogModifiedDate(DataManager dataManager, Dialog dialog, long modifiedDate,
-            boolean notify) {
+                                                 boolean notify) {
         if (dialog != null) {
             dialog.setModifiedDateLocal(modifiedDate);
             dataManager.getDialogDataManager().update(dialog, notify);
@@ -178,14 +179,14 @@ public class DbUtils {
     }
 
     public static void saveDialogNotificationToCache(Context context, DataManager dataManager,
-            DialogOccupant dialogOccupant, QBChatMessage qbChatMessage, boolean notify) {
+                                                     DialogOccupant dialogOccupant, QBChatMessage qbChatMessage, boolean notify) {
         DialogNotification dialogNotification = ChatUtils.createLocalDialogNotification(context, dataManager,
                 qbChatMessage, dialogOccupant);
         saveDialogNotificationToCache(dataManager, dialogNotification, notify);
     }
 
     private static void saveDialogNotificationToCache(DataManager dataManager,
-            DialogNotification dialogNotification, boolean notify) {
+                                                      DialogNotification dialogNotification, boolean notify) {
         if (dialogNotification.getDialogOccupant() != null) {
             dataManager.getDialogNotificationDataManager().createOrUpdate(dialogNotification, notify);
         }
@@ -196,14 +197,14 @@ public class DbUtils {
     }
 
     public static void updateDialogOccupants(DataManager dataManager, String dialogId,
-            List<Integer> dialogOccupantIdsList, DialogOccupant.Status status) {
+                                             List<Integer> dialogOccupantIdsList, DialogOccupant.Status status) {
         List<DialogOccupant> dialogOccupantsList = ChatUtils.
                 getUpdatedDialogOccupantsList(dataManager, dialogId, dialogOccupantIdsList, status);
         dataManager.getDialogOccupantDataManager().createOrUpdateAll(dialogOccupantsList);
     }
 
     public static void updateDialogOccupant(DataManager dataManager, String dialogId,
-            int occupantId, DialogOccupant.Status status) {
+                                            int occupantId, DialogOccupant.Status status) {
         DialogOccupant dialogOccupant = ChatUtils.getUpdatedDialogOccupant(dataManager, dialogId, status,
                 occupantId);
         dataManager.getDialogOccupantDataManager().update(dialogOccupant);

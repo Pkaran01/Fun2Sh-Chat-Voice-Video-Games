@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                         showPermissionRationale(token);
                     }
-                }, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
             }
         } else {
             elsePart();
@@ -155,6 +155,9 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
 
                                         regType = data.get("REGTYPE").toString();
                                         PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.reg_type, data.get(Const.App_Ver.reg_type).toString());
+                                        if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.expire_date, null) == null) {
+                                            PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.expire_date, Utility.getAfter15DayDate());
+                                        }
                                         M.I(LoginActivity.this, DashBoardActivity.class, null);
 
                                         LoginActivity.this.finish();

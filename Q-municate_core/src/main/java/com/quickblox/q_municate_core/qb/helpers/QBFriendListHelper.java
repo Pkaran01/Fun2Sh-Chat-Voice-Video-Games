@@ -27,6 +27,7 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.models.UserRequest;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 
+
 import org.jivesoftware.smack.packet.RosterPacket;
 
 import java.io.Serializable;

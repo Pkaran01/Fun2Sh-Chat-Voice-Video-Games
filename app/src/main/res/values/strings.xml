@@ -203,7 +203,6 @@
 
     <string-array name="new_messages_option_opponent">
         <item>Add this message to Favourite</item>
-        <item>Remove this message</item>
         <item>Copy this message</item>
     </string-array>
 

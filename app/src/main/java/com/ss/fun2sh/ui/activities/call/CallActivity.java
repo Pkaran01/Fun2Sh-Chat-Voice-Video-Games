@@ -1,6 +1,7 @@
 package com.ss.fun2sh.ui.activities.call;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,7 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Friend;
 import com.quickblox.q_municate_db.models.User;
+import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBMediaStreamManager;
 import com.quickblox.videochat.webrtc.QBRTCClient;
@@ -152,12 +154,26 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         super.onCreate(savedInstanceState);
         dataManager = DataManager.getInstance();
         canPerformLogout.set(false);
         initFields();
         audioStreamReceiver = new AudioStreamReceiver();
+
         //initWiFiManagerListener();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP
+                | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
+        wakeLock.acquire();
+
         if (ACTION_ANSWER_CALL.equals(getIntent().getAction())) {
             addConversationFragmentReceiveCall();
         }
@@ -186,8 +202,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         dataManager.getCallDataManager().create(call);
         // unregisterReceiver(wifiStateReceiver);
         unregisterReceiver(audioStreamReceiver);
-
-
     }
 
     @Override
@@ -196,7 +210,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         super.onPause();
     }
 
-    private Window wind;
 
     @Override
     protected void onResume() {
@@ -205,11 +218,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (wakeLock.isHeld()) {
             wakeLock.release();
         }
-        wind = this.getWindow();
-        wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
     }
 
     PowerManager.WakeLock wakeLock;
@@ -217,17 +225,14 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     protected void onStart() {
         super.onStart();
-
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         intentFilter.addAction(AudioManager.ACTION_HEADSET_PLUG);
         intentFilter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
         //registerReceiver(wifiStateReceiver, intentFilter);
         registerReceiver(audioStreamReceiver, intentFilter);
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP
-                | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
-        wakeLock.acquire();
+
+        ;
 
     }
 
@@ -343,7 +348,9 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     @Override
     public void onReceiveNewSession(final QBRTCSession session) {
-        Log.d(TAG, "Session " + session.getSessionID() + " are income");
+        Log.e(TAG, "Session " + session.getSessionID() + " are income");
+        M.E("karan on recived");
+
     }
 
     @Override
@@ -373,7 +380,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
 
         if (qbRtcSessionUserCallback != null) {
-            M.T(CallActivity.this, "The user, whom you have called, is busy. Please try later.");
+            ToastUtils.longToast("The user, whom you have called, is busy. Please try later.");
             qbRtcSessionUserCallback.onCallRejectByUser(session, userID, userInfo);
         }
         runOnUiThread(new Runnable() {
@@ -548,7 +555,8 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
         ringtonePlayer = new RingtonePlayer(this, R.raw.beep);
         // Add activity as callback to RTCClient
-        qbRtcClient = QBRTCClient.getInstance(this);
+
+        qbRtcClient = QBRTCClient.getInstance(CallActivity.this);
         //store in database
         call = new Call();
 
@@ -701,7 +709,9 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     public void addConversationFragmentReceiveCall() {
+        M.E("karan 4");
         if (qbCallChatHelper != null) {
+            M.E("karan 5");
             QBRTCSession session = qbCallChatHelper.getCurrentRtcSession();
 
             if (session != null) {

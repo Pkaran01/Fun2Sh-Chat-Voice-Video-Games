@@ -12,6 +12,7 @@ import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.Message;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseListAdapter;
@@ -43,7 +44,7 @@ public class GroupDialogsListAdapter extends BaseListAdapter<Dialog> {
             viewHolder.lastMessageTextView = (TextView) convertView.findViewById(R.id.last_message_textview);
             viewHolder.unreadMessagesTextView = (TextView) convertView.findViewById(
                     R.id.unread_messages_textview);
-
+            viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.timeTextView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -72,6 +73,7 @@ public class GroupDialogsListAdapter extends BaseListAdapter<Dialog> {
 
         viewHolder.lastMessageTextView.setText(
                 ChatUtils.getDialogLastMessage(resources.getString(R.string.cht_notification_message), message, dialogNotification));
+        viewHolder.timeTextView.setText(Utility.getTimeAgo(ChatUtils.getDialogMessageCreatedDate(true, message, dialogNotification) * 1000));
         return convertView;
     }
 
@@ -81,5 +83,6 @@ public class GroupDialogsListAdapter extends BaseListAdapter<Dialog> {
         public TextView nameTextView;
         public TextView lastMessageTextView;
         public TextView unreadMessagesTextView;
+        public TextView timeTextView;
     }
 }

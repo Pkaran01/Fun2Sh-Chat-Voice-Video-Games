@@ -21,6 +21,7 @@ public class Const {
         String userData = "userData";
         String reg_id = "REGID";
         String reg_type = "REGTYPE";
+        String expire_date = "expire_date";
         String secondTimeLogin = "secondtimelogin";
         String firstTimeProfile = "firsttimeProfile";
         String QBPassword = "1234567890";

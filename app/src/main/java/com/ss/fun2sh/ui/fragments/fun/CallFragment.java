@@ -165,6 +165,15 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(callList != null) {
+            callList = DataManager.getInstance().getCallDataManager().getAllSorted();
+            callAdapter.setFilter(callList);
+        }
+    }
+
     private List<Call> filter(List<Call> models, String query) {
         query = query.toLowerCase();
 

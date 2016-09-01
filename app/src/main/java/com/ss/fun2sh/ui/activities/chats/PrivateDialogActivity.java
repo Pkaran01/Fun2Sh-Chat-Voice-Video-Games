@@ -23,6 +23,7 @@ import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.FriendDataManager;
 import com.quickblox.q_municate_db.models.Dialog;
+import com.quickblox.q_municate_db.models.State;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
@@ -160,7 +161,11 @@ public class PrivateDialogActivity extends BaseDialogActivity {
                 boolean ownMessage = !combinationMessage.isIncoming(AppSession.getSession().getUser().getId());
                 if (ownMessage) {
                     //own
-                    ownMessage(combinationMessage);
+                    if (State.DELIVERED.equals(combinationMessage.getState()) || State.READ.equals(combinationMessage.getState())) {
+                        opponentMessage(combinationMessage);
+                    } else {
+                        ownMessage(combinationMessage);
+                    }
                 } else {
                     //opponent
                     opponentMessage(combinationMessage);

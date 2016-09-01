@@ -30,8 +30,7 @@
                 android:id="@+id/text_message_delivery_status_imageview"
                 android:layout_width="8dp"
                 android:layout_height="fill_parent"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_status_mes_sent"/>
+                android:layout_marginRight="5dp" />
 
             <TextView
                 android:id="@+id/time_text_message_textview"

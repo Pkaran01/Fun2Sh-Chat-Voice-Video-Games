@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -197,6 +198,19 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         micToggleVideoCall.setActivated(enability);
     }
 
+    /*@Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }*/
 
     @Override
     public void onStart() {
@@ -438,16 +452,18 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         if (remoteVideoView != null && localVideoTrack != null) {
             if (visible) {
                 QBMediaStreamManager mediaStreamManager = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager();
-                int currentCameraId = mediaStreamManager.getCurrentCameraId();
+                if (mediaStreamManager != null) {
+                    int currentCameraId = mediaStreamManager.getCurrentCameraId();
 
-                RTCGLVideoView.RendererConfig config = new RTCGLVideoView.RendererConfig();
-                config.mirror = CameraUtils.isCameraFront(currentCameraId);
-                config.coordinates = s;
+                    RTCGLVideoView.RendererConfig config = new RTCGLVideoView.RendererConfig();
+                    config.mirror = CameraUtils.isCameraFront(currentCameraId);
+                    config.coordinates = s;
 
-                localVideoTrack.addRenderer(new VideoRenderer(remoteVideoView.obtainVideoRenderer(RTCGLVideoView.RendererSurface.SECOND)));
+                    localVideoTrack.addRenderer(new VideoRenderer(remoteVideoView.obtainVideoRenderer(RTCGLVideoView.RendererSurface.SECOND)));
 
-                remoteVideoView.updateRenderer(RTCGLVideoView.RendererSurface.SECOND, config);
-                Log.d(TAG, "fullscreen enabled");
+                    remoteVideoView.updateRenderer(RTCGLVideoView.RendererSurface.SECOND, config);
+                    Log.d(TAG, "fullscreen enabled");
+                }
             } else {
                 localVideoTrack.removeRenderer(localVideoTrack.getRenderer());
                 remoteVideoView.removeLocalRendererCallback();
@@ -465,6 +481,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                         | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                         | View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.KEEP_SCREEN_ON
         );
     }
 

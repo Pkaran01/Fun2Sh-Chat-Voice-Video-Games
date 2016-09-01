@@ -14,13 +14,16 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,18 +34,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.quickblox.chat.QBChatService;
+import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBDialog;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
@@ -50,6 +55,8 @@ import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.command.Command;
 import com.quickblox.q_municate_core.core.loader.BaseLoader;
 import com.quickblox.q_municate_core.crud.QBMessageUpdateBuilder;
+import com.quickblox.q_municate_core.crud.QueryDeleteMessages;
+import com.quickblox.q_municate_core.crud.QueryUpdateMessage;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.QBLoadAttachFileCommand;
@@ -70,6 +77,7 @@ import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogNotification;
 import com.quickblox.q_municate_db.models.DialogOccupant;
 import com.quickblox.q_municate_db.models.Message;
+import com.quickblox.q_municate_db.models.State;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
@@ -79,11 +87,13 @@ import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.UserAccount;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
+import com.ss.fun2sh.ui.activities.others.PreviewImageActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseRecyclerViewAdapter;
 import com.ss.fun2sh.utils.FileUtils;
 import com.ss.fun2sh.utils.KeyboardUtils;
@@ -94,12 +104,17 @@ import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
 import com.ss.fun2sh.utils.listeners.OnImagePickedListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -166,11 +181,14 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     //Audio Recarder
     private MediaRecorder recorder;
     boolean isRecarding;
-    File audiofile;
+    File sourceFile;
 
     //upload file
     private Uri fileUri;
+    private String folderName;
+    private File destFile;
 
+    public static BaseDialogActivity baseDialogActivity;
 
     @Override
     protected int getContentResId() {
@@ -180,8 +198,13 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        baseDialogActivity = this;
+        if (Const.FORWARD_MESSAGE != null) {
+            M.E(Const.FORWARD_MESSAGE);
+            sourceFile = new File(Const.FORWARD_MESSAGE);
+            startLoadAttachFile(sourceFile);
+        }
         initFields();
-
         shimmer = new Shimmer();
         shimmer.start(shimmer_tv);
         shimmer.setRepeatCount(99999999)
@@ -230,10 +253,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         registerBroadcastReceivers();
 
         hideSmileLayout();
-        if (Const.FORWARD_MESSAGE != null) {
-            M.E(Const.FORWARD_MESSAGE);
-            startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
-        }
+
     }
 
     @OnTextChanged(R.id.message_edittext)
@@ -284,19 +304,9 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                             // set the image file name
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                             // set the video image quality to high
-                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+                            cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                             startActivityForResult(cameraIntent, ACTION_TAKE_VIDEO);
                         } else if (which == 1) {
-                            //VIDEO FROM GALLERY
-                            Intent intent = new Intent();
-                            intent.setType("video/*");
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
-                        } else if (which == 2) {
-                            //AUDIO FROM SDCARD
-                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(i, PICK_AUDIO_FILE);
-                        } else if (which == 3) {
                             //RECORD AUDIO
                             dialog.dismiss();
                             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -331,7 +341,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                                 addRecordingToMediaLibrary();
                                                 isRecarding = false;
                                                 recardingDialog.dismiss();
-                                                startLoadAttachFile(audiofile);
+                                                startLoadAttachFile(sourceFile);
                                             } else {
                                                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                                                         .format(new java.util.Date().getTime());
@@ -345,13 +355,13 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                                 }
 
                                                 try {
-                                                    audiofile = File.createTempFile("FUNCHAT_" + timeStamp + "", ".mp3", dir);
+                                                    sourceFile = File.createTempFile("FUNCHAT_" + timeStamp + "", ".mp3", dir);
                                                     //Creating MediaRecorder and specifying audio source, output format, encoder & output format
                                                     recorder = new MediaRecorder();
                                                     recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                                                     recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
                                                     recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                                                    recorder.setOutputFile(audiofile.getAbsolutePath());
+                                                    recorder.setOutputFile(sourceFile.getAbsolutePath());
                                                     recorder.prepare();
                                                     recorder.start();
                                                     recardingTime.start();
@@ -365,12 +375,17 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                             }
                                         }
                                     });
+                        } else if (which == 2) {
+                            //VIDEO FROM GALLERY
+                            Intent intent = new Intent();
+                            intent.setType("video/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+                        } else if (which == 3) {
+                            //AUDIO FROM SDCARD
+                            Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(i, PICK_AUDIO_FILE);
                         } else if (which == 4) {
-                            //File FROM SDCARD
-                            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-                            i.setType("*/*");
-                            startActivityForResult(i, PICK_FILE);
-                        } else if (which == 5) {
                             //File FROM SDCARD
                             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                             i.setType("*/*");
@@ -423,10 +438,10 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         //creating content values of size 4
         ContentValues values = new ContentValues(4);
         long current = System.currentTimeMillis();
-        values.put(MediaStore.Audio.Media.TITLE, "audio" + audiofile.getName());
+        values.put(MediaStore.Audio.Media.TITLE, "audio" + sourceFile.getName());
         values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
         values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
-        values.put(MediaStore.Audio.Media.DATA, audiofile.getAbsolutePath());
+        values.put(MediaStore.Audio.Media.DATA, sourceFile.getAbsolutePath());
 
         //creating content resolver and storing it in the external content uri
         ContentResolver contentResolver = getContentResolver();
@@ -442,22 +457,23 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // After camera screen this code will excuted
-        Const.FORWARD_MESSAGE = null;
+
         if (requestCode == ACTION_TAKE_VIDEO) {
             if (resultCode == RESULT_OK) {
-                startLoadAttachFile(new File(fileUri.getPath()));
+                sourceFile = new File(fileUri.getPath());
+                startLoadAttachFile(sourceFile);
             }
         } else if (requestCode == REQUEST_TAKE_GALLERY_VIDEO && resultCode == RESULT_OK && data != null) {
             sendFile(data.getData());
         } else if (requestCode == PICK_AUDIO_FILE && resultCode == RESULT_OK && data != null) {
             fileUri = Uri.parse(getRealPathFromURI(data.getData(), 1));
-            M.E(fileUri.getPath());
-            startLoadAttachFile(new File(fileUri.getPath()));
+            sourceFile = new File(fileUri.getPath());
+            startLoadAttachFile(sourceFile);
         } else if (requestCode == PICK_FILE && resultCode == RESULT_OK && data != null) {
 //            fileUri = Uri.parse(getRealPathFromURI(data.getData(), 1));
             try {
-                M.E(Utility.getFilePath(BaseDialogActivity.this, data.getData()));
-                startLoadAttachFile(new File(Utility.getFilePath(BaseDialogActivity.this, data.getData())));
+                sourceFile = new File(Utility.getFilePath(BaseDialogActivity.this, data.getData()));
+                startLoadAttachFile(sourceFile);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -489,9 +505,32 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             }
             M.E(fileUri.toString());
             // MEDIA GALLERY
-            startLoadAttachFile(new File(fileUri.getPath()));
+            sourceFile = new File(fileUri.getPath());
+            startLoadAttachFile(sourceFile);
         } catch (Exception e) {
             M.E(e.getMessage());
+        }
+    }
+
+    protected void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!sourceFile.exists()) {
+            return;
+        }
+        if (destFile.exists()) {
+            return;
+        }
+        FileChannel source = null;
+        FileChannel destination = null;
+        source = new FileInputStream(sourceFile).getChannel();
+        destination = new FileOutputStream(destFile).getChannel();
+        if (destination != null && source != null) {
+            destination.transferFrom(source, 0, source.size());
+        }
+        if (source != null) {
+            source.close();
+        }
+        if (destination != null) {
+            destination.close();
         }
     }
 
@@ -671,10 +710,6 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         updateBroadcastActionList();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     protected void removeActions() {
         removeAction(QBServiceConsts.LOAD_ATTACH_FILE_SUCCESS_ACTION);
@@ -1082,6 +1117,24 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             Const.FORWARD_MESSAGE = null;
             onFileLoaded(file);
             hideProgress();
+            String attachmentType = file.getContentType();
+            if (attachmentType.contains("audio")) {
+                folderName = FileUtils.audioFolderName;
+            } else if (attachmentType.contains("video")) {
+                folderName = FileUtils.videoFolderName;
+            } else if (attachmentType.contains("image")) {
+                folderName = FileUtils.folderName + "/";
+            } else if (attachmentType.contains("pdf") || attachmentType.contains("msword") || attachmentType.contains("wordprocessingml")) {
+                folderName = FileUtils.docFolderName;
+            } else {
+                folderName = FileUtils.otherFolderName;
+            }
+            destFile = new File(Environment.getExternalStorageDirectory().toString() + folderName, sourceFile.getName());
+            try {
+                copyFile(sourceFile, destFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1241,6 +1294,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                         Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + fileName;
                                         M.E(Const.FORWARD_MESSAGE);
                                         MainActivity.start(BaseDialogActivity.this);
+                                        BaseDialogActivity.this.finish();
                                     } else {
                                         M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
                                     }
@@ -1259,7 +1313,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
             opration[0] = "Remove from favourite";
         }
         if (combinationMessage.getAttachment() != null) {
-            opration[2] = "Forward this message";
+            opration[1] = "Forward this message";
         }
         new MaterialDialog.Builder(BaseDialogActivity.this)
                 .items(opration)
@@ -1275,9 +1329,6 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                 M.E("Error in add to favourite");
                             }
                         } else if (which == 1) {
-                            //Remove
-                            removeMessage(combinationMessage);
-                        } else if (which == 2) {
                             //Copy
                             if (combinationMessage.getAttachment() != null) {
                                 //forward images or file ka code
@@ -1300,6 +1351,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                         Const.FORWARD_MESSAGE = Environment.getExternalStorageDirectory().toString() + getDirectoryName(combinationMessage) + fileName;
                                         M.E(Const.FORWARD_MESSAGE);
                                         MainActivity.start(BaseDialogActivity.this);
+                                        BaseDialogActivity.this.finish();
                                     } else {
                                         M.T(BaseDialogActivity.this, "Message forwarding failed, media is missing, download first.");
                                     }
@@ -1319,8 +1371,12 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                sweetAlertDialog.dismiss();
-                dataManager.getMessageDataManager().deleteMessageById(combinationMessage.getMessageId());
+                if (NetworkUtil.getConnectivityStatus(BaseDialogActivity.this)) {
+                    new DeleteMessage(combinationMessage).execute();
+                    sweetAlertDialog.dismiss();
+                } else {
+                    M.dError(BaseDialogActivity.this, getString(R.string.dlg_internet_connection_is_missing));
+                }
             }
         });
         sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -1331,6 +1387,40 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
         });
 
         messagesAdapter.notifyDataSetChanged();
+    }
+
+    private class DeleteMessage extends AsyncTask<String, Void, Boolean> {
+        CombinationMessage combinationMessage;
+
+        DeleteMessage(CombinationMessage combinationMessage) {
+            this.combinationMessage = combinationMessage;
+        }
+
+        @Override
+        protected Boolean doInBackground(String[] params) {
+            // do above Server call here
+            try {
+                Set<String> messagesIds = new HashSet<String>() {{
+                    add(combinationMessage.getMessageId());
+                }};
+                QueryDeleteMessages.deleteMessages(messagesIds, true);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean message) {
+            //process message
+            if (message) {
+                dataManager.getMessageDataManager().deleteMessageById(combinationMessage.getMessageId());
+            } else {
+                M.T(BaseDialogActivity.this, "Unable to delete message");
+            }
+
+        }
     }
 
     public void editMessage(final CombinationMessage msg) {
@@ -1357,7 +1447,6 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                         if (UserAccount.isEmpty(emailEditText)) {
                             QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
                             messageUpdateBuilder.updateText(emailEditText.getText().toString());
-                            messageUpdateBuilder.markRead();
                             QBMessageUpdateBuilder.updateMessage(msg.getMessageId(), msg.getDialogOccupant().getDialog().getDialogId(), messageUpdateBuilder, new QBEntityCallback<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid, Bundle bundle) {
@@ -1386,4 +1475,5 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                 });
         messagesAdapter.notifyDataSetChanged();
     }
+
 }

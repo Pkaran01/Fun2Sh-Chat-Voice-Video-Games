@@ -18,11 +18,13 @@ import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_db.models.Dialog;
+import com.quickblox.q_municate_db.models.State;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.ss.fun2sh.Activity.PackageUpgradeActivity;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.adapters.chats.GroupDialogMessagesAdapter;
 import com.ss.fun2sh.utils.listeners.simple.SimpleOnRecycleItemClickListener;
@@ -65,21 +67,19 @@ public class GroupDialogActivity extends BaseDialogActivity {
         }
 
         initMessagesRecyclerView();
-       /* if (Const.FORWARD_MESSAGE.length() > 0) {
-            startLoadAttachFile(new File(Const.FORWARD_MESSAGE));
-        }*/
-        if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
-            //if (false) {
-            setContentView(R.layout.fragment_upgrade);
-            Button packageUpgrade = (Button) findViewById(R.id.package_upgrade);
-            packageUpgrade.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle args = new Bundle();
-                    args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
-                    M.I(GroupDialogActivity.this, PackageUpgradeActivity.class, args);
-                }
-            });
+        if (Utility.getTodayDate().equals(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.expire_date))) {
+            if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
+                setContentView(R.layout.fragment_upgrade);
+                Button packageUpgrade = (Button) findViewById(R.id.package_upgrade);
+                packageUpgrade.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle args = new Bundle();
+                        args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
+                        M.I(GroupDialogActivity.this, PackageUpgradeActivity.class, args);
+                    }
+                });
+            }
         }
     }
 
@@ -98,8 +98,11 @@ public class GroupDialogActivity extends BaseDialogActivity {
                 boolean ownMessage = !combinationMessage.isIncoming(AppSession.getSession().getUser().getId());
                 if (ownMessage) {
                     //own
-                    M.E("ownmessage");
-                    ownMessage(combinationMessage);
+                    if (State.DELIVERED.equals(combinationMessage.getState()) || State.READ.equals(combinationMessage.getState())) {
+                        opponentMessage(combinationMessage);
+                    } else {
+                        ownMessage(combinationMessage);
+                    }
                 } else {
                     //opponent
                     opponentMessage(combinationMessage);

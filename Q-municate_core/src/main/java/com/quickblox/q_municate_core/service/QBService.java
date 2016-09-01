@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.exception.QBResponseException;
@@ -564,6 +565,7 @@ public class QBService extends Service {
 
             }
         }
+        Log.e("karan","QBServices");
         return START_NOT_STICKY;
     }
 

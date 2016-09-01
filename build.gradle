@@ -21,6 +21,9 @@ allprojects {
     repositories {
         jcenter({url "http://jcenter.bintray.com/"})
         mavenCentral()
+        maven {
+            url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
+        }
     }
 }
 
@@ -36,6 +39,12 @@ ext {
     versionCode = 2
 
     prodDebug = true
+
+    lintAbortOnError = false
+
+    // QuickBlox SDK version
+    qbSdkVersion = '2.6.1'
+
 
     // Dependencies versions
     multiDexVersion = '1.0.1'

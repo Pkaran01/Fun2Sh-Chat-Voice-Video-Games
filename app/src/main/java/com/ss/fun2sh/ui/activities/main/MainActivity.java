@@ -255,13 +255,13 @@ public class MainActivity extends BaseLoggableActivity {
                                 }
                             });
                         } else if (tab.getPosition() == 3) {
-                            toolbartTitle.setText("Favourite");
+                            toolbartTitle.setText("Favourites");
                             navigationDrawerAdapter = new NavigationDrawerAdapter(MainActivity.this, getResources().getStringArray(R.array.favroitearray));
                             navigation_drawer_list.setAdapter(navigationDrawerAdapter);
                             navigation_drawer_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    if (position == 3) {
+                                    if (position == 2) {
                                         MyProfileActivity.start(MainActivity.this);
                                     } else if (position == 0) {
                                         Intent intent = new Intent(MainActivity.this, DashBoardActivity.class);

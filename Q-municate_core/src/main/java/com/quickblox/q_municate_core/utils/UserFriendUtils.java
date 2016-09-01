@@ -8,6 +8,7 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.models.UserRequest;
 import com.quickblox.users.model.QBUser;
 
+
 import org.jivesoftware.smack.packet.RosterPacket;
 
 import java.util.ArrayList;

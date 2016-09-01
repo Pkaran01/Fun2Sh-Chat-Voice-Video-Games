@@ -19,6 +19,7 @@ import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
+import com.ss.fun2sh.ui.activities.chats.BaseDialogActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.listeners.ChatUIHelperListener;
@@ -62,7 +63,7 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
         final ViewHolder viewHolder = (ViewHolder) baseClickListenerViewHolder;
 
         final CombinationMessage combinationMessage = getItem(position);
-        boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
+        final boolean ownMessage = !combinationMessage.isIncoming(currentUser.getId());
         boolean notificationMessage = combinationMessage.getNotificationType() != null;
 
         String avatarUrl = combinationMessage.getDialogOccupant().getUser().getAvatar();
@@ -92,9 +93,27 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                         setMessageStatus(viewHolder.attachDeliveryStatusImageView, State.DELIVERED.equals(
                                 combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
                     }
+                    viewHolder.attachImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            if (ownMessage) {
+                                //own
+                                if (State.DELIVERED.equals(combinationMessage.getState()) || State.READ.equals(combinationMessage.getState())) {
+                                    BaseDialogActivity.baseDialogActivity.opponentMessage(combinationMessage);
+                                } else {
+                                    BaseDialogActivity.baseDialogActivity.ownMessage(combinationMessage);
+                                }
+                            } else {
+                                //opponent
+                                BaseDialogActivity.baseDialogActivity.opponentMessage(combinationMessage);
+                            }
+
+                            return true;
+                        }
+                    });
                 } else {
-                    setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                     if (combinationMessage.getAttachment().getName() != null) {
+                        setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                         final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
                         viewHolder.fileName.setText(tokens[0]);
                         viewHolder.fileType.setText(tokens[1].toUpperCase());
@@ -120,13 +139,14 @@ public class GroupDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                                 }
                             }
                         });
-                    }
-                    displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);
-                    viewHolder.timeOtherAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
 
-                    if (ownMessage && combinationMessage.getState() != null) {
-                        setMessageStatus(viewHolder.otherAttachDeliveryStatusImageView, State.DELIVERED.equals(
-                                combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                        displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);
+                        viewHolder.timeOtherAttachMessageTextView.setText(DateUtils.formatDateSimpleTime(combinationMessage.getCreatedDate()));
+
+                        if (ownMessage && combinationMessage.getState() != null) {
+                            setMessageStatus(viewHolder.otherAttachDeliveryStatusImageView, State.DELIVERED.equals(
+                                    combinationMessage.getState()), State.READ.equals(combinationMessage.getState()));
+                        }
                     }
                 }
             } else {

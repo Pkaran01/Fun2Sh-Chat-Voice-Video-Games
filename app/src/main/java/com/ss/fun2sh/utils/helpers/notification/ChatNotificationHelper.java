@@ -5,17 +5,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.WindowManager;
 
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.NotificationEvent;
+import com.quickblox.q_municate_core.models.StartConversationReason;
 import com.quickblox.q_municate_core.qb.commands.chat.QBInitCallChatCommand;
+import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
+import com.quickblox.q_municate_db.models.User;
+import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
 import com.ss.fun2sh.AppController;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.NetworkUtil;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.utils.SystemUtils;
@@ -23,6 +32,9 @@ import com.ss.fun2sh.utils.helpers.LoginHelper;
 import com.ss.fun2sh.utils.helpers.SharedHelper;
 import com.ss.fun2sh.utils.listeners.simple.SimpleGlobalLoginListener;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ChatNotificationHelper {
@@ -77,9 +89,11 @@ public class ChatNotificationHelper {
         } else {
             // push about call
             if (AppSession.getSession().getUser() != null) {
+                M.E("in call notification");
                 LoginHelper loginHelper = new LoginHelper(context);
                 loginHelper.makeGeneralLogin(new CallLoginListener());
             }
+
         }
 
         saveOpeningDialog(false);
@@ -139,9 +153,8 @@ public class ChatNotificationHelper {
             qbRtcClient.addSessionCallbacksListener(new QBRTCClientSessionCallbacks() {
                 @Override
                 public void onReceiveNewSession(QBRTCSession qbrtcSession) {
-                    KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                    final KeyguardManager.KeyguardLock kl = km.newKeyguardLock("MyKeyguardLock");
-                    kl.disableKeyguard();
+                    M.E("onReceive chatnotification");
+                    ///startCallActivity(qbrtcSession);
                 }
 
                 @Override
@@ -171,7 +184,6 @@ public class ChatNotificationHelper {
 
                 @Override
                 public void onSessionClosed(QBRTCSession qbrtcSession) {
-
                 }
 
                 @Override
@@ -187,4 +199,30 @@ public class ChatNotificationHelper {
             sendNotification(message);
         }
     }
+
+    private void startCallActivity(QBRTCSession qbRtcSession) {
+        User user = DataManager.getInstance().getUserDataManager()
+                .get(qbRtcSession.getSessionDescription().getCallerID());
+
+        M.E("onReceive call activity");
+
+        if (user != null) {
+            List<QBUser> qbUsersList = new ArrayList<>(1);
+            qbUsersList.add(UserFriendUtils.createQbUser(user));
+            Intent intent = new Intent(context, CallActivity.class);
+            intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);
+            intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.INCOME_CALL_FOR_ACCEPTION);
+            intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbRtcSession.getConferenceType());
+            intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSession.getSessionDescription());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            context.getApplicationContext().startActivity(intent);
+        } else {
+            throw new NullPointerException("user is null!");
+        }
+    }
+
 }

@@ -99,7 +99,7 @@ public class QBPrivateChatHelper extends QBBaseChatHelper {
         QBFile file = null;
 
         try {
-            file = QBContent.uploadFileTask(inputFile, true, (String) null);
+            file = QBContent.uploadFileTask(inputFile, true, inputFile.getName());
         } catch (QBResponseException exc) {
             throw new Exception(context.getString(R.string.dlg_fail_upload_attach));
         }

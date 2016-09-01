@@ -1,10 +1,12 @@
 package com.quickblox.q_municate_core.qb.helpers;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.QBSignaling;
@@ -47,6 +49,8 @@ public class QBCallChatHelper extends BaseHelper {
     private QBRTCSession currentQbRtcSession;
     private QBRTCClientSessionCallbacks qbRtcClientSessionCallbacks;
 
+    KeyguardManager.KeyguardLock kl;
+
     public QBCallChatHelper(Context context) {
         super(context);
     }
@@ -65,9 +69,9 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     public void initActivityClass(Class<? extends Activity> activityClass) {
-        Log.d(TAG, "initActivityClass()");
+        Log.e(TAG, "initActivityClass()");
         this.activityClass = activityClass;
-        Log.d("test_crash_1", "initActivityClass(), activityClass = " + activityClass);
+        Log.e("test_crash_1", "initActivityClass(), activityClass = " + activityClass);
     }
 
     public QBRTCSession getCurrentRtcSession() {
@@ -96,7 +100,7 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     private void setUpCallClient() {
-        Log.d(TAG, "setUpCallClient()");
+        Log.e(TAG, "setUpCallClient()");
 
         qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraErrorHandler() {
             @Override
@@ -131,8 +135,11 @@ public class QBCallChatHelper extends BaseHelper {
             intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.INCOME_CALL_FOR_ACCEPTION);
             intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbRtcSession.getConferenceType());
             intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSession.getSessionDescription());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            intent.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
             context.getApplicationContext().startActivity(intent);
         } else {
             throw new NullPointerException("user is null!");
@@ -165,21 +172,26 @@ public class QBCallChatHelper extends BaseHelper {
 
         @Override
         public void onReceiveNewSession(QBRTCSession qbRtcSession) {
-            Log.d(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
+            Log.e(TAG, "onReceiveNewSession(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
             CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, true);
-            if (currentQbRtcSession != null || isCallActive(context) ) {
+            KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+            kl = km.newKeyguardLock("MyKeyguardLock");
+            kl.disableKeyguard();
+            if (currentQbRtcSession != null || isCallActive(context)) {
                 Log.d(TAG, "onReceiveNewSession(). Stop new session. Device now is busy");
-                /*if (!qbRtcSession.equals(currentQbRtcSession)) {
-                    qbRtcSession.rejectCall(null);
-                }*/
-                Map<String, String> infoMap = new HashMap<>();
-                infoMap.put("busy", "I'm on a call right now!");
-                qbRtcSession.rejectCall(infoMap);
+                if (!qbRtcSession.equals(currentQbRtcSession)) {
+                    Map<String, String> infoMap = new HashMap<>();
+                    infoMap.put("busy", "I'm on a call right now!");
+                    qbRtcSession.rejectCall(infoMap);
+                }
             } else {
-                Log.d(TAG, "onReceiveNewSession(). init session.");
+                Log.e(TAG, "onReceiveNewSession(). init session.");
                 if (activityClass != null) {
+                    Log.e(TAG, "onReceiveNewSession(). in if.");
                     startCallActivity(qbRtcSession);
                     currentQbRtcSession = qbRtcSession;
+                } else {
+                    Log.e(TAG, "onReceiveNewSession(). in else.");
                 }
             }
         }
@@ -234,6 +246,8 @@ public class QBCallChatHelper extends BaseHelper {
         public void onSessionClosed(QBRTCSession qbRtcSession) {
             Log.d(TAG, "onSessionClosed(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
             CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
+            /*if (kl != null)
+                kl.reenableKeyguard();*/
             if (qbRtcClientSessionCallbacks != null) {
                 qbRtcClientSessionCallbacks.onSessionClosed(qbRtcSession);
             }

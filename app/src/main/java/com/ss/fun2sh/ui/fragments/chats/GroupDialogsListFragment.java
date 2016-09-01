@@ -43,7 +43,9 @@ import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.Activity.PackageUpgradeActivity;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.chats.GroupDialogActivity;
 import com.ss.fun2sh.ui.activities.chats.NewGroupDialogActivity;
@@ -99,18 +101,19 @@ public class GroupDialogsListFragment extends BaseLoaderFragment<List<Dialog>> i
         initFields();
         initChatsDialogs();
         registerForContextMenu(groupDialogsListView);
-        if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
-        //if (false) {
-            view = inflater.inflate(R.layout.fragment_upgrade, container, false);
-            Button packageUpgrade = (Button) view.findViewById(R.id.package_upgrade);
-            packageUpgrade.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle args = new Bundle();
-                    args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
-                    M.I(baseActivity, PackageUpgradeActivity.class, args);
-                }
-            });
+        if (Utility.getTodayDate().equals(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.expire_date))) {
+            if (!PrefsHelper.getPrefsHelper().getPref(reg_type).equals("PREMIUM")) {
+                view = inflater.inflate(R.layout.fragment_upgrade, container, false);
+                Button packageUpgrade = (Button) view.findViewById(R.id.package_upgrade);
+                packageUpgrade.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle args = new Bundle();
+                        args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
+                        M.I(baseActivity, PackageUpgradeActivity.class, args);
+                    }
+                });
+            }
         }
         checkVisibilityEmptyLabel();
         return view;

@@ -99,7 +99,6 @@ public class GCMNotifService extends Service {
                     }
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
 

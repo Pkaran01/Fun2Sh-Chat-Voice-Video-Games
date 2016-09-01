@@ -27,6 +27,7 @@ import com.quickblox.q_municate_db.models.Message;
 import com.ss.fun2sh.Activity.PackageUpgradeActivity;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
+import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.adapters.chats.FavouriteAdapter;
@@ -101,61 +102,62 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
                              Bundle savedInstanceState) {
 
         View rootView;
-        if (PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.reg_type).equals("PREMIUM")) {
-        //if (true) {
-            rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
-            messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messages_recycleview);
-            filter = (Spinner) rootView.findViewById(R.id.filterByType);
-            tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
-            favouriteAdapter = new FavouriteAdapter(baseActivity, createCombinationMessagesList());
-            initMessagesRecyclerView();
-            filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    // your code here
-                    if (position == 0) {
-                        combinationMessagesList = createCombinationMessagesList();
-                    } else if (position == 1) {
-                        combinationMessagesList = filterTextMessage(createCombinationMessagesList());
-                    } else if (position == 2) {
-                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.PICTURE);
-                    } else if (position == 3) {
-                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.AUDIO);
-                    } else if (position == 4) {
-                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.VIDEO);
-                    } else if (position == 5) {
-                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.DOC);
-                    } else if (position == 6) {
-                        combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.OTHER);
-                    }
-                    if (favouriteAdapter != null) {
-                        favouriteAdapter.setFilter(combinationMessagesList);
-                        checkEmpyList(combinationMessagesList);
-                    }
-                }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parentView) {
-                    // your code here
+        rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
+        messagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.messages_recycleview);
+        filter = (Spinner) rootView.findViewById(R.id.filterByType);
+        tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
+        favouriteAdapter = new FavouriteAdapter(baseActivity, createCombinationMessagesList());
+        initMessagesRecyclerView();
+        filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                if (position == 0) {
                     combinationMessagesList = createCombinationMessagesList();
+                } else if (position == 1) {
+                    combinationMessagesList = filterTextMessage(createCombinationMessagesList());
+                } else if (position == 2) {
+                    combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.PICTURE);
+                } else if (position == 3) {
+                    combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.AUDIO);
+                } else if (position == 4) {
+                    combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.VIDEO);
+                } else if (position == 5) {
+                    combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.DOC);
+                } else if (position == 6) {
+                    combinationMessagesList = filterByType(createCombinationMessagesList(), Attachment.Type.OTHER);
+                }
+                if (favouriteAdapter != null) {
                     favouriteAdapter.setFilter(combinationMessagesList);
                     checkEmpyList(combinationMessagesList);
                 }
+            }
 
-            });
-            ;
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+                combinationMessagesList = createCombinationMessagesList();
+                favouriteAdapter.setFilter(combinationMessagesList);
+                checkEmpyList(combinationMessagesList);
+            }
 
-        } else {
-            rootView = inflater.inflate(R.layout.fragment_upgrade, container, false);
-            Button packageUpgrade = (Button) rootView.findViewById(R.id.package_upgrade);
-            packageUpgrade.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle args = new Bundle();
-                    args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
-                    M.I(baseActivity, PackageUpgradeActivity.class, args);
-                }
-            });
+        });
+
+
+        if (Utility.getTodayDate().equals(PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.expire_date))) {
+            if (!PrefsHelper.getPrefsHelper().getPref(Const.App_Ver.reg_type).equals("PREMIUM")) {
+                rootView = inflater.inflate(R.layout.fragment_upgrade, container, false);
+                Button packageUpgrade = (Button) rootView.findViewById(R.id.package_upgrade);
+                packageUpgrade.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle args = new Bundle();
+                        args.putString("reg_type", String.valueOf(PrefsHelper.getPrefsHelper().getPref(reg_type)));
+                        M.I(baseActivity, PackageUpgradeActivity.class, args);
+                    }
+                });
+            }
         }
         return rootView;
     }
@@ -204,7 +206,6 @@ public class FavouriteFragment extends BaseFragment implements SearchView.OnQuer
         checkEmpyList(filterList);
         return true;
     }
-
 
 
     private List<CombinationMessage> filter(List<CombinationMessage> models, String query) {
