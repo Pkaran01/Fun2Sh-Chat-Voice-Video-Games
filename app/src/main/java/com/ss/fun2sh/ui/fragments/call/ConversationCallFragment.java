@@ -149,7 +149,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
     private void setUpUiByCallType() {
         if (!isVideoCall) {
-            remoteVideoView.setVisibility(View.INVISIBLE);
+          //  remoteVideoView.setVisibility(View.INVISIBLE);
             cameraToggle.setVisibility(View.GONE);
             cameraToggle.setEnabled(false);
             cameraToggle.setChecked(false);
@@ -263,8 +263,12 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
         avatarAndNameView = (FrameLayout) view.findViewById(R.id.avatar_and_name);
 
+//        avatarAndNameView.addView(getActivity().getLayoutInflater().inflate(isVideoCall ?
+//                        R.layout.view_avatar_and_name_horizontal : R.layout.view_avatar_and_name_vertical,
+//                avatarAndNameView, false));
+
         avatarAndNameView.addView(getActivity().getLayoutInflater().inflate(isVideoCall ?
-                        R.layout.view_avatar_and_name_horizontal : R.layout.view_avatar_and_name_vertical,
+                        R.layout.view_avatar_and_name_horizontal : R.layout.view_avatar_and_name_horizontal,
                 avatarAndNameView, false));
 
         elementSetVideoButtons = view.findViewById(R.id.element_set_video_buttons);
@@ -275,19 +279,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
         actionButtonsEnabled(false);
 
-     /*   new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setLocalVideoViewVisible(true,getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
-                        elementSetVideoButtons.setVisibility(View.INVISIBLE);
-                    }
-                });
 
-            }
-        }, 6000);*/
     }
 
     @Override
@@ -355,29 +347,72 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
                 ((CallActivity) getActivity()).hangUpCurrentSession();
                 handUpVideoCall.setEnabled(false);
                 handUpVideoCall.setActivated(false);
+                setLocalVideoViewVisible(false, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+                isFullScreen = false;
 
             }
         });
 
+
+        elementSetVideoButtons.setVisibility(View.VISIBLE);
+        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isFullScreen = false;
+                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                        toggleFullScreen();
+                    }
+                });
+
+            }
+        }, 2000);
+
+
         remoteVideoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleFullScreen();
-                elementSetVideoButtons.setVisibility(View.VISIBLE);
-                setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e("log1", "handler value1-");
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
-                                elementSetVideoButtons.setVisibility(View.INVISIBLE);
-                            }
-                        });
+
+                if(isFullScreen){
+                    isFullScreen = false;
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+                    }else{
+                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
                     }
-                }, 6000);
+                    toggleFullScreen();
+                }else{
+                    isFullScreen = true;
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+                    }else{
+                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
+                    }
+                    toggleFullScreen();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e("log1", "handler value1-");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+                                    }else{
+                                        setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                                    }
+                                    isFullScreen = false;
+                                    toggleFullScreen();
+                                }
+                            });
+                        }
+                    }, 8000);
+                }
+
             }
         });
     }
@@ -385,65 +420,43 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+
+        elementSetVideoButtons.setVisibility(View.VISIBLE);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            remoteVideoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFullScreen();
-                    elementSetVideoButtons.setVisibility(View.VISIBLE);
-                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("log1", "handler value1-");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    elementSetVideoButtons.setVisibility(View.INVISIBLE);
-                                }
-                            });
-                        }
-                    }, 6000);
-                }
-            });
-        } else {
-            remoteVideoView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFullScreen();
-                    elementSetVideoButtons.setVisibility(View.VISIBLE);
-                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.e("log1", "handler value1-");
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
-                                    elementSetVideoButtons.setVisibility(View.INVISIBLE);
-                                }
-                            });
-                        }
-                    }, 6000);
-                }
-            });
+            setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+        }else{
+            setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen));
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_land_view_coordinates_full_screen));
+                        }else{
+                            setLocalVideoViewVisible(true, getResources().getIntArray(R.array.local_view_coordinates_full_screen_aoutomatichide));
+                        }
+                        isFullScreen = false;
+                        toggleFullScreen();
+                    }
+                });
+
+            }
+        }, 8000);
+
     }
 
     void toggleFullScreen() {
         if (isFullScreen) {
-            // setLocalVideoViewVisible(false);
             showSystemUI();
             ((CallActivity) getActivity()).showCallActionBar();
-            elementSetVideoButtons.setVisibility(View.INVISIBLE);
-            isFullScreen = false;
+            elementSetVideoButtons.setVisibility(View.VISIBLE);
         } else {
-            //   setLocalVideoViewVisible(true);
             hideSystemUI();
             ((CallActivity) getActivity()).hideCallActionBar();
-            elementSetVideoButtons.setVisibility(View.VISIBLE);
-            isFullScreen = true;
+            elementSetVideoButtons.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -451,9 +464,9 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
     private void setLocalVideoViewVisible(boolean visible, int s[]) {
         if (remoteVideoView != null && localVideoTrack != null) {
             if (visible) {
-                QBMediaStreamManager mediaStreamManager = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager();
-                if (mediaStreamManager != null) {
-                    int currentCameraId = mediaStreamManager.getCurrentCameraId();
+               // QBMediaStreamManager mediaStreamManager = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager();
+                if (((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager() != null) {
+                    int currentCameraId = ((CallActivity) getActivity()).getCurrentSession().getMediaStreamManager().getCurrentCameraId();
 
                     RTCGLVideoView.RendererConfig config = new RTCGLVideoView.RendererConfig();
                     config.mirror = CameraUtils.isCameraFront(currentCameraId);

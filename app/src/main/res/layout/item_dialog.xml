@@ -7,35 +7,30 @@
 
 
     <LinearLayout
+        android:id="@+id/lin_chat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="3dp"
-        android:paddingTop="3dp"
-        android:weightSum="3.1">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:weightSum="3">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.9"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <com.github.siyamed.shapeimageview.HexagonImageView
                     android:id="@+id/avatar_imageview"
                     style="@style/AvatarImageViewStyle"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="5dp"
                     android:padding="3dp"
                     app:siBorderColor="@color/greencolorInner"
                     app:siBorderWidth="2dp" />
@@ -45,23 +40,23 @@
 
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="0.8"
                 android:orientation="vertical"
                 android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center|bottom">
+                    android:gravity="center_vertical|bottom">
 
                     <TextView
                         android:id="@+id/name_textview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center|left|bottom"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
                         android:text="Frank Ocean"
                         android:textColor="@color/pinkColor"
                         android:textStyle="bold" />
@@ -70,16 +65,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center_vertical">
 
                     <com.rockerhieu.emojicon.EmojiconTextView
                         android:id="@+id/last_message_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/name_textview"
-                        android:layout_gravity="center_vertical"
+                        android:maxLines="2"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="@dimen/text_size_small"
                         tools:text="1111111 sclk" />
@@ -90,7 +84,7 @@
 
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -101,16 +95,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center|bottom">
+                    android:gravity="center_vertical|bottom">
 
                     <TextView
                         android:id="@+id/timeTextView"
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center|left|bottom"
-                        android:maxLines="1"
-                        android:text="29 minutes ago"
-                        android:textSize="12dp"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:maxLines="2"
+                        android:text="29 minutes ago" />
 
                 </LinearLayout>
 
@@ -118,22 +111,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/unread_messages_textview"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="1dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="1dp"
+                        android:gravity="center_horizontal"
+                        android:maxLines="2"
                         android:text="1"
                         android:textColor="#D20000"
                         android:textSize="@dimen/text_size" />
-                    <!--android:background="@drawable/badge_unread_messages_counter"-->
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -142,19 +131,12 @@
         </LinearLayout>
 
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1">
+            android:layout_height="5dp"
+            android:background="@drawable/dotted"
+            android:layerType="software" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/dotted"
-                android:layerType="software" />
-            <!--  android:src="@drawable/dotted"-->
-
-        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="E:\Chat\Fun2Chat\Fun2Sh\Fun2Sh\Q-municate_db\src\main\jniLibs"/></dataSet><dataSet config="release"><source path="E:\Chat\Fun2Chat\Fun2Sh\Fun2Sh\Q-municate_db\src\release\jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\github projects\Fun2Sh\Q-municate_db\src\main\jniLibs"/></dataSet><dataSet config="release"><source path="E:\github projects\Fun2Sh\Q-municate_db\src\release\jniLibs"/></dataSet></merger>

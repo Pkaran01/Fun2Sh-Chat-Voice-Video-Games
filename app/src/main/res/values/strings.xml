@@ -27,6 +27,24 @@
         <item>Sign Out</item>
     </string-array>
 
+    <string-array name="new_messages_friend">
+        <item>Send Message</item>
+        <item>Audio Call</item>
+        <item>Video Call</item>
+        <item>Block Contact</item>
+        <item>Delete Chat History</item>
+        <item>Remove Contact and Chat</item>
+    </string-array>
+
+    <string-array name="new_messages_friend_unblock">
+        <item>Send Message</item>
+        <item>Audio Call</item>
+        <item>Video Call</item>
+        <item>Unblock Contact</item>
+        <item>Delete Chat History</item>
+        <item>Remove Contact and Chat</item>
+    </string-array>
+
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">

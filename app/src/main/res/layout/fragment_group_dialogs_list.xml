@@ -1,62 +1,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundforall_screens"
+    android:orientation="vertical">
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/createGroup"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/backgroundforall_screens"/>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/createGroup"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@color/qbcolorPrimary"
-            android:orientation="horizontal"
-            android:padding="5dp">
+        android:layout_height="70dp"
+        android:background="@color/qbcolorPrimary"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
 
-            <ImageView
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_margin="1dp"
-                android:background="@drawable/add_group"
-                android:padding="5dp"/>
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="1dp"
+            android:background="@drawable/add_group"
+            android:padding="5dp" />
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center|left"
-                android:paddingLeft="10dp"
-                android:text="Create Group Name"
-                android:textColor="@color/pinkColor"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/chats_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/createGroup"
-            />
 
         <TextView
-            android:id="@+id/empty_list_textview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/createGroup"
-            android:gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/dialog_no_group_chats"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_size"/>
-    </RelativeLayout>
+            android:layout_height="fill_parent"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:text="Create Group Name"
+            android:textColor="@color/pinkColor"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chats_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/createGroup"
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/empty_list_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/createGroup"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/contact_no_friends"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_size"
+        android:visibility="gone" />
+
 </RelativeLayout>

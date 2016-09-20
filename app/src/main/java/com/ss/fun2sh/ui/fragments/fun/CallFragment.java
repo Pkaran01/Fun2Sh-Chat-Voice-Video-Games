@@ -51,7 +51,7 @@ public class CallFragment extends BaseFragment implements SearchView.OnQueryText
         View rootView = inflater.inflate(R.layout.fragment_call, container, false);
 
         callList = DataManager.getInstance().getCallDataManager().getAllSorted();
-        callAdapter = new CallAdapter(getActivity(), callList);
+        callAdapter = new CallAdapter(baseActivity, callList);
         tv = (TextView) rootView.findViewById(R.id.empty_list_textview);
         initCallRecyclerView(rootView);
         checkEmptyList(callList);

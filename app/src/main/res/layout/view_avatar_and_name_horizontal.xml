@@ -5,32 +5,34 @@
     android:id="@+id/view_avatar_and_name_horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingLeft="20dp"
     android:layout_marginTop="@dimen/call_avatar_top_margin_plus_height_actionbar"
-    android:gravity="center"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/image_view_small_avatar_layout_size"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <com.ss.fun2sh.ui.views.roundedimageview.RoundedImageView
         android:id="@+id/avatar_imageview"
         style="@style/AvatarImageViewStyle"
         android:layout_width="@dimen/image_view_small_avatar_layout_width"
         android:layout_height="@dimen/image_view_small_avatar_layout_height"
-        android:layout_gravity="center"
         app:border_color="@color/dark_gray"
         app:border_width="@dimen/avatar_border_width"
         app:oval="true"
-
         />
 
     <TextView
         android:id="@+id/calling_to_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/call_buttons_padding"
         android:maxLines="1"
         android:textColor="@color/light_gray"
-
         android:textSize="@dimen/text_size_large"
         />
-
+</LinearLayout>
 </LinearLayout>

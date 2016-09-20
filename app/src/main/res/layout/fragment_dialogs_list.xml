@@ -1,31 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   >
+    android:background="@drawable/backgroundforall_screens"
+    android:orientation="vertical">
 
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/backgroundforall_screens"
-        android:scaleType="centerCrop"/>
-
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/chats_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"/>
-
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/empty_list_textview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/createGroup"
         android:gravity="center_horizontal"
         android:padding="10dp"
-        android:text="@string/dialog_no_chats"
+        android:visibility="gone"
+        android:text="@string/contact_no_friends"
         android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_size"
-        android:visibility="gone" />
+        android:textSize="@dimen/text_size"/>
 
 </RelativeLayout>

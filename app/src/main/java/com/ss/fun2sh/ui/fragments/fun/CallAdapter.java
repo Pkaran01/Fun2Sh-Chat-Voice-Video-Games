@@ -1,5 +1,6 @@
 package com.ss.fun2sh.ui.fragments.fun;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -9,22 +10,36 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.siyamed.shapeimageview.HexagonImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.quickblox.chat.model.QBDialog;
+import com.quickblox.q_municate_core.qb.commands.chat.QBDeleteChatCommand;
+import com.quickblox.q_municate_core.qb.helpers.QBCallChatHelper;
+import com.quickblox.q_municate_core.utils.ChatUtils;
+import com.quickblox.q_municate_core.utils.ConnectivityUtils;
+import com.quickblox.q_municate_core.utils.DbUtils;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
+import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.User;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
+import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHolder> {
     private List<Call> callList;
-    Context context;
+    BaseActivity activity;
+  //  protected QBCallChatHelper callChatHelper;
+    private DataManager dataManager;
 
     public class DataObjectHolder extends RecyclerView.ViewHolder {
         TextView username;
@@ -45,17 +60,50 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
                 public void onClick(View v) {
                     boolean isFriend = DataManager.getInstance().getFriendDataManager().existsByUserId(callList.get(getAdapterPosition()).getUser().getUserId());
                     if (isFriend) {
-                        UserProfileActivity.start(context, callList.get(getAdapterPosition()).getUser().getUserId());
+                        UserProfileActivity.start(activity, callList.get(getAdapterPosition()).getUser().getUserId());
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (activity.checkNetworkAvailableWithError()) {
+                        new MaterialDialog.Builder(activity)
+                                .items(R.array.deleteDilaog)
+                                .itemsCallback(new MaterialDialog.ListCallback() {
+                                    @Override
+                                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        if (which == 0) {
+                                            Call call = callList.get(getAdapterPosition());
+                                            deleteDialog(call);
+                                        }
+                                    }
+                                })
+                                .show();
+                    }
+                    return true;
                 }
             });
         }
     }
 
+    private void deleteDialog(Call call) {
 
-    public CallAdapter(Context context, List<Call> callList) {
-        this.context = context;
+        DataManager.getInstance().getCallDataManager().deleteByCallId(call.getCallId());
+            int position = callList.indexOf(call);
+            if (position != -1) {
+                callList.remove(call);
+                notifyItemRemoved(position);
+            }
+    }
+
+
+
+    public CallAdapter(BaseActivity activity, List<Call> callList) {
+        this.activity = activity;
         this.callList = callList;
+        dataManager = DataManager.getInstance();
     }
 
     @Override

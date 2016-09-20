@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -52,39 +55,33 @@ import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.Bind;
-import butterknife.OnItemClick;
+
 
 public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implements SearchView.OnQueryTextListener {
 
-    private static final String TAG = DialogsListFragment.class.getSimpleName();
     private static final int LOADER_ID = DialogsListFragment.class.hashCode();
 
     @Bind(R.id.chats_listview)
-    ListView dialogsListView;
+    RecyclerView dialogsListView;
 
     @Bind(R.id.empty_list_textview)
     TextView emptyListTextView;
 
     private DialogsListAdapter dialogsListAdapter;
     private DataManager dataManager;
-    private QBUser qbUser;
     private Observer commonObserver;
+    List<Dialog> dialogsList;
 
-    public static DialogsListFragment newInstance() {
-        return new DialogsListFragment();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialogs_list, container, false);
-
         activateButterKnife(view);
-
         initFields();
+        dialogsList= Collections.emptyList();
         initChatsDialogs();
-
         registerForContextMenu(dialogsListView);
-
         return view;
     }
 
@@ -98,27 +95,7 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
     private void initFields() {
         dataManager = DataManager.getInstance();
         commonObserver = new CommonObserver();
-        qbUser = AppSession.getSession().getUser();
-        dialogsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (baseActivity.checkNetworkAvailableWithError()) {
-                    new MaterialDialog.Builder(baseActivity)
-                            .items(R.array.deleteDilaog)
-                            .itemsCallback(new MaterialDialog.ListCallback() {
-                                @Override
-                                public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    if (which == 0) {
-                                        Dialog mdialog = dialogsListAdapter.getItem(position);
-                                        deleteDialog(mdialog);
-                                    }
-                                }
-                            })
-                            .show();
-                }
-                return true;
-            }
-        });
+
     }
 
     @Override
@@ -166,19 +143,6 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        addObservers();
-
-        if (dialogsListAdapter != null) {
-            checkVisibilityEmptyLabel();
-        }
-
-        if (dialogsListAdapter != null) {
-            dialogsListAdapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -186,24 +150,7 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
         deleteObservers();
     }
 
-    @OnItemClick(R.id.chats_listview)
-    void startChat(int position) {
-        Dialog dialog = dialogsListAdapter.getItem(position);
 
-        if (!baseActivity.checkNetworkAvailableWithError() && isFirstOpeningDialog(dialog.getDialogId())) {
-            return;
-        }
-
-        if (dialog.getType() == Dialog.Type.PRIVATE) {
-            startPrivateChatActivity(dialog);
-        } else {
-            startGroupChatActivity(dialog);
-        }
-    }
-
-    private boolean isFirstOpeningDialog(String dialogId) {
-        return !dataManager.getMessageDataManager().getTempMessagesByDialogId(dialogId).isEmpty();
-    }
 
     @Override
     public void onConnectedToService(QBService service) {
@@ -226,10 +173,6 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
         checkEmptyList(dialogsList.size());
     }
 
-    private void checkVisibilityEmptyLabel() {
-        emptyListTextView.setVisibility(dialogsListAdapter.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
     private void addObservers() {
         dataManager.getDialogDataManager().addObserver(commonObserver);
         dataManager.getMessageDataManager().addObserver(commonObserver);
@@ -245,48 +188,18 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
     }
 
     private void initChatsDialogs() {
-        List<Dialog> dialogsList = Collections.emptyList();
+        dialogsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         dialogsListAdapter = new DialogsListAdapter(baseActivity, dialogsList);
         dialogsListView.setAdapter(dialogsListAdapter);
     }
 
-    private void startPrivateChatActivity(Dialog dialog) {
-        List<DialogOccupant> occupantsList = dataManager.getDialogOccupantDataManager()
-                .getDialogOccupantsListByDialogId(dialog.getDialogId());
-        User opponent = ChatUtils.getOpponentFromPrivateDialog(UserFriendUtils.createLocalUser(qbUser), occupantsList);
 
-        if (!TextUtils.isEmpty(dialog.getDialogId())) {
-            PrivateDialogActivity.start(baseActivity, opponent, dialog);
-        }
-    }
-
-    private void startGroupChatActivity(Dialog dialog) {
-        GroupDialogActivity.start(baseActivity, dialog);
-    }
 
     private void updateDialogsList() {
         onChangedData();
     }
 
-    private void deleteDialog(Dialog dialog) {
-        if (Dialog.Type.GROUP.equals(dialog.getType())) {
-            if (groupChatHelper != null) {
-                try {
-                    QBDialog localDialog = ChatUtils.createQBDialogFromLocalDialogWithoutLeaved(dataManager,
-                            dataManager.getDialogDataManager().getByDialogId(dialog.getDialogId()));
-                    List<Integer> occupantsIdsList = new ArrayList<>();
-                    occupantsIdsList.add(qbUser.getId());
-                    groupChatHelper.sendGroupMessageToFriends(
-                            localDialog,
-                            DialogNotification.Type.OCCUPANTS_DIALOG, occupantsIdsList, true);
-                    DbUtils.deleteDialogLocal(dataManager, dialog.getDialogId());
-                } catch (QBResponseException e) {
-                    ErrorUtils.logError(e);
-                }
-            }
-        }
-        QBDeleteChatCommand.start(baseActivity, dialog.getDialogId(), dialog.getType());
-    }
+
 
     private void checkEmptyList(int listSize) {
         if (listSize > 0) {
@@ -349,4 +262,24 @@ public class DialogsListFragment extends BaseLoaderFragment<List<Dialog>> implem
             }
         }
     }
+
+    private void checkVisibilityEmptyLabel() {
+        emptyListTextView.setVisibility(dialogsListAdapter.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addObservers();
+
+        if (dialogsListAdapter != null) {
+            checkVisibilityEmptyLabel();
+        }
+
+        if (dialogsListAdapter != null) {
+            dialogsListAdapter.notifyDataSetChanged();
+        }
+    }
+
+
 }

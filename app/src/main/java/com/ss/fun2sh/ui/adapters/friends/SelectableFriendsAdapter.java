@@ -104,7 +104,7 @@ public class SelectableFriendsAdapter extends FriendsAdapter {
         return selectedFriendsList;
     }
 
-    protected static class ViewHolder extends FriendsAdapter.ViewHolder {
+    protected  class ViewHolder extends FriendsAdapter.ViewHolder {
 
         @Bind(R.id.selected_friend_checkbox)
         CheckBox selectFriendCheckBox;

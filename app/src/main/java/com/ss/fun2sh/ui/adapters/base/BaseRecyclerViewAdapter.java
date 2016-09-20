@@ -113,4 +113,13 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseClickListenerVie
     protected void displayAvatarImage(String uri, HexagonImageView imageView) {
         ImageLoader.getInstance().displayImage(uri, imageView, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
     }
+
+    protected void displayGroupPhotoImage(String uri, HexagonImageView imageView) {
+        ImageLoader.getInstance().displayImage(uri, imageView, ImageLoaderUtils.UIL_GROUP_AVATAR_DISPLAY_OPTIONS);
+    }
+
+    public void setNewData(List<T> newData) {
+        objectsList = newData;
+        notifyDataSetChanged();
+    }
 }

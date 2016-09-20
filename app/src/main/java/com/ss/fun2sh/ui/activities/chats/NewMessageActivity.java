@@ -1,5 +1,6 @@
 package com.ss.fun2sh.ui.activities.chats;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class NewMessageActivity extends BaseFragment {
     private DataManager dataManager;
     private FriendsAdapter friendsAdapter;
     private User selectedUser;
+
 
 
     @Override
