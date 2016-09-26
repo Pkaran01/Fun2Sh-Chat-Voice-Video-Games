@@ -1,14 +1,30 @@
 [
     {
-        "merged": "E:\\github projects\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\gtm_analytics",
-        "source": "E:\\github projects\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-analytics\\8.1.0\\res\\raw\\gtm_analytics"
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\file.txt",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.quickblox\\quickblox-android-sdk-content\\2.6.1\\res\\raw\\file.txt"
     },
     {
-        "merged": "E:\\github projects\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\orm.properties",
-        "source": "E:\\github projects\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\Fun2Sh\\Q-municate_db\\unspecified\\res\\raw\\orm.properties"
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\amazaonerror.xml",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.quickblox\\quickblox-android-sdk-content\\2.6.1\\res\\raw\\amazaonerror.xml"
     },
     {
-        "merged": "E:\\github projects\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\beep.wav",
-        "source": "E:\\github projects\\Fun2Sh\\Q-municate_core\\src\\main\\res\\raw\\beep.wav"
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\xmlresponse.xml",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.quickblox\\quickblox-android-sdk-content\\2.6.1\\res\\raw\\xmlresponse.xml"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\image.png",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.quickblox\\quickblox-android-sdk-content\\2.6.1\\res\\raw\\image.png"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\orm.properties",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\Fun2Sh\\Q-municate_db\\unspecified\\res\\raw\\orm.properties"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\gtm_analytics",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-analytics\\8.1.0\\res\\raw\\gtm_analytics"
+    },
+    {
+        "merged": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\build\\intermediates\\res\\merged\\release\\raw\\beep.wav",
+        "source": "E:\\Chat\\Fun2Chat\\Fun2Sh\\Fun2Sh\\Fun2Sh\\Q-municate_core\\src\\main\\res\\raw\\beep.wav"
     }
 ]

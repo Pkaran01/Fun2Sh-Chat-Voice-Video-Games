@@ -94,7 +94,7 @@ public class QBCallChatHelper extends BaseHelper {
                                       QBRTCSessionConnectionCallbacks qbRtcSessionConnectionCallbacks) {
         if (currentQbRtcSession != null) {
             currentQbRtcSession.removeSignalingCallback(qbRtcSignalingCallback);
-            currentQbRtcSession.removeSessionnCallbacksListener(qbRtcSessionConnectionCallbacks);
+            currentQbRtcSession.removeSessionCallbacksListener(qbRtcSessionConnectionCallbacks);
             currentQbRtcSession = null;
         }
     }
@@ -224,14 +224,15 @@ public class QBCallChatHelper extends BaseHelper {
         }
 
         @Override
-        public void onReceiveHangUpFromUser(QBRTCSession qbRtcSession, Integer integer) {
+        public void onReceiveHangUpFromUser(QBRTCSession qbRtcSession, Integer integer, Map<String, String> map) {
             Log.d(TAG,
                     "onReceiveHangUpFromUser(), qbRtcSession.getSession() = " + qbRtcSession.getSessionID());
             CoreSharedHelper.getInstance().savePref(CoreSharedHelper.isCallRunning, false);
             if (qbRtcClientSessionCallbacks != null) {
-                qbRtcClientSessionCallbacks.onReceiveHangUpFromUser(qbRtcSession, integer);
+                qbRtcClientSessionCallbacks.onReceiveHangUpFromUser(qbRtcSession, integer, map);
             }
         }
+
 
         @Override
         public void onUserNoActions(QBRTCSession qbRtcSession, Integer integer) {

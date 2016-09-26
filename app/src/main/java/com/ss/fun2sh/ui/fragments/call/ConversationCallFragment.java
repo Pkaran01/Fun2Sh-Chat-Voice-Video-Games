@@ -198,19 +198,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         micToggleVideoCall.setActivated(enability);
     }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-    }*/
+
 
     @Override
     public void onStart() {
@@ -229,6 +217,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
         ((CallActivity) getActivity()).addRTCSessionUserCallback(this);
     }
 
+    //TODO Push for call message
     private void sendPushAboutCall() {
         if (isPeerToPeerCall) {
             QBFriendListHelper qbFriendListHelper = new QBFriendListHelper(getActivity());

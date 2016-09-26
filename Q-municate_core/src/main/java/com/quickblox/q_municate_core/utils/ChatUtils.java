@@ -390,7 +390,7 @@ public class ChatUtils {
         message.setMessageId(qbChatMessage.getId());
         message.setDialogOccupant(dialogOccupant);
         message.setCreatedDate(dateSent);
-        message.setState(qbChatMessage.isRead() ? State.READ : state);
+        message.setState(qbChatMessage.isMarkable() ? State.READ : state);
         message.setBody(qbChatMessage.getBody());
         return message;
     }
@@ -493,7 +493,7 @@ public class ChatUtils {
 
         long dateSent = getMessageDateSent(qbChatMessage);
         dialogNotification.setCreatedDate(dateSent);
-        dialogNotification.setState(qbChatMessage.isRead() ? State.READ : State.DELIVERED);
+        dialogNotification.setState(qbChatMessage.isMarkable() ? State.READ : State.DELIVERED);
 
         return dialogNotification;
     }

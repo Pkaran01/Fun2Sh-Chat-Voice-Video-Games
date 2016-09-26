@@ -11,7 +11,7 @@ public final class R {
 		public static final int db_version = 0x7f0a0007;
 	}
 	public static final class raw {
-		public static final int orm = 0x7f050002;
+		public static final int orm = 0x7f050005;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f060037;

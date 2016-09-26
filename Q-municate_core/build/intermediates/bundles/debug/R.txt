@@ -740,9 +740,13 @@ int layout select_dialog_item_material 0x7f030024
 int layout select_dialog_multichoice_material 0x7f030025
 int layout select_dialog_singlechoice_material 0x7f030026
 int layout support_simple_spinner_dropdown_item 0x7f030027
-int raw beep 0x7f050000
-int raw gtm_analytics 0x7f050001
-int raw orm 0x7f050002
+int raw amazaonerror 0x7f050000
+int raw beep 0x7f050001
+int raw file 0x7f050002
+int raw gtm_analytics 0x7f050003
+int raw image 0x7f050004
+int raw orm 0x7f050005
+int raw xmlresponse 0x7f050006
 int string abc_action_bar_home_description 0x7f060000
 int string abc_action_bar_home_description_format 0x7f060032
 int string abc_action_bar_home_subtitle_description_format 0x7f060033

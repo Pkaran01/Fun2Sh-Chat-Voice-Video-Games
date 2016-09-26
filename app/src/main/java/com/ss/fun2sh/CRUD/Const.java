@@ -25,6 +25,8 @@ public class Const {
         String secondTimeLogin = "secondtimelogin";
         String firstTimeProfile = "firsttimeProfile";
         String QBPassword = "1234567890";
+        String ACCOUNT_ID = "52545";
+        String ACCOUNT_KEY = "hzp8Cs6sqTxQS5zY4bDy";
         String LAST_AVATAR_URL = "last_avatar_url";
     }
 

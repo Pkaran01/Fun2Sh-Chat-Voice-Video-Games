@@ -173,9 +173,10 @@ public class ChatNotificationHelper {
                 }
 
                 @Override
-                public void onReceiveHangUpFromUser(QBRTCSession qbrtcSession, Integer integer) {
+                public void onReceiveHangUpFromUser(QBRTCSession qbrtcSession, Integer integer, Map<String, String> map) {
 
                 }
+
 
                 @Override
                 public void onUserNoActions(QBRTCSession qbrtcSession, Integer integer) {

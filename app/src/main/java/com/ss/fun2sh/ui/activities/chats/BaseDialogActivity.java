@@ -49,14 +49,13 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.quickblox.chat.QBChatService;
 import com.quickblox.chat.model.QBAttachment;
 import com.quickblox.chat.model.QBDialog;
+import com.quickblox.chat.query.QueryDeleteMessages;
+import com.quickblox.chat.request.QBMessageUpdateBuilder;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.QBEntityCallback;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.core.command.Command;
 import com.quickblox.q_municate_core.core.loader.BaseLoader;
-import com.quickblox.q_municate_core.crud.QBMessageUpdateBuilder;
-import com.quickblox.q_municate_core.crud.QueryDeleteMessages;
-import com.quickblox.q_municate_core.crud.QueryUpdateMessage;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.QBLoadAttachFileCommand;
@@ -1403,7 +1402,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                 Set<String> messagesIds = new HashSet<String>() {{
                     add(combinationMessage.getMessageId());
                 }};
-                QueryDeleteMessages.deleteMessages(messagesIds, true);
+                QBChatService.deleteMessages(messagesIds, true);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1447,14 +1446,9 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                         if (UserAccount.isEmpty(emailEditText)) {
                             QBMessageUpdateBuilder messageUpdateBuilder = new QBMessageUpdateBuilder();
                             messageUpdateBuilder.updateText(emailEditText.getText().toString());
-                            QBMessageUpdateBuilder.updateMessage(msg.getMessageId(), msg.getDialogOccupant().getDialog().getDialogId(), messageUpdateBuilder, new QBEntityCallback<Void>() {
+                            QBChatService.updateMessage(msg.getMessageId(), msg.getDialogOccupant().getDialog().getDialogId(), messageUpdateBuilder, new QBEntityCallback<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid, Bundle bundle) {
-
-                                }
-
-                                @Override
-                                public void onSuccess() {
                                     dataManager.getMessageDataManager().updateMessage(msg.getMessageId(), emailEditText.getText().toString());
                                     M.T(BaseDialogActivity.this, "Message is updated");
                                     updateData();
@@ -1462,7 +1456,7 @@ public abstract class BaseDialogActivity extends BaseLoggableActivity implements
                                 }
 
                                 @Override
-                                public void onError(List<String> list) {
+                                public void onError(QBResponseException errors) {
 
                                 }
                             });

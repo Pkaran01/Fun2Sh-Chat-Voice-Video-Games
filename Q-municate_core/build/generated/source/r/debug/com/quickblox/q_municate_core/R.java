@@ -2209,9 +2209,13 @@ containing a value of this type.
         public static int support_simple_spinner_dropdown_item=0x7f030027;
     }
     public static final class raw {
-        public static int beep=0x7f050000;
-        public static int gtm_analytics=0x7f050001;
-        public static int orm=0x7f050002;
+        public static int amazaonerror=0x7f050000;
+        public static int beep=0x7f050001;
+        public static int file=0x7f050002;
+        public static int gtm_analytics=0x7f050003;
+        public static int image=0x7f050004;
+        public static int orm=0x7f050005;
+        public static int xmlresponse=0x7f050006;
     }
     public static final class string {
         public static int abc_action_bar_home_description=0x7f060000;

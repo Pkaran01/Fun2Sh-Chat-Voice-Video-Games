@@ -14,6 +14,7 @@ import com.quickblox.chat.QBChatService;
 import com.quickblox.core.QBSettings;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.utils.ActivityLifecycleHandler;
 import com.ss.fun2sh.utils.StringObfuscator;
 import com.ss.fun2sh.utils.helpers.SharedHelper;
@@ -50,10 +51,12 @@ public class AppController extends Application {
 
     private void initQb() {
         QBChatService.setDebugEnabled(StringObfuscator.getDebugEnabled());
-        QBSettings.getInstance().fastConfigInit(
+        QBSettings.getInstance().init(this, StringObfuscator.getApplicationId(), StringObfuscator.getAuthKey(), StringObfuscator.getAuthSecret());
+        QBSettings.getInstance().setAccountKey(Const.App_Ver.ACCOUNT_KEY);
+     /*   QBSettings.getInstance().fastConfigInit(
                 StringObfuscator.getApplicationId(),
                 StringObfuscator.getAuthKey(),
-                StringObfuscator.getAuthSecret());
+                StringObfuscator.getAuthSecret());*/
     }
 
     private void initDb() {
