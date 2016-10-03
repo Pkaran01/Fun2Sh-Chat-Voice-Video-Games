@@ -53,6 +53,7 @@ import com.ss.fun2sh.ui.activities.authorization.SplashActivity;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.chats.GroupDialogActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.fragments.dialogs.base.ProgressDialogFragment;
 import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.bridges.ActionBarBridge;
@@ -502,7 +503,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     private boolean needShowReceivedNotification() {
         boolean isSplashActivity = this instanceof SplashActivity;
         boolean isCallActivity = this instanceof CallActivity;
-        return !isSplashActivity && !isCallActivity;
+        boolean isGroupCallActivity = this instanceof GroupCallActivity;
+        return !isSplashActivity && !isCallActivity && !isGroupCallActivity;
     }
 
     protected void onSuccessAction(String action) {
@@ -651,7 +653,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     }
 
     protected void performLoginChatSuccessAction(Bundle bundle) {
-        QBInitCallChatCommand.start(this, CallActivity.class);
+        //QBInitCallChatCommand.start(this, CallActivity.class);
+        QBInitCallChatCommand.start(this, GroupCallActivity.class);
         showSnackbarUpdatingDialogs();
         hideProgress();
     }

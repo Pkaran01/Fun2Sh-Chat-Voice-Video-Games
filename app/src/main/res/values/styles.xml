@@ -21,6 +21,11 @@
         <item name="theme">@style/ToolbarThemeCall</item>
     </style>
 
+    <style name="AppThemeVideo.Button" parent="Widget.AppCompat.Button">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/selector_button_general</item>
         <item name="android:layout_width">wrap_content</item>

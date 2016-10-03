@@ -26,8 +26,6 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
 
-import org.webrtc.VideoCapturerAndroid;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,16 +100,17 @@ public class QBCallChatHelper extends BaseHelper {
     private void setUpCallClient() {
         Log.e(TAG, "setUpCallClient()");
 
-        qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraErrorHandler() {
+      /*  qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraErrorHandler() {
             @Override
             public void onCameraError(String error) {
                 Log.d(TAG, "Error on cams, error = " + error);
             }
-        });
+        });*/
 
-        QBRTCConfig.setMaxOpponentsCount(MAX_OPPONENTS_COUNT);
-        QBRTCConfig.setDisconnectTime(DISCONNECT_TIME);
-        QBRTCConfig.setAnswerTimeInterval(ANSWER_TIME_INTERVAL);
+        QBRTCConfig.setMaxOpponentsCount(6);
+        QBRTCConfig.setDisconnectTime(30);
+        QBRTCConfig.setAnswerTimeInterval(30l);
+        QBRTCConfig.setStatsReportInterval(60);
         QBRTCConfig.setDebugEnabled(true);
 
         qbRtcClient.prepareToProcessCalls();
@@ -128,7 +127,8 @@ public class QBCallChatHelper extends BaseHelper {
             Log.d(TAG, "startCallActivity(), qbRtcSession.getSessionDescription() = " + qbRtcSession
                     .getSessionDescription());
 
-            List<QBUser> qbUsersList = new ArrayList<>(1);
+            ///List<QBUser> qbUsersList = new ArrayList<>(1);
+            List<QBUser> qbUsersList = new ArrayList<>();
             qbUsersList.add(UserFriendUtils.createQbUser(user));
             Intent intent = new Intent(context, activityClass);
             intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);

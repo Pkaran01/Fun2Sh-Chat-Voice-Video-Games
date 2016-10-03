@@ -33,6 +33,7 @@ import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
 import com.ss.fun2sh.ui.adapters.chats.PrivateDialogMessagesAdapter;
 import com.ss.fun2sh.ui.fragments.dialogs.base.TwoButtonsDialogFragment;
@@ -297,7 +298,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
         }
         List<QBUser> qbUserList = new ArrayList<>(1);
         qbUserList.add(UserFriendUtils.createQbUser(user));
-        CallActivity.start(PrivateDialogActivity.this, qbUserList, qbConferenceType, null);
+        GroupCallActivity.start(PrivateDialogActivity.this, qbUserList, qbConferenceType, null);
 
     }
 

@@ -27,6 +27,7 @@ import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.utils.SystemUtils;
 import com.ss.fun2sh.utils.helpers.LoginHelper;
 import com.ss.fun2sh.utils.helpers.SharedHelper;
@@ -149,7 +150,8 @@ public class ChatNotificationHelper {
         @Override
         public void onCompleteQbChatLogin() {
             M.E("onCompleteQbChatLogin");
-            QBInitCallChatCommand.start(context, CallActivity.class);
+            //QBInitCallChatCommand.start(context, CallActivity.class);
+            QBInitCallChatCommand.start(context, GroupCallActivity.class);
             qbRtcClient.addSessionCallbacksListener(new QBRTCClientSessionCallbacks() {
                 @Override
                 public void onReceiveNewSession(QBRTCSession qbrtcSession) {

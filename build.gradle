@@ -21,6 +21,7 @@ allprojects {
     repositories {
         jcenter({url "http://jcenter.bintray.com/"})
         mavenCentral()
+        mavenLocal()
         maven {
             url "https://github.com/QuickBlox/quickblox-android-sdk-releases/raw/master/"
         }

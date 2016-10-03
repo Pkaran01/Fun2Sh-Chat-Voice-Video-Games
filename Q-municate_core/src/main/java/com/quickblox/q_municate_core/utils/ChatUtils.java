@@ -390,7 +390,7 @@ public class ChatUtils {
         message.setMessageId(qbChatMessage.getId());
         message.setDialogOccupant(dialogOccupant);
         message.setCreatedDate(dateSent);
-        message.setState(qbChatMessage.isMarkable() ? State.READ : state);
+        message.setState(qbChatMessage.isDelayed() ? State.READ : state);
         message.setBody(qbChatMessage.getBody());
         return message;
     }
@@ -420,14 +420,6 @@ public class ChatUtils {
         Attachment attachment = new Attachment();
         attachment.setAttachmentId(qbAttachment.getId());
         attachment.setRemoteUrl(qbAttachment.getUrl());
-        Log.e("CRUD createLocal", "start");
-        Log.e("CRUD createLocal", qbAttachment.getName() + "");
-        Log.e("CRUD createLocal", qbAttachment.getId() + "");
-        Log.e("CRUD createLocal", qbAttachment.getType() + "");
-        Log.e("CRUD createLocal", qbAttachment.getContentType() + "");
-        Log.e("CRUD createLocal", qbAttachment.getSize() + "");
-        Log.e("CRUD createLocal", qbAttachment.toString() + "");
-        Log.e("CRUD createLocal", "end");
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                 .format(new java.util.Date().getTime());
         String fileName;
@@ -493,7 +485,7 @@ public class ChatUtils {
 
         long dateSent = getMessageDateSent(qbChatMessage);
         dialogNotification.setCreatedDate(dateSent);
-        dialogNotification.setState(qbChatMessage.isMarkable() ? State.READ : State.DELIVERED);
+        dialogNotification.setState(qbChatMessage.isDelayed() ? State.READ : State.DELIVERED);
 
         return dialogNotification;
     }

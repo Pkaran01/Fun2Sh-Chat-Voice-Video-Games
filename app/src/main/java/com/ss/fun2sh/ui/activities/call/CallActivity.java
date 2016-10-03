@@ -1,11 +1,11 @@
 package com.ss.fun2sh.ui.activities.call;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 
@@ -38,8 +38,8 @@ import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Friend;
 import com.quickblox.q_municate_db.models.User;
-import com.quickblox.q_municate_db.utils.ErrorUtils;
 import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.AppRTCAudioManager;
 import com.quickblox.videochat.webrtc.QBMediaStreamManager;
 import com.quickblox.videochat.webrtc.QBRTCClient;
 import com.quickblox.videochat.webrtc.QBRTCSession;
@@ -52,12 +52,16 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
 import com.quickblox.videochat.webrtc.exception.QBRTCException;
 import com.quickblox.videochat.webrtc.exception.QBRTCSignalException;
+import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
+import com.ss.fun2sh.ui.activities.groupcall.fragments.SessionController;
 import com.ss.fun2sh.ui.fragments.call.ConversationCallFragment;
 import com.ss.fun2sh.ui.fragments.call.IncomingCallFragment;
 import com.ss.fun2sh.utils.ToastUtils;
+
+import org.webrtc.RendererCommon;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -69,7 +73,8 @@ import butterknife.Bind;
 
 import static com.ss.fun2sh.CRUD.M.E;
 
-public class CallActivity extends BaseLoggableActivity implements QBRTCClientSessionCallbacks, QBRTCSessionConnectionCallbacks, QBRTCSignalingCallback {
+public class CallActivity extends BaseLoggableActivity implements
+        QBRTCClientSessionCallbacks, QBRTCSessionConnectionCallbacks, QBRTCSignalingCallback, SessionController {
 
     public static final int CALL_ACTIVITY_CLOSE = 1000;
     public static final int CALL_ACTIVITY_CLOSE_WIFI_DISABLED = 1001;
@@ -93,18 +98,19 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     private RingtonePlayer ringtonePlayer;
     private boolean isStarted = false;
 
-    private QBRTCSessionUserCallback qbRtcSessionUserCallback;
+    private SessionController.QBRTCSessionUserCallback qbRtcSessionUserCallback;
     private QBCallChatHelper qbCallChatHelper;
     private StartConversationReason startConversationReason;
     private QBRTCSessionDescription qbRtcSessionDescription;
     private ActionBar actionBar;
     private boolean isSpeakerEnabled;
-    private AudioStreamReceiver audioStreamReceiver;
+    private AppRTCAudioManager audioManager;
     private String ACTION_ANSWER_CALL = "action_answer_call";
-
+    private SessionController.AudioStateCallback audioStateCallback;
     DataManager dataManager;
     private Call call;
 
+    private SharedPreferences sharedPref;
 
     public static void start(Activity activity, List<QBUser> qbUsersList, QBRTCTypes.QBConferenceType qbConferenceType,
                              QBRTCSessionDescription qbRtcSessionDescription) {
@@ -132,6 +138,36 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
         actionBar = getSupportActionBar();
 
+    }
+
+    @Override
+    public void addAudioStateCallback(SessionController.AudioStateCallback audioStateCallback) {
+        this.audioStateCallback = audioStateCallback;
+    }
+
+    @Override
+    public void switchAudio() {
+        if (audioManager.getSelectedAudioDevice() == AppRTCAudioManager.AudioDevice.WIRED_HEADSET
+                || audioManager.getSelectedAudioDevice() == AppRTCAudioManager.AudioDevice.EARPIECE) {
+            audioManager.setAudioDevice(AppRTCAudioManager.AudioDevice.SPEAKER_PHONE);
+        } else {
+            audioManager.setAudioDevice(AppRTCAudioManager.AudioDevice.EARPIECE);
+        }
+    }
+
+    @Override
+    public void onUseHeadSet(boolean use) {
+        audioManager.setManageHeadsetByDefault(use);
+    }
+
+    @Override
+    public void onVideoScalingSwitch(RendererCommon.ScalingType scalingType) {
+
+    }
+
+    @Override
+    public void onCaptureFormatChange(int width, int height, int framerate) {
+        getCurrentSession().getMediaStreamManager().changeCaptureFormat(width, height, framerate);
     }
 
     public void setCallActionBarTitle(String title) {
@@ -166,7 +202,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         dataManager = DataManager.getInstance();
         canPerformLogout.set(false);
         initFields();
-        audioStreamReceiver = new AudioStreamReceiver();
+
 
         //initWiFiManagerListener();
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -174,12 +210,37 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
                 | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
         wakeLock.acquire();
 
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         if (ACTION_ANSWER_CALL.equals(getIntent().getAction())) {
             addConversationFragmentReceiveCall();
         }
 
     }
 
+    public SharedPreferences getDefaultSharedPrefs() {
+        return sharedPref;
+    }
+
+    private void initAudioManager() {
+        audioManager = AppRTCAudioManager.create(this, new AppRTCAudioManager.OnAudioManagerStateListener() {
+            @Override
+            public void onAudioChangedState(AppRTCAudioManager.AudioDevice audioDevice) {
+                M.T(CallActivity.this, "Audio device swicthed to  " + audioDevice);
+            }
+        });
+        audioManager.setDefaultAudioDevice(AppRTCAudioManager.AudioDevice.EARPIECE);
+        audioManager.setOnWiredHeadsetStateListener(new AppRTCAudioManager.OnWiredHeadsetStateListener() {
+            @Override
+            public void onWiredHeadsetStateChanged(boolean plugged, boolean hasMicrophone) {
+                M.T(CallActivity.this, "Headset " + (plugged ? "plugged" : "unplugged"));
+                if (audioStateCallback != null) {
+                    audioStateCallback.onWiredHeadsetStateChanged(plugged);
+                }
+            }
+        });
+    }
 
     private void initCallFragment() {
         switch (startConversationReason) {
@@ -201,7 +262,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         super.onStop();
         dataManager.getCallDataManager().create(call);
         // unregisterReceiver(wifiStateReceiver);
-        unregisterReceiver(audioStreamReceiver);
     }
 
     @Override
@@ -230,7 +290,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         intentFilter.addAction(AudioManager.ACTION_HEADSET_PLUG);
         intentFilter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
         //registerReceiver(wifiStateReceiver, intentFilter);
-        registerReceiver(audioStreamReceiver, intentFilter);
 
         ;
 
@@ -349,13 +408,10 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     @Override
     public void onReceiveNewSession(final QBRTCSession session) {
         Log.e(TAG, "Session " + session.getSessionID() + " are income");
-        M.E("karan on recived");
-
     }
 
     @Override
     public void onUserNotAnswer(QBRTCSession session, Integer userID) {
-        E("onUserNotAnswer");
         if (!session.equals(getCurrentSession())) {
             return;
         }
@@ -378,10 +434,10 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (!session.equals(getCurrentSession())) {
             return;
         }
-
+        final String reason = userInfo != null ? userInfo.get(Const.App_Ver.REJECT_REASON) : "";
         if (qbRtcSessionUserCallback != null) {
             ToastUtils.longToast("The user, whom you have called, is busy. Please try later.");
-            qbRtcSessionUserCallback.onCallRejectByUser(session, userID, userInfo);
+            qbRtcSessionUserCallback.onCallRejectByUser(session, userID, reason);
         }
         runOnUiThread(new Runnable() {
             @Override
@@ -410,12 +466,13 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     @Override
-    public void onReceiveHangUpFromUser(QBRTCSession session, Integer userID, Map<String, String> map) {
+    public void onReceiveHangUpFromUser(QBRTCSession session, Integer userID, Map<String, String> userInfo) {
         //call.setStatus(4);
+        String reason = userInfo != null ? userInfo.get(Const.App_Ver.HANG_UP_REASON) : "";
         if (session.equals(getCurrentSession())) {
 
             if (qbRtcSessionUserCallback != null) {
-                qbRtcSessionUserCallback.onReceiveHangUpFromUser(session, userID);
+                qbRtcSessionUserCallback.onReceiveHangUpFromUser(session, userID, reason);
             }
 
             final String participantName = UserFriendUtils.getUserNameByID(userID, opponentsList);
@@ -554,6 +611,8 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         startConversationReason = (StartConversationReason) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE);
         qbRtcSessionDescription = (QBRTCSessionDescription) getIntent().getSerializableExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION);
 
+        initAudioManager();
+
         ringtonePlayer = new RingtonePlayer(this, R.raw.beep);
         // Add activity as callback to RTCClient
 
@@ -576,15 +635,6 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
     }
 
-    private void initWiFiManagerListener() {
-        wifiStateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "WIFI was changed");
-                processCurrentWifiState(context);
-            }
-        };
-    }
 
     public User getOpponentAsUserFromDB(int opponentId) {
         DataManager dataManager = DataManager.getInstance();
@@ -666,6 +716,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     private void addIncomingCallFragment(QBRTCSessionDescription qbRtcSessionDescription) {
         Log.d(TAG, "QBRTCSession in addIncomingCallFragment is " + qbRtcSessionDescription);
         if (isInFront) {
+            setOptionsForSession(getCurrentSession(), getDefaultSharedPrefs());
             Fragment fragment = new IncomingCallFragment();
             Bundle bundle = new Bundle();
             bundle.putSerializable(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSessionDescription);
@@ -679,6 +730,13 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
     }
 
+    private void setOptionsForSession(QBRTCSession session, SharedPreferences sharedPref) {
+        QBRTCSession.SessionOptions sessionOptions = new QBRTCSession.SessionOptions();
+        sessionOptions.leaveSessionIfInitiatorHangUp = sharedPref.getBoolean(getString(R.string.pref_initiator_behaviour_key),
+                Boolean.valueOf(getString(R.string.pref_initiator_behaviour_default)));
+        session.setOptions(sessionOptions);
+    }
+
     public void addConversationCallFragment() {
         Log.d(TAG, "addConversationCallFragment()");
 
@@ -688,7 +746,7 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 
         if (qbCallChatHelper != null) {
             qbCallChatHelper.initCurrentSession(newSessionWithOpponents, this, this);
-
+            setOptionsForSession(newSessionWithOpponents, getDefaultSharedPrefs());
             ConversationCallFragment fragment = ConversationCallFragment
                     .newInstance(opponentsList, opponentsList.get(0).getFullName(), qbConferenceType,
                             StartConversationReason.OUTCOME_CALL_MADE,
@@ -710,12 +768,11 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
     }
 
     public void addConversationFragmentReceiveCall() {
-        M.E("karan 4");
         if (qbCallChatHelper != null) {
-            M.E("karan 5");
             QBRTCSession session = qbCallChatHelper.getCurrentRtcSession();
 
             if (session != null) {
+
                 Integer myId = QBChatService.getInstance().getUser().getId();
                 ArrayList<Integer> opponentsWithoutMe = new ArrayList<>(session.getOpponents());
                 opponentsWithoutMe.remove(new Integer(myId));
@@ -725,6 +782,8 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
                         .getUsersByIDs(opponentsWithoutMe.toArray(new Integer[opponentsWithoutMe.size()]),
                                 opponentsList);
                 SettingsUtil.setSettingsStrategy(this, newOpponents);
+                com.ss.fun2sh.ui.activities.groupcall.utils.SettingsUtil.setSettingsStrategy(newOpponents, getDefaultSharedPrefs(), this);
+                setOptionsForSession(getCurrentSession(), getDefaultSharedPrefs());
                 ConversationCallFragment fragment = ConversationCallFragment.newInstance(newOpponents,
                         UserFriendUtils.getUserNameByID(session.getCallerID(), newOpponents),
                         session.getConferenceType(), StartConversationReason.INCOME_CALL_FOR_ACCEPTION,
@@ -749,6 +808,18 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         if (timerChronometer != null) {
             timerChronometer.stop();
             isStarted = false;
+        }
+    }
+
+    @Override
+    public void hangUpCurrentSession(String hangUpReason) {
+        if (ringtonePlayer != null) {
+            ringtonePlayer.stop();
+        }
+        if (getCurrentSession() != null) {
+            Map<String, String> infoMap = new HashMap<>();
+            infoMap.put(Const.App_Ver.HANG_UP_REASON, hangUpReason);
+            getCurrentSession().hangUp(infoMap);
         }
     }
 
@@ -783,7 +854,12 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
         }
     }
 
-    public void addRTCSessionUserCallback(QBRTCSessionUserCallback qbRtcSessionUserCallback) {
+    @Override
+    public void removeRTCSessionUserCallback(QBRTCSessionUserCallback sessionUserCallback) {
+        this.qbRtcSessionUserCallback = null;
+    }
+
+    public void addRTCSessionUserCallback(SessionController.QBRTCSessionUserCallback qbRtcSessionUserCallback) {
         this.qbRtcSessionUserCallback = qbRtcSessionUserCallback;
     }
 
@@ -796,29 +872,4 @@ public class CallActivity extends BaseLoggableActivity implements QBRTCClientSes
 //        return false;
 //    }
 
-    private class AudioStreamReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (intent.getAction().equals(AudioManager.ACTION_HEADSET_PLUG)) {
-                Log.d(TAG, "ACTION_HEADSET_PLUG " + intent.getIntExtra("state", -1));
-            } else if (intent.getAction().equals(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED)) {
-                Log.d(TAG, "ACTION_SCO_AUDIO_STATE_UPDATED " + intent.getIntExtra("EXTRA_SCO_AUDIO_STATE", -2));
-            }
-            isSpeakerEnabled = (intent.getIntExtra("state", -1) == 1);
-            invalidateOptionsMenu();
-        }
-    }
-
-    public interface QBRTCSessionUserCallback {
-
-        void onUserNotAnswer(QBRTCSession session, Integer userId);
-
-        void onCallRejectByUser(QBRTCSession session, Integer userId, Map<String, String> userInfo);
-
-        void onCallAcceptByUser(QBRTCSession session, Integer userId, Map<String, String> userInfo);
-
-        void onReceiveHangUpFromUser(QBRTCSession session, Integer userId);
-    }
 }

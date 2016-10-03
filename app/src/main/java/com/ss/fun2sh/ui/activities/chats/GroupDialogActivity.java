@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.quickblox.chat.model.QBDialog;
 import com.quickblox.content.model.QBFile;
 import com.quickblox.core.exception.QBResponseException;
 import com.quickblox.q_municate_core.models.AppSession;
@@ -16,23 +17,28 @@ import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.helpers.QBGroupChatHelper;
 import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
+import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.State;
 import com.quickblox.q_municate_db.models.User;
 import com.quickblox.q_municate_db.utils.ErrorUtils;
+import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.Activity.PackageUpgradeActivity;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.adapters.chats.GroupDialogMessagesAdapter;
+import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.listeners.simple.SimpleOnRecycleItemClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.ss.fun2sh.CRUD.Const.App_Ver.reg_type;
 
@@ -180,10 +186,29 @@ public class GroupDialogActivity extends BaseDialogActivity {
             case R.id.action_group_details:
                 GroupDialogDetailsActivity.start(this, dialog.getDialogId());
                 break;
+            case R.id.action_audio_call:
+                callToUser();
+                break;
             default:
                 super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void callToUser() {
+        if (!isChatInitializedAndUserLoggedIn()) {
+            ToastUtils.longToast(R.string.call_chat_service_is_initializing);
+            return;
+        }
+        QBDialog qbDialog = ChatUtils.createQBDialogFromLocalDialog(dataManager,
+                dataManager.getDialogDataManager().getByDialogId(dialog.getDialogId()));
+        List<User> occupantsList = dataManager.getUserDataManager().getUsersForGroupChat(qbDialog.getDialogId(), qbDialog.getOccupants());
+        List<QBUser> qbUserList = new ArrayList<>(1);
+        for (User user : occupantsList) {
+            qbUserList.add(UserFriendUtils.createQbUser(user));
+        }
+        GroupCallActivity.start(GroupDialogActivity.this, qbUserList);
+
     }
 
     @Override

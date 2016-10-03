@@ -77,7 +77,7 @@ public class QBLoadDialogsCommand extends ServiceCommand {
         boolean needToLoadMore;
 
         do {
-            qbRequestGetBuilder.setPagesSkip(allDialogsList.size());
+            qbRequestGetBuilder.setLimit(allDialogsList.size());
             qbRequestGetBuilder.addRule(FIELD_DIALOG_TYPE, OPERATOR_EQ, dialogsType.getCode());
             List<QBDialog> newDialogsList = dialogsType == QBDialogType.PRIVATE
                     ? getPrivateDialogs(qbRequestGetBuilder, returnedBundle)

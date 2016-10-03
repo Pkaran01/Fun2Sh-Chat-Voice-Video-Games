@@ -13,6 +13,9 @@ public class Const {
     public static String TIME_OUT = "No reply from server due to Internet Connection Problem";
     public static Bitmap previewImage;
 
+
+
+
     public interface App_Ver {
         String isFirstTime = "isFirstTime";
         String isFirstTimeLogin = "isFirstTimeLogin";
@@ -28,6 +31,18 @@ public class Const {
         String ACCOUNT_ID = "52545";
         String ACCOUNT_KEY = "hzp8Cs6sqTxQS5zY4bDy";
         String LAST_AVATAR_URL = "last_avatar_url";
+
+        //Call Activtiy
+        int CALL_ACTIVITY_CLOSE = 1000;
+
+        //CALL ACTIVITY CLOSE REASONS
+        int CALL_ACTIVITY_CLOSE_WIFI_DISABLED = 1001;
+        String WIFI_DISABLED = "wifi_disabled";
+
+        String OPPONENTS = "opponents";
+        String CONFERENCE_TYPE = "conference_type";
+        String HANG_UP_REASON = "hangup_reason";
+        String REJECT_REASON = "reject_reason";
     }
 
     public interface URL {

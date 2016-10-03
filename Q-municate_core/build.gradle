@@ -19,7 +19,7 @@ dependencies {
     compile("com.quickblox:quickblox-android-sdk-content:$rootProject.qbSdkVersion")
     compile ("com.quickblox:quickblox-android-sdk-messages:$rootProject.qbSdkVersion" )
 
-    compile "com.quickblox:quickblox-android-sdk-videochat-webrtc:2.6"
+    compile "com.quickblox:quickblox-android-sdk-videochat-webrtc:$rootProject.qbSdkVersion"
 
 
 
