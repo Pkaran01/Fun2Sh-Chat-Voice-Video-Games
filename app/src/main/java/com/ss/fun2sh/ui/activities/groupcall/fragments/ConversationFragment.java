@@ -18,8 +18,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-
+import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.StartConversationReason;
+import com.quickblox.q_municate_core.qb.commands.push.QBSendPushCommand;
+import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
+import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBMediaStreamManager;
 import com.quickblox.videochat.webrtc.QBRTCSession;
@@ -28,8 +31,6 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCClientVideoTracksCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.exception.QBRTCException;
 import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
-import com.ss.fun2sh.CRUD.Const;
-import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.utils.FragmentLifeCycleHandler;
@@ -104,9 +105,9 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         ConversationFragment fragment = (opponents.size() == 1) ? new OneToOneConversationFragment() :
                 new GroupConversationFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(Const.App_Ver.CONFERENCE_TYPE, qbConferenceType.getValue());
+        bundle.putInt(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbConferenceType.getValue());
         bundle.putString(CALLER_NAME, callerName);
-        bundle.putSerializable(Const.App_Ver.OPPONENTS, (Serializable) opponents);
+        bundle.putSerializable(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) opponents);
         if (userInfo != null) {
             for (String key : userInfo.keySet()) {
                 bundle.putString("UserInfo:" + key, userInfo.get(key));
@@ -131,18 +132,18 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         view = inflater.inflate(R.layout.group_kk_conversation_fragment, container, false);
         Log.d(TAG, "Fragment. Thread id: " + Thread.currentThread().getId());
 
-        ((GroupCallActivity) getActivity()).initActionBarWithTimer();
 
         if (getArguments() != null) {
-            opponents = (ArrayList<QBUser>) getArguments().getSerializable(Const.App_Ver.OPPONENTS);
-            qbConferenceType = getArguments().getInt(Const.App_Ver.CONFERENCE_TYPE);
-            startReason = getArguments().getInt(GroupCallActivity.START_CONVERSATION_REASON);
-            sessionID = getArguments().getString(GroupCallActivity.SESSION_ID);
-            callerName = getArguments().getString(GroupCallActivity.CALLER_NAME);
+            opponents = (ArrayList<QBUser>) getArguments().getSerializable(QBServiceConsts.EXTRA_OPPONENTS);
+            qbConferenceType = getArguments().getInt(QBServiceConsts.EXTRA_CONFERENCE_TYPE);
+            startReason = getArguments().getInt(START_CONVERSATION_REASON);
+            sessionID = getArguments().getString(SESSION_ID);
+            callerName = getArguments().getString(CALLER_NAME);
 
             isPeerToPeerCall = opponents.size() == 1;
             isVideoEnabled = (qbConferenceType ==
                     QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO.getValue());
+
             Log.d(TAG, "CALLER_NAME: " + callerName);
             Log.d(TAG, "opponents: " + opponents.toString());
         }
@@ -212,10 +213,21 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         super.onStart();
         QBRTCSession session = sessionController.getCurrentSession();
         if (!isMessageProcessed) {
-            if (startReason ==StartConversationReason.INCOME_CALL_FOR_ACCEPTION.ordinal()) {
+            if (startReason == StartConversationReason.INCOME_CALL_FOR_ACCEPTION.ordinal()) {
                 session.acceptCall(session.getUserInfo());
+                if (isVideoEnabled) {
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call from " + callerName);
+                } else {
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call from " + callerName);
+                }
             } else {
+                sendPushAboutCall();
                 session.startCall(session.getUserInfo());
+                if (isVideoEnabled) {
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call to " + callerName);
+                } else {
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call to " + callerName);
+                }
             }
             isMessageProcessed = true;
         }
@@ -240,11 +252,14 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         localVideoView = (SurfaceViewRenderer) view.findViewById(R.id.localSurfView);
 
         localVideoView.setZOrderMediaOverlay(true);
-        updateVideoView(localVideoView,  false);
+        updateVideoView(localVideoView, false);
         initLocalViewUI(view);
+        initCustomView(view);
 
         if (isVideoEnabled) {
             initVideoCallSettings(view);
+        } else {
+            localVideoView.setVisibility(View.INVISIBLE);
         }
 
         cameraToggle = (ToggleButton) view.findViewById(R.id.cameraToggle);
@@ -255,7 +270,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         incUserName = (TextView) view.findViewById(R.id.incUserName);
         incUserName.setText(callerName);
         actionButtonsEnabled(false);
-        initCustomView(view);
+
         initRemoteView();
     }
 
@@ -281,7 +296,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     }
 
     protected void updateVideoView(SurfaceViewRenderer surfaceViewRenderer, boolean mirror, ScalingType scalingType) {
-        Log.i(TAG, "updateVideoView mirror:" + mirror +", scalintType = "+ scalingType);
+        Log.i(TAG, "updateVideoView mirror:" + mirror + ", scalintType = " + scalingType);
         surfaceViewRenderer.setScalingType(scalingType);
         surfaceViewRenderer.setMirror(mirror);
         surfaceViewRenderer.requestLayout();
@@ -338,7 +353,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         cameraToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                cameraState =  isChecked ? CameraState.ENABLED_FROM_USER : CameraState.DISABLED_FROM_USER;
+                cameraState = isChecked ? CameraState.ENABLED_FROM_USER : CameraState.DISABLED_FROM_USER;
                 enableCamera(isChecked);
             }
         });
@@ -399,7 +414,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
 
     }
 
-    ScalingType getRandomScalingType(){
+    ScalingType getRandomScalingType() {
         Random random = new Random();
         int nextInt = random.nextInt(3);
 
@@ -407,9 +422,9 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         return values[nextInt];
     }
 
-    protected void onVideoScalingUpdated(ScalingType scalingType ) {
-        Log.i(TAG, "onVideoScalingUpdated to " +scalingType);
-        M.T(getActivity(),"View format changed to :" + scalingType);
+    protected void onVideoScalingUpdated(ScalingType scalingType) {
+        Log.e(TAG, "onVideoScalingUpdated to " + scalingType);
+        // Toaster.longToast("View format changed to :"+scalingType);
         updateVideoView(localVideoView, true, scalingType);
     }
 
@@ -585,6 +600,18 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
 
         }
 
+    }
+
+    //TODO Push for call message
+    private void sendPushAboutCall() {
+        QBFriendListHelper qbFriendListHelper = new QBFriendListHelper(getActivity());
+        for (QBUser qbUser : opponents) {
+            if (!qbFriendListHelper.isUserOnline(qbUser.getId())) {
+                String callMsg = getString(R.string.dlg_offline_call,
+                        AppSession.getSession().getUser().getFullName());
+                QBSendPushCommand.start(getActivity(), callMsg, qbUser.getId());
+            }
+        }
     }
 
 }

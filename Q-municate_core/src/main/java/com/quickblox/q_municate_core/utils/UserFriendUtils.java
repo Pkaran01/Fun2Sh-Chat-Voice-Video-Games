@@ -70,6 +70,8 @@ public class UserFriendUtils {
         qbUser.setId(user.getUserId());
         qbUser.setLogin(user.getLogin());
         qbUser.setFullName(user.getFullName());
+        //as avatar id
+        qbUser.setExternalId(user.getAvatar());
         return qbUser;
     }
 

@@ -13,11 +13,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.quickblox.chat.QBChatService;
+import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCSessionDescription;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
-import com.ss.fun2sh.CRUD.Const;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.utils.RingtonePlayer;
@@ -50,19 +51,19 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
     private View view;
     private long lastCliclTime = 0l;
     private RingtonePlayer ringtonePlayer;
+    boolean missedCall;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (getArguments() != null) {
-            opponents = getArguments().getIntegerArrayList("opponents");
-            sessionDescription = (QBRTCSessionDescription) getArguments().getSerializable("sessionDescription");
-            qbConferenceType = getArguments().getInt(Const.App_Ver.CONFERENCE_TYPE);
+            opponents = getArguments().getIntegerArrayList(QBServiceConsts.EXTRA_OPPONENTS);
+            sessionDescription = (QBRTCSessionDescription) getArguments().getSerializable(QBServiceConsts.EXTRA_SESSION_DESCRIPTION);
+            qbConferenceType = getArguments().getInt(QBServiceConsts.EXTRA_CONFERENCE_TYPE);
 
 
-            conferenceType =
-                    qbConferenceType == 1 ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO :
-                            QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+            conferenceType = qbConferenceType == 1 ? QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO :
+                    QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
 
             Log.d(TAG, conferenceType.toString() + "From onCreateView()");
         }
@@ -71,7 +72,6 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
             view = inflater.inflate(R.layout.group_fragment_income_call, container, false);
 
-            ((GroupCallActivity) getActivity()).initGroupActionBar();
 
             initUI(view);
             setDisplayedTypeCall(conferenceType);
@@ -80,6 +80,19 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         }
         ringtonePlayer = new RingtonePlayer(getActivity());
         return view;
+    }
+
+    private void stopCallNotification() {
+        if (ringtonePlayer != null) {
+            ringtonePlayer.stop();
+        }
+        if (missedCall) {
+            //save for missed call
+            ((GroupCallActivity) getActivity()).setMissedCallValue();
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
     }
 
     @Override
@@ -108,6 +121,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         callerName = (TextView) view.findViewById(R.id.callerName);
         callerName.setText(getCallerName(((GroupCallActivity) getActivity()).getCurrentSession()));
+        ((GroupCallActivity) getActivity()).initGroupActionBar(getCallerName(((GroupCallActivity) getActivity()).getCurrentSession()) + "is calling");
 
         otherIncUsers = (TextView) view.findViewById(R.id.otherIncUsers);
         otherIncUsers.setText(getOtherIncUsersNames(opponents));
@@ -131,36 +145,27 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         if (vibrator.hasVibrator()) {
             vibrator.vibrate(vibrationCycle, 1);
         }
-
+        missedCall = true;
     }
 
-    private void stopCallNotification() {
-        if (ringtonePlayer != null) {
-            ringtonePlayer.stop();
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-    }
 
     private String getOtherIncUsersNames(ArrayList<Integer> opponents) {
+        M.E("getOtherIncUsersNames size" + opponents);
         StringBuffer s = new StringBuffer("");
         opponents.remove(QBChatService.getInstance().getUser().getId());
 
         for (Integer i : opponents) {
             for (QBUser usr : opponentsFromCall) {
                 if (usr.getId().equals(i)) {
-                    if (opponents.indexOf(i) == (opponents.size() - 1)) {
-                        s.append(usr.getFullName() + " ");
-                        break;
-                    } else {
-                        s.append(usr.getFullName() + ", ");
-                    }
+                    s.append(usr.getFullName() + ", ");
                 }
             }
         }
-        return s.toString();
+        if (s.toString().endsWith(", ")) {
+            return s.toString().substring(0, s.toString().length() - 2);
+        } else {
+            return s.toString();
+        }
     }
 
     private String getCallerName(QBRTCSession session) {
@@ -216,6 +221,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
     private void accept() {
         takeBtn.setClickable(false);
+        missedCall = false;
         stopCallNotification();
 
         ((GroupCallActivity) getActivity())
@@ -227,11 +233,11 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
     private void reject() {
         rejectBtn.setClickable(false);
         Log.d(TAG, "Call is rejected");
-
+        missedCall = false;
         stopCallNotification();
 
         ((GroupCallActivity) getActivity()).rejectCurrentSession(" I don't want to talk");
         ((GroupCallActivity) getActivity()).removeIncomeCallFragment();
-        ((GroupCallActivity) getActivity()).addOpponentsFragment();
+        getActivity().finish();
     }
 }

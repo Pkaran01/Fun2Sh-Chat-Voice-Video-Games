@@ -13,11 +13,11 @@
     <ToggleButton
         android:id="@+id/cameraToggle"
         style="@style/AppThemeVideo.Button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
         android:textOff=""
         android:textOn=""
-        android:background="@drawable/selector_toggle_camera"
+        android:background="@drawable/ic_toggle_camera"
         android:layout_gravity="center_vertical"
         android:checked="true"
         />
@@ -25,11 +25,11 @@
     <ToggleButton
         android:id="@+id/dynamicToggleVideoCall"
         style="@style/AppThemeVideo.Button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
         android:textOff=""
         android:textOn=""
-        android:background="@drawable/selector_toggle_dynamic_sm"
+        android:background="@drawable/ic_toggle_dynamic"
         android:layout_gravity="center_vertical"
         android:checked="true"
         />
@@ -37,11 +37,11 @@
     <ToggleButton
         android:id="@+id/micToggleVideoCall"
         style="@style/AppThemeVideo.Button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
         android:textOff=""
         android:textOn=""
-        android:background="@drawable/selector_toggle_mic"
+        android:background="@drawable/ic_toggle_mic"
         android:gravity="center_vertical|center_horizontal"
         android:layout_gravity="center_vertical"
         android:checked="true"
@@ -51,9 +51,9 @@
         android:id="@+id/handUpVideoCall"
         style="@style/AppThemeVideo.Button"
         android:src="@drawable/ic_call_end"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:layout_margin="4dp"
-        android:background="@drawable/selector_call_end"/>
+        android:background="@drawable/btn_background_call_end"/>
 
 </LinearLayout>

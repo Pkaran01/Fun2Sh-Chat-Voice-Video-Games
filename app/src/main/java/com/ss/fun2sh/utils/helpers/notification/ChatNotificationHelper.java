@@ -1,11 +1,9 @@
 package com.ss.fun2sh.utils.helpers.notification;
 
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.quickblox.q_municate_core.models.AppSession;
@@ -23,8 +21,6 @@ import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
 import com.ss.fun2sh.AppController;
 import com.ss.fun2sh.CRUD.M;
-import com.ss.fun2sh.CRUD.NetworkUtil;
-import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
@@ -200,31 +196,6 @@ public class ChatNotificationHelper {
         public void onCompleteWithError(String error) {
             isLoginNow = false;
             sendNotification(message);
-        }
-    }
-
-    private void startCallActivity(QBRTCSession qbRtcSession) {
-        User user = DataManager.getInstance().getUserDataManager()
-                .get(qbRtcSession.getSessionDescription().getCallerID());
-
-        M.E("onReceive call activity");
-
-        if (user != null) {
-            List<QBUser> qbUsersList = new ArrayList<>(1);
-            qbUsersList.add(UserFriendUtils.createQbUser(user));
-            Intent intent = new Intent(context, CallActivity.class);
-            intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);
-            intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.INCOME_CALL_FOR_ACCEPTION);
-            intent.putExtra(QBServiceConsts.EXTRA_CONFERENCE_TYPE, qbRtcSession.getConferenceType());
-            intent.putExtra(QBServiceConsts.EXTRA_SESSION_DESCRIPTION, qbRtcSession.getSessionDescription());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                    WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-            context.getApplicationContext().startActivity(intent);
-        } else {
-            throw new NullPointerException("user is null!");
         }
     }
 

@@ -486,8 +486,6 @@
     <string name="pref_initiator_behaviour_default">true</string>
 
 
-
-
     <string name="pref_value_enabled">Enabled</string>
     <string name="pref_value_disabled">Disabled</string>
 

@@ -86,27 +86,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="28dp">
 
-    <ImageButton
-        android:id="@+id/rejectBtn"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_call_end"
-        android:background="@drawable/selector_call_end"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="40dp"
+        <ImageButton
+            android:id="@+id/rejectBtn"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_call_end"
+            android:background="@drawable/btn_background_call_end"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="40dp"
 
-        android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"/>
 
-    <ImageButton
-        android:id="@+id/takeBtn"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_call"
-        android:background="@drawable/selector_call_take"
-        android:gravity="center_vertical"
-        android:layout_marginRight="40dp"
+        <ImageButton
+            android:id="@+id/takeBtn"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_call"
+            android:background="@drawable/btn_background_call_take"
+            android:gravity="center_vertical"
+            android:layout_marginRight="40dp"
 
-        android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

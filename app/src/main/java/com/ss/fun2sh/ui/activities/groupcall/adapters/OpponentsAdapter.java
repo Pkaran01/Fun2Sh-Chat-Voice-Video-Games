@@ -7,10 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.siyamed.shapeimageview.HexagonImageView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.utils.image.ImageLoaderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +61,10 @@ public class OpponentsAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.group_list_item_opponents, null);
             holder = new ViewHolder();
-            holder.opponentsNumber = (TextView) convertView.findViewById(R.id.opponentsNumber);
+            holder.avatar_imageview = (HexagonImageView) convertView.findViewById(R.id.avatar_imageview);
             holder.opponentsName = (TextView) convertView.findViewById(R.id.opponentsName);
             holder.opponentsRadioButton = (CheckBox) convertView.findViewById(R.id.opponentsCheckBox);
-
             convertView.setTag(holder);
-
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -73,7 +75,8 @@ public class OpponentsAdapter extends BaseAdapter {
         if (user != null) {
 
             holder.opponentsName.setText(user.getFullName());
-
+            //get Avatar by trick
+            displayAvatarImage(user.getExternalId(), holder.avatar_imageview);
             holder.opponentsRadioButton.setOnCheckedChangeListener(null);
             holder.opponentsRadioButton.setChecked(selected.contains(user));
 
@@ -97,9 +100,14 @@ public class OpponentsAdapter extends BaseAdapter {
         return convertView;
     }
 
+    protected void displayAvatarImage(String uri, ImageView imageView) {
+        ImageLoader.getInstance().displayImage(uri, imageView, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS);
+    }
+
     public static class ViewHolder {
-        TextView opponentsNumber;
+        HexagonImageView avatar_imageview;
         TextView opponentsName;
         CheckBox opponentsRadioButton;
     }
+
 }

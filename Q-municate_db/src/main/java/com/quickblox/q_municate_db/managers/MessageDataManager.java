@@ -98,10 +98,11 @@ public class MessageDataManager extends BaseManager<Message> {
             Where<Message, Long> where = queryBuilder.where();
             where.and(
                     where.in(DialogOccupant.Column.ID, dialogOccupantsIdsList),
-                    where.or(
+                    where.eq(Message.Column.STATE, State.TEMP_LOCAL_UNREAD)
+                  /*  where.or(
                             where.eq(Message.Column.STATE, State.DELIVERED),
                             where.eq(Message.Column.STATE, State.TEMP_LOCAL_UNREAD)
-                    )
+                    )*/
             );
 
             PreparedQuery<Message> preparedQuery = queryBuilder.prepare();

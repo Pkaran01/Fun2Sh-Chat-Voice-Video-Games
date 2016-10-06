@@ -2,6 +2,7 @@ package com.ss.fun2sh.ui.activities.groupcall.fragments;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
-
 
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.groupcall.adapters.OpponentsFromCallAdapter;
@@ -64,7 +64,12 @@ public class GroupConversationFragment extends ConversationFragment {
             @Override
             public void onGlobalLayout() {
                 setGrid(columnsCount, rowsCount);
-                opponentListView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    opponentListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    opponentListView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
             }
         });
     }
@@ -84,9 +89,14 @@ public class GroupConversationFragment extends ConversationFragment {
     private void setGrid(int columnsCount, int rowsCount) {
         int gridWidth = opponentListView.getMeasuredWidth();
         float itemMargin = getResources().getDimension(R.dimen.grid_item_divider);
-        int cellSize = defineMinSize(gridWidth, opponentListView.getMeasuredHeight(),
-                columnsCount, rowsCount, itemMargin);
-        Log.i(TAG, "onGlobalLayout : cellSize=" + cellSize);
+        //int cellSize = defineMinSize(gridWidth, 600, columnsCount, rowsCount, itemMargin);
+        int cellSize = 332;
+    /*    Log.e(TAG, "onGlobalLayout : cellSize=" + cellSize);
+        Log.e(TAG, "onGlobalLayout : gridWidth=" + gridWidth);
+        Log.e(TAG, "onGlobalLayout : gridHight=" + opponentListView.getMeasuredHeight());
+
+        Log.e(TAG, "onGlobalLayout : columnsCount=" + columnsCount);
+        Log.e(TAG, "onGlobalLayout : itemMargin=" + itemMargin);*/
 
         //TODO review holding current session in activity
         OpponentsFromCallAdapter opponentsAdapter = new OpponentsFromCallAdapter(getActivity(),

@@ -51,9 +51,14 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         this.showVideoView = showVideoView;
         this.inflater = LayoutInflater.from(context);
         itemWidth = width;
-        itemHeight = height;
+        if (showVideoView) {
+            itemHeight = height;
+        } else {
+            itemHeight = 150;
+        }
         setPadding(itemMargin);
-        Log.d(TAG, "item width=" + itemWidth + ", item height=" + itemHeight);
+
+        Log.e(TAG, "item width=" + itemWidth + ", item height=" + itemHeight);
     }
 
     private void setPadding(int itemMargin) {
@@ -107,7 +112,7 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         return position;
     }
 
-    protected void updateVideoView(SurfaceViewRenderer surfaceViewRenderer, boolean mirror){
+    protected void updateVideoView(SurfaceViewRenderer surfaceViewRenderer, boolean mirror) {
         surfaceViewRenderer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
         surfaceViewRenderer.setMirror(mirror);
         surfaceViewRenderer.requestLayout();

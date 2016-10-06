@@ -1,7 +1,6 @@
 package com.ss.fun2sh.ui.activities.groupcall.fragments;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +34,9 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
 
     private static final String TAG = OpponentsFragment.class.getSimpleName();
     private OpponentsAdapter opponentsAdapter;
-    public static String login;
     private Button btnAudioCall;
     private Button btnVideoCall;
     private View view = null;
-    private ProgressDialog progresDialog;
     private ListView opponentsList;
 
     public static OpponentsFragment getInstance() {
@@ -55,30 +52,14 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
 
         initUI(view);
 
-        // Show dialog till opponents loading
-        progresDialog = new ProgressDialog(getActivity()) {
-            @Override
-            public void onBackPressed() {
-                M.T(getActivity(), "Wait until loading finish");
-            }
-        };
-        progresDialog.setMessage("Load opponents ...");
-        progresDialog.setCanceledOnTouchOutside(false);
-        progresDialog.show();
-
         initOpponentListAdapter();
 
         return view;
     }
 
     private void initOpponentListAdapter() {
-        final ListView opponentsList = (ListView) view.findViewById(R.id.opponentsList);
-
         List<QBUser> userList = new ArrayList<>(((GroupCallActivity) getActivity()).getOpponentsList());
         prepareUserList(opponentsList, userList);
-        progresDialog.dismiss();
-
-
     }
 
     private void prepareUserList(ListView opponentsList, List<QBUser> users) {
@@ -87,7 +68,6 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
             users.remove(i);
 
         // Prepare users list for simple adapter.
-        //
         opponentsAdapter = new OpponentsAdapter(getActivity(), users);
         opponentsList.setAdapter(opponentsAdapter);
     }
@@ -100,15 +80,10 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
     }
 
     private void initUI(View view) {
-
-        login = getActivity().getIntent().getStringExtra("login");
-
         btnAudioCall = (Button) view.findViewById(R.id.btnAudioCall);
         btnVideoCall = (Button) view.findViewById(R.id.btnVideoCall);
-
         btnAudioCall.setOnClickListener(this);
         btnVideoCall.setOnClickListener(this);
-
         opponentsList = (ListView) view.findViewById(R.id.opponentsList);
     }
 
@@ -125,7 +100,6 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
             return;
         }
         QBRTCTypes.QBConferenceType qbConferenceType = null;
-
         //Init conference type
         switch (v.getId()) {
             case R.id.btnAudioCall:
@@ -135,7 +109,6 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
             case R.id.btnVideoCall:
                 // get call type
                 qbConferenceType = QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO;
-
                 break;
         }
 
@@ -152,9 +125,6 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onPause() {
         super.onPause();
-        if (progresDialog.isShowing()) {
-            progresDialog.dismiss();
-        }
     }
 
     @Override

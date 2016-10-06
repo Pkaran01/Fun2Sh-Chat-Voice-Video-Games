@@ -26,6 +26,8 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCClientSessionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSignalingCallback;
 
+import org.webrtc.VideoCapturerAndroid;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,12 +102,35 @@ public class QBCallChatHelper extends BaseHelper {
     private void setUpCallClient() {
         Log.e(TAG, "setUpCallClient()");
 
-      /*  qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraErrorHandler() {
+        qbRtcClient.setCameraErrorHendler(new VideoCapturerAndroid.CameraEventsHandler() {
             @Override
-            public void onCameraError(String error) {
-                Log.d(TAG, "Error on cams, error = " + error);
+            public void onCameraError(final String s) {
+
+                Log.e("QBCallChatHelper", "Camera error: " + s);
             }
-        });*/
+
+            @Override
+            public void onCameraFreezed(String s) {
+                Log.e("QBCallChatHelper", "Camera freezed: " + s);
+                //hangUpCurrentSession("camera freezed" + s);
+            }
+
+            @Override
+            public void onCameraOpening(int i) {
+                Log.e("QBCallChatHelper", +i + " opening");
+            }
+
+            @Override
+            public void onFirstFrameAvailable() {
+                Log.e("QBCallChatHelper", "onFirstFrameAvailable");
+            }
+
+            @Override
+            public void onCameraClosed() {
+                Log.e("QBCallChatHelper", "onCameraClosed");
+            }
+        });
+
 
         QBRTCConfig.setMaxOpponentsCount(6);
         QBRTCConfig.setDisconnectTime(30);
@@ -117,8 +142,7 @@ public class QBCallChatHelper extends BaseHelper {
     }
 
     private void startCallActivity(QBRTCSession qbRtcSession) {
-        User user = DataManager.getInstance().getUserDataManager()
-                .get(qbRtcSession.getSessionDescription().getCallerID());
+        User user = DataManager.getInstance().getUserDataManager().get(qbRtcSession.getSessionDescription().getCallerID());
 
         if (user != null) {
             Log.d(TAG, "startCallActivity(), user = " + user);
@@ -128,8 +152,13 @@ public class QBCallChatHelper extends BaseHelper {
                     .getSessionDescription());
 
             ///List<QBUser> qbUsersList = new ArrayList<>(1);
-            List<QBUser> qbUsersList = new ArrayList<>();
+            List<User> occupantsList = DataManager.getInstance().getUserDataManager().getAllByIds(qbRtcSession.getSessionDescription().getOpponents());
+            List<QBUser> qbUsersList = new ArrayList<>(1);
             qbUsersList.add(UserFriendUtils.createQbUser(user));
+            for (User user2 : occupantsList) {
+                qbUsersList.add(UserFriendUtils.createQbUser(user2));
+            }
+
             Intent intent = new Intent(context, activityClass);
             intent.putExtra(QBServiceConsts.EXTRA_OPPONENTS, (Serializable) qbUsersList);
             intent.putExtra(QBServiceConsts.EXTRA_START_CONVERSATION_REASON_TYPE, StartConversationReason.INCOME_CALL_FOR_ACCEPTION);

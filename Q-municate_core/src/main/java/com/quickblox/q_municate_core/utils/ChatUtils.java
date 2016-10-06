@@ -445,7 +445,6 @@ public class ChatUtils {
         } else {
             attachment.setName(fileName);
         }
-        Log.e("CRUD createLocal", attachment.getName() + "");
         return attachment;
     }
 

@@ -1,15 +1,9 @@
 package com.ss.fun2sh.ui.adapters.chats;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
-import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.CombinationMessage;
 import com.quickblox.q_municate_core.qb.commands.chat.QBUpdateStatusMessageCommand;
 import com.quickblox.q_municate_core.utils.ChatUtils;
@@ -132,30 +126,36 @@ public class PrivateDialogMessagesAdapter extends BaseDialogMessagesAdapter {
                 if (combinationMessage.getAttachment().getName() != null) {
                     setViewVisibility(viewHolder.attachOtherFileRelativeLayout, View.VISIBLE);
                     final String[] tokens = combinationMessage.getAttachment().getName().split("\\.(?=[^\\.]+$)");
-                    viewHolder.fileName.setText(tokens[0]);
-                    viewHolder.fileType.setText(tokens[1].toUpperCase());
-                    final String directory = getDirectoryName(combinationMessage);
-                    final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
-                    final boolean check = file.exists();
-                    if (check)
-                        viewHolder.downloadButton.setText("OPEN");
+                    try {
+                        viewHolder.fileName.setText(tokens[0]);
+                        viewHolder.fileType.setText(tokens[1].toUpperCase());
+                        final String directory = getDirectoryName(combinationMessage);
+                        final File file = new File(Environment.getExternalStorageDirectory().toString() + directory, combinationMessage.getAttachment().getName());
+                        final boolean check = file.exists();
+                        if (check)
+                            viewHolder.downloadButton.setText("OPEN");
 
-                    viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //download file
-                            if (!viewHolder.downloadButton.getText().equals("OPEN")) {
-                                if (NetworkUtil.getConnectivityStatus(baseActivity)) {
-                                    new DownloadFileAsync(directory, viewHolder, combinationMessage.getAttachment().getName()).execute(combinationMessage.getAttachment().getRemoteUrl());
+                        viewHolder.downloadButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //download file
+                                if (!viewHolder.downloadButton.getText().equals("OPEN")) {
+                                    if (NetworkUtil.getConnectivityStatus(baseActivity)) {
+                                        new DownloadFileAsync(directory, viewHolder, combinationMessage.getAttachment().getName()).execute(combinationMessage.getAttachment().getRemoteUrl());
+                                    } else {
+                                        M.dError(baseActivity, "Unable to connect internet.");
+                                        viewHolder.downloadButton.setText("DOWNLOAD");
+                                    }
                                 } else {
-                                    M.dError(baseActivity, "Unable to connect internet.");
-                                    viewHolder.downloadButton.setText("DOWNLOAD");
+                                    openFile(tokens[1], file);
                                 }
-                            } else {
-                                openFile(tokens[1], file);
                             }
-                        }
-                    });
+                        });
+                    } catch (Exception e) {
+                        viewHolder.fileName.setText("Invalid File");
+                        viewHolder.fileType.setText("--");
+                        viewHolder.downloadButton.setVisibility(View.INVISIBLE);
+                    }
 
 
                     displayAvatarImage(avatarUrl, viewHolder.avatarOtherAttaheImageView);

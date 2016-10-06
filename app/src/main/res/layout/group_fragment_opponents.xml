@@ -3,14 +3,13 @@
     android:id="@+id/fragmentOpponents"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white">
+    android:background="@drawable/backgroundforall_screens">
 
 
     <TextView
         android:id="@+id/selectUsertextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -60,7 +59,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:text="@string/btn_video_call"
-            android:textColor="@color/green"
+            android:textColor="@color/blue"
             android:textStyle="bold" />
 
         <!--<Button

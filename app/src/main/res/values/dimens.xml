@@ -82,4 +82,10 @@
     <dimen name="about_vendor_text_margin_bottom">22dp</dimen>
 
     <dimen name="grid_item_divider">4dp</dimen>
+
+
+    <dimen name="image_button_size">@dimen/abc_action_button_min_height_material</dimen>
+    <dimen name="button_width">88dp</dimen>
+
+    <integer name="users_count">10</integer>
 </resources>

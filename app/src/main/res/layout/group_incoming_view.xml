@@ -3,29 +3,29 @@
     android:id="@+id/incomingView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_gravity="center_horizontal">
+    android:layout_gravity="center_horizontal"
+    android:layout_alignParentBottom="true">
 
     <ImageButton
         android:id="@+id/callEndBtnInIncAction"
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginLeft="40dp"
-        android:background="@drawable/selector_call_end"
+        android:src="@drawable/ic_call_end"
+        android:background="@drawable/btn_background_call_end"
         android:gravity="center_vertical"
-        android:src="@drawable/ic_call" />
+        android:layout_marginLeft="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="60dp"/>
 
     <ImageButton
         android:id="@+id/callTakeBtnInIncAction"
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="60dp"
-        android:layout_marginRight="40dp"
-        android:background="@drawable/selector_call_take"
+        android:src="@drawable/ic_call"
+        android:background="@drawable/btn_background_call_take"
         android:gravity="center_vertical"
-        android:src="@drawable/ic_call" />
+        android:layout_marginRight="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="60dp"/>
 
 </RelativeLayout>

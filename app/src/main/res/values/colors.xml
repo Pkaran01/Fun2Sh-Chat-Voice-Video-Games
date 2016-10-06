@@ -25,6 +25,10 @@
     <!--QB-->
     <color name="bg_main">#fff</color>
 
+    <color name="black_transparent_30">#30000000</color>
+    <color name="black_transparent_50">#50000000</color>
+    <color name="white_transparent_80">#80FFFFFF</color>
+
     <color name="primary">#fff</color>
     <color name="primary_dark">@color/dark_gray</color>
     <color name="accent">@color/green</color>

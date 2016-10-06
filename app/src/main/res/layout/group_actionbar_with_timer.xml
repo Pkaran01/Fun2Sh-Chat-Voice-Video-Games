@@ -3,17 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="5dp"
     android:weightSum="1">
 
     <Chronometer
         android:id="@+id/timerABWithTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
-        android:gravity="center_vertical|center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/gray"
-        android:textSize="20sp" />
+        android:textColor="@color/black"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/loginAsABWithTimer"
@@ -26,18 +27,19 @@
         android:text="@string/logged_in_as"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/userNameABWithTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/loginAsABWithTimer"
+        android:layout_alignParentRight="true"
         android:gravity="center_vertical|center_horizontal"
         android:maxLines="1"
         android:text="User Name"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 </RelativeLayout>

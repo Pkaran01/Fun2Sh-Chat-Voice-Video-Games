@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/red"
             android:text="User Name"
             android:gravity="center_vertical|center_horizontal"
             android:maxLines="1"
@@ -28,9 +28,8 @@
             />
 
         <ImageButton
-
             android:id="@+id/button_call_scaling_mode"
-            android:src="@drawable/userimgdefault"
+            android:src="@drawable/refresh_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginLeft="8dp"
@@ -44,8 +43,8 @@
         android:layout_margin="2dp"
         android:layout_above="@+id/element_set_video_buttons"
         android:layout_below="@+id/UserTopLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
     <include
         android:id="@+id/element_set_video_buttons"

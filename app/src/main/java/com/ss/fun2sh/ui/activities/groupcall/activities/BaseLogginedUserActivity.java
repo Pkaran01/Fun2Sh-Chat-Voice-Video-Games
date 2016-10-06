@@ -1,8 +1,8 @@
 package com.ss.fun2sh.ui.activities.groupcall.activities;
 
-import android.app.AlertDialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
-import com.quickblox.q_municate_core.models.AppSession;
-import com.quickblox.users.model.QBUser;
 import com.ss.fun2sh.R;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 
@@ -27,44 +25,19 @@ abstract public class BaseLogginedUserActivity extends BaseLoggableActivity {
     private Chronometer timerABWithTimer;
     private boolean isStarted = false;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        super.initActionBar();
+    }
+
+    public void initGroupActionBar(String title) {
+        setActionBarTitle(title);
+    }
+
     public void initGroupActionBar() {
-        LayoutInflater mInflater = LayoutInflater.from(this);
-
-        View mCustomView = mInflater.inflate(R.layout.group_actionbar_view, null);
-        mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
-
-
-        TextView numberOfListAB = (TextView) mCustomView.findViewById(R.id.numberOfListAB);
-        QBUser loggedUser = AppSession.getSession().getUser();
-        if (loggedUser != null) {
-     /*       int number = DataHolder.getUserIndexByID(loggedUser.getId());
-            numberOfListAB.setBackgroundResource(ListUsersActivity.resourceSelector(number));
-            numberOfListAB.setText(String.valueOf(number+1));*/
-
-            TextView loginAsAB = (TextView) mCustomView.findViewById(R.id.loginAsAB);
-            loginAsAB.setText(R.string.logged_in_as);
-            //
-            TextView userNameAB = (TextView) mCustomView.findViewById(R.id.userNameAB);
-            userNameAB.setText(String.valueOf(loggedUser.getLogin()));
-        }
-
-        numberOfListAB.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(BaseLogginedUserActivity.this);
-                dialog.setTitle(APP_VERSION);
-                String appVersion = getAppVersion();
-                dialog.setMessage(appVersion);
-                dialog.show();
-                return true;
-            }
-        });
-
-
-        mActionBar.setCustomView(mCustomView);
-        mActionBar.setDisplayShowCustomEnabled(true);
+        super.setActionBarUpButtonEnabled(true);
+        setActionBarTitle("Group Call");
 
     }
 
@@ -80,9 +53,9 @@ abstract public class BaseLogginedUserActivity extends BaseLoggableActivity {
 
     }
 
-    public void initActionBarWithTimer() {
+    public void initActionBarWithTimer(String title) {
         mActionBar = getSupportActionBar();
-        mActionBar.setDisplayShowHomeEnabled(false);
+        super.setActionBarUpButtonEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
 
         LayoutInflater mInflater = LayoutInflater.from(this);
@@ -91,14 +64,8 @@ abstract public class BaseLogginedUserActivity extends BaseLoggableActivity {
 
         timerABWithTimer = (Chronometer) mCustomView.findViewById(R.id.timerABWithTimer);
 
-        TextView loginAsABWithTimer = (TextView) mCustomView.findViewById(R.id.loginAsABWithTimer);
-        loginAsABWithTimer.setText(R.string.logged_in_as);
-
         TextView userNameAB = (TextView) mCustomView.findViewById(R.id.userNameABWithTimer);
-        QBUser user = AppSession.getSession().getUser();
-        if (user != null) {
-            userNameAB.setText(user.getFullName());
-        }
+        userNameAB.setText(title);
 
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

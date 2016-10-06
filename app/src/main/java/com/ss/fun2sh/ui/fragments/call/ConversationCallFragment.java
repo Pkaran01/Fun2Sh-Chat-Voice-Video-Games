@@ -467,7 +467,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
                 }
             } else {
                 localVideoTrack.removeRenderer(localVideoTrack.getRenderer());
-                remoteVideoView.removeLocalRendererCallback();
+                //remoteVideoView.removeLocalRendererCallback();
                 Log.d(TAG, "fullscreen disabled");
             }
         }
@@ -586,7 +586,7 @@ public class ConversationCallFragment extends Fragment implements Serializable, 
 
             if (localVideoTrack != null) {
                 localVideoTrack.removeRenderer(localVideoTrack.getRenderer());
-                remoteVideoView.removeLocalRendererCallback();
+                //remoteVideoView.removeLocalRendererCallback();
             }
         }
     }
