@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +30,7 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.DateUtilsCore;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
 import com.quickblox.q_municate_core.utils.call.RingtonePlayer;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.users.model.QBUser;
@@ -48,6 +51,7 @@ import com.quickblox.videochat.webrtc.exception.QBRTCSignalException;
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.groupcall.adapters.OpponentsAdapter;
 import com.ss.fun2sh.ui.activities.groupcall.fragments.ConversationFragment;
 import com.ss.fun2sh.ui.activities.groupcall.fragments.IncomeCallFragment;
@@ -156,6 +160,9 @@ public class GroupCallActivity extends BaseLogginedUserActivity implements QBRTC
             e.printStackTrace();
         }
 
+        toolbar.setBackgroundColor(Color.parseColor("#000000"));
+        CoreSharedHelper.getInstance().savePref(Constants.USERFULLVIDEO, "false");
+        CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "false");
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP
                 | PowerManager.ON_AFTER_RELEASE, "MyWakeLock");
@@ -303,6 +310,7 @@ public class GroupCallActivity extends BaseLogginedUserActivity implements QBRTC
             }
         });
     }
+
 
     private void initCallFragment() {
         switch (startConversationReason) {

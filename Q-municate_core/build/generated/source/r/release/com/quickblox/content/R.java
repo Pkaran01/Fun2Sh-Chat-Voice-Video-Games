@@ -8,9 +8,9 @@ package com.quickblox.content;
 
 public final class R {
 	public static final class raw {
-		public static final int amazaonerror = 0x7f050000;
-		public static final int file = 0x7f050002;
-		public static final int image = 0x7f050004;
-		public static final int xmlresponse = 0x7f050006;
+		public static int amazaonerror = 0x7f050000;
+		public static int file = 0x7f050002;
+		public static int image = 0x7f050004;
+		public static int xmlresponse = 0x7f050006;
 	}
 }

@@ -1,12 +1,19 @@
 package com.ss.fun2sh.ui.activities.groupcall.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +21,29 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.quickblox.chat.QBChatService;
 import com.quickblox.q_municate_core.models.AppSession;
 import com.quickblox.q_municate_core.models.StartConversationReason;
+import com.quickblox.q_municate_core.models.UserCustomData;
 import com.quickblox.q_municate_core.qb.commands.push.QBSendPushCommand;
 import com.quickblox.q_municate_core.qb.helpers.QBFriendListHelper;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.PrefsHelper;
+import com.quickblox.q_municate_core.utils.Utils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
+import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBMediaStreamManager;
 import com.quickblox.videochat.webrtc.QBRTCSession;
@@ -31,10 +52,17 @@ import com.quickblox.videochat.webrtc.callbacks.QBRTCClientVideoTracksCallbacks;
 import com.quickblox.videochat.webrtc.callbacks.QBRTCSessionConnectionCallbacks;
 import com.quickblox.videochat.webrtc.exception.QBRTCException;
 import com.quickblox.videochat.webrtc.view.QBRTCVideoTrack;
+
+import com.ss.fun2sh.CRUD.Const;
+import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
+import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.utils.FragmentLifeCycleHandler;
 import com.ss.fun2sh.ui.activities.groupcall.utils.QBRTCSessionUtils;
+import com.ss.fun2sh.utils.image.ImageLoaderUtils;
+import com.ss.fun2sh.utils.image.ImageUtils;
 
 import org.webrtc.EglBase;
 import org.webrtc.RendererCommon.ScalingType;
@@ -96,6 +124,11 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     private OnCallSettingsController videoSettingsController;
     private ImageButton videoScalingButton;
     private ScalingType scalingType = ScalingType.SCALE_ASPECT_FIT;
+    Toolbar toolbar;
+    boolean fullscreen = false;
+    View element_set_video_buttons;
+    LinearLayout switchcamerabtn, linearbackground;
+    ImageView userimageView, local_imageviewown_layout;
 
     public static ConversationFragment newInstance(List<QBUser> opponents, String callerName,
                                                    QBRTCTypes.QBConferenceType qbConferenceType,
@@ -123,16 +156,18 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
 
     protected abstract TextView getStatusViewForOpponent(int userId);
 
+    protected abstract TextView getStatusViewForOpponentName(int userId);
+
     protected abstract void initCustomView(View view);
 
     protected abstract SurfaceViewRenderer getVideoViewForOpponent(Integer userID);
+
+    protected abstract RelativeLayout getInnerRelative();
 
     protected View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState,
                                 int contentId) {
         view = inflater.inflate(R.layout.group_kk_conversation_fragment, container, false);
         Log.d(TAG, "Fragment. Thread id: " + Thread.currentThread().getId());
-
-
         if (getArguments() != null) {
             opponents = (ArrayList<QBUser>) getArguments().getSerializable(QBServiceConsts.EXTRA_OPPONENTS);
             qbConferenceType = getArguments().getInt(QBServiceConsts.EXTRA_CONFERENCE_TYPE);
@@ -157,6 +192,41 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         setUpUiByCallType(qbConferenceType);
 
         mainHandler = new FragmentLifeCycleHandler(this);
+        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(Color.parseColor("#000000"));
+        getInnerRelative().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isVideoEnabled) {
+                    if (CoreSharedHelper.getInstance().getPref(Constants.FUULSCREENPREF).toString().equalsIgnoreCase("true")) {
+                        if (fullscreen == false) {
+                            toolbar.setVisibility(View.GONE);
+                            element_set_video_buttons.setVisibility(View.GONE);
+                            fullscreen = true;
+                        } else {
+                            toolbar.setVisibility(View.VISIBLE);
+                            element_set_video_buttons.setVisibility(View.VISIBLE);
+                            fullscreen = false;
+                        }
+                    }
+                } else {
+                    if (CoreSharedHelper.getInstance().getPref(Constants.FUULSCREENPREF).toString().equalsIgnoreCase("true")) {
+                        if (fullscreen == false) {
+                            toolbar.setVisibility(View.GONE);
+                            element_set_video_buttons.setVisibility(View.GONE);
+                            fullscreen = true;
+                        } else {
+                            toolbar.setVisibility(View.VISIBLE);
+                            element_set_video_buttons.setVisibility(View.VISIBLE);
+                            fullscreen = false;
+                        }
+                    }
+                }
+
+            }
+        });
+
+
         return view;
     }
 
@@ -170,6 +240,9 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     @Override
     public void onDetach() {
         super.onDetach();
+        CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "false");
+        CoreSharedHelper.getInstance().savePref(Constants.USERPICAUDIOPREF, "false");
+        CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "false");
         sessionController = null;
         videoSettingsController = null;
         mainHandler.detach();
@@ -216,17 +289,67 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
             if (startReason == StartConversationReason.INCOME_CALL_FOR_ACCEPTION.ordinal()) {
                 session.acceptCall(session.getUserInfo());
                 if (isVideoEnabled) {
-                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call from " + callerName);
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call from " + getOtherIncUsersNames(opponents));
+                    if (CoreSharedHelper.getInstance().getPref(Constants.USERORIENTATIONAUDIOPREF).toString().equalsIgnoreCase("true")) {
+                        //  ownUserIcon();
+                        CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "false");
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
+
                 } else {
-                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call from " + callerName);
+                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call from " + getOtherIncUsersNames(opponents));
+
+                    if (CoreSharedHelper.getInstance().getPref(Constants.AUDIOONETOONECALL).toString().equalsIgnoreCase("true")) {
+                        setUserImage();
+                    }
+
+                    if (CoreSharedHelper.getInstance().getPref(Constants.USERPICAUDIOPREF).toString().equalsIgnoreCase("true")) {
+                        ownUserIcon();
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
+                    if (CoreSharedHelper.getInstance().getPref(Constants.USERORIENTATIONAUDIOPREF).toString().equalsIgnoreCase("true")) {
+                        //  ownUserIcon();
+                        CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "false");
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
+
                 }
             } else {
                 sendPushAboutCall();
                 session.startCall(session.getUserInfo());
                 if (isVideoEnabled) {
-                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call to " + callerName);
+                    //  ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call to " + getOtherIncUsersNames(opponents));
+
+                    if (CoreSharedHelper.getInstance().getPref(Constants.VIDEOONETOONECALL).toString().equalsIgnoreCase("true")) {
+                        CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "false");
+                        CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "true");
+                        ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call to " + callerName);
+
+                    } else if (CoreSharedHelper.getInstance().getPref(Constants.VIDEOGROUPCALL).toString().equalsIgnoreCase("true")) {
+                        CoreSharedHelper.getInstance().savePref(Constants.VIDEOGROUPCALL, "false");
+                        CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "false");
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        ((GroupCallActivity) getActivity()).initActionBarWithTimer("Video call to " + getOtherIncUsersNames(opponents));
+                    }
+
                 } else {
-                    ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call to " + callerName);
+                    //  ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call to " + getOtherIncUsersNames(opponents));
+
+                    if (CoreSharedHelper.getInstance().getPref(Constants.AUDIOONETOONECALL).toString().equalsIgnoreCase("true")) {
+                        CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "false");
+                        CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "true");
+                        linearbackground.setBackgroundResource(R.drawable.bg);
+                        setUserImage();
+                        ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call to " + callerName);
+                    } else if (CoreSharedHelper.getInstance().getPref(Constants.AUDIOGROUPCALL).toString().equalsIgnoreCase("true")) {
+                        CoreSharedHelper.getInstance().savePref(Constants.AUDIOGROUPCALL, "false");
+                        CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "false");
+                        CoreSharedHelper.getInstance().savePref(Constants.USERPICAUDIOPREF, "true");
+                        ownUserIcon();
+                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        ((GroupCallActivity) getActivity()).initActionBarWithTimer("Audio call to " + getOtherIncUsersNames(opponents));
+                    }
+
                 }
             }
             isMessageProcessed = true;
@@ -235,6 +358,42 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         sessionController.addRTCSessionUserCallback(this);
         sessionController.addAudioStateCallback(this);
     }
+
+    protected void setUserImage() {
+        if (userimageView != null) {
+            userimageView.setVisibility(View.VISIBLE);
+            if (DataManager.getInstance().getUserDataManager().get(getOpponentUserId(opponents)).getAvatar().toString().trim().equalsIgnoreCase("")) {
+                userimageView.setBackgroundResource(R.drawable.avatarprofilecaling);
+            } else {
+                loadusersLogo(DataManager.getInstance().getUserDataManager().get(getOpponentUserId(opponents)).getAvatar(), userimageView);
+            }
+        }
+    }
+
+    private void ownUserIcon() {
+        if (local_imageviewown_layout != null) {
+            local_imageviewown_layout.setVisibility(View.VISIBLE);
+            UserCustomData userCustomData = Utils.customDataToObject(AppSession.getSession().getUser().getCustomData());
+            if (!TextUtils.isEmpty(userCustomData.getAvatar_url())) {
+                loadusersLogo(userCustomData.getAvatar_url(), local_imageviewown_layout);
+                PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.LAST_AVATAR_URL, userCustomData.getAvatar_url());
+            } else {
+                local_imageviewown_layout.setImageResource(R.drawable.avatarprofile);
+            }
+        }
+    }
+
+
+    protected void loadusersLogo(String logoUrl, final ImageView userimageView) {
+        ImageLoader.getInstance().loadImage(logoUrl, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedBitmap) {
+                        userimageView.setImageBitmap(loadedBitmap);
+                    }
+                });
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -248,9 +407,38 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         stubCompat.inflate();
     }
 
+    private String getOtherIncUsersNames(ArrayList<QBUser> opponents) {
+        M.E("getOtherIncUsersNames size" + opponents);
+        StringBuffer s = new StringBuffer("");
+        opponents.remove(QBChatService.getInstance().getUser().getId());
+
+        for (QBUser usr : opponents) {
+            s.append(usr.getFullName() + ", ");
+        }
+        if (s.toString().endsWith(", ")) {
+            return s.toString().substring(0, s.toString().length() - 2);
+        } else {
+            return s.toString();
+        }
+    }
+
+
+    private int getOpponentUserId(ArrayList<QBUser> opponents) {
+        M.E("getOtherIncUsersNames size" + opponents);
+        opponents.remove(QBChatService.getInstance().getUser().getId());
+        for (QBUser usr : opponents) {
+            return usr.getId();
+        }
+        return 0;
+    }
+
+
     private void initViews(View view) {
         localVideoView = (SurfaceViewRenderer) view.findViewById(R.id.localSurfView);
-
+        userimageView = (ImageView) view.findViewById(R.id.userimageView);
+        local_imageviewown_layout = (ImageView) view.findViewById(R.id.local_imageviewown_layout);
+        linearbackground = (LinearLayout) view.findViewById(R.id.linearbackground);
+        element_set_video_buttons = view.findViewById(R.id.element_set_video_buttons);
         localVideoView.setZOrderMediaOverlay(true);
         updateVideoView(localVideoView, false);
         initLocalViewUI(view);
@@ -275,7 +463,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     }
 
     private void initVideoCallSettings(View view) {
-        view.findViewById(R.id.video_call_settings_view).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.video_call_settings_view).setVisibility(View.GONE);
 
         videoScalingButton =
                 (ImageButton) view.findViewById(R.id.button_call_scaling_mode);
@@ -321,7 +509,6 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         if (cameraState != CameraState.DISABLED_FROM_USER && isVideoEnabled) {
             toggleCamera(false);
         }
-
         super.onPause();
     }
 
@@ -330,6 +517,11 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         super.onStop();
         sessionController.removeRTCClientConnectionCallback(this);
         sessionController.removeRTCSessionUserCallback(this);
+        actionButtonsEnabled(false);
+        sessionController.hangUpCurrentSession(" because I'm busy");
+        handUpVideoCall.setEnabled(false);
+        handUpVideoCall.setActivated(false);
+        getActivity().finish();
     }
 
     @Override
@@ -340,12 +532,18 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         if (remoteVideoView != null) {
             fillVideoView(remoteVideoView, videoTrack, true);
         }
+        Log.e(TAG, "Receive for opponent= " + userID);
+
     }
+
 
     private void initSwitchCameraButton(View view) {
         switchCameraToggle = (ToggleButton) view.findViewById(R.id.switchCameraToggle);
+        switchcamerabtn = (LinearLayout) view.findViewById(R.id.switchcamerabtn);
         switchCameraToggle.setVisibility(isVideoEnabled ?
-                View.VISIBLE : View.INVISIBLE);
+                View.GONE : View.GONE);
+        switchcamerabtn.setVisibility(isVideoEnabled ?
+                View.VISIBLE : View.GONE);
     }
 
     private void initButtonsListener() {
@@ -383,6 +581,21 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
                 handUpVideoCall.setEnabled(false);
                 handUpVideoCall.setActivated(false);
 
+            }
+        });
+
+        switchcamerabtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QBRTCSession currentSession = sessionController.getCurrentSession();
+                if (currentSession == null) {
+                    return;
+                }
+                final QBMediaStreamManager mediaStreamManager = currentSession.getMediaStreamManager();
+                if (mediaStreamManager == null) {
+                    return;
+                }
+                mediaStreamManager.switchCameraInput(null);
             }
         });
 
@@ -441,7 +654,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
                 currentSession.getMediaStreamManager().stopVideoSource();
             }
             myCameraOff.setVisibility(isNeedEnableCam ? View.INVISIBLE : View.VISIBLE);
-            switchCameraToggle.setVisibility(isNeedEnableCam ? View.VISIBLE : View.INVISIBLE);
+            switchCameraToggle.setVisibility(isNeedEnableCam ? View.GONE : View.GONE);
         }
     }
 
@@ -455,7 +668,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
         if (currentSession != null && currentSession.getMediaStreamManager() != null) {
             currentSession.getMediaStreamManager().setVideoEnabled(isNeedEnableCam);
             myCameraOff.setVisibility(isNeedEnableCam ? View.INVISIBLE : View.VISIBLE);
-            switchCameraToggle.setVisibility(isNeedEnableCam ? View.VISIBLE : View.INVISIBLE);
+            switchCameraToggle.setVisibility(isNeedEnableCam ? View.GONE : View.GONE);
         }
     }
 
@@ -475,6 +688,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
             fillVideoView(localVideoView, videoTrack, !isPeerToPeerCall);
         }
     }
+
 
     private void initLocalViewUI(View localView) {
         initSwitchCameraButton(localView);
@@ -503,13 +717,27 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     public void onStartConnectToUser(QBRTCSession qbrtcSession, Integer userId) {
         Log.i(TAG, "onStartConnectToUser" + userId);
         setStatusForOpponent(userId, getString(R.string.checking));
+
+        Log.e(TAG, "checking...");
+
+
     }
 
     @Override
     public void onConnectedToUser(QBRTCSession qbrtcSession, final Integer userId) {
         Log.i(TAG, "onConnectedToUser" + userId);
         actionButtonsEnabled(true);
-        setStatusForOpponent(userId, getString(R.string.connected));
+        //  setStatusForOpponent(userId, getString(R.string.connected));
+
+        if (getStatusViewForOpponent(userId) != null) {
+            getStatusViewForOpponent(userId).setVisibility(View.GONE);
+        }
+        if (getStatusViewForOpponentName(userId) != null) {
+            getStatusViewForOpponentName(userId).setVisibility(View.GONE);
+        }
+
+        Log.e(TAG, "Connected...");
+
     }
 
 
@@ -525,7 +753,7 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
 
     @Override
     public void onDisconnectedFromUser(QBRTCSession qbrtcSession, Integer integer) {
-        setStatusForOpponent(integer, getString(R.string.disconnected));
+        //  setStatusForOpponent(integer, getString(R.string.disconnected));
     }
 
     @Override
@@ -562,6 +790,11 @@ public abstract class ConversationFragment extends Fragment implements SessionCo
     @Override
     public void onReceiveHangUpFromUser(QBRTCSession session, Integer userId, String userInfo) {
         setStatusForOpponent(userId, getString(R.string.hungUp));
+        actionButtonsEnabled(false);
+/*        sessionController.hangUpCurrentSession(" because I'm busy");
+        handUpVideoCall.setEnabled(false);
+        handUpVideoCall.setActivated(false);*/
+        getActivity().finish();
     }
 
     @Override

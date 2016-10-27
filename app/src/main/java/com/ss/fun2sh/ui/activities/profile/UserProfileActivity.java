@@ -25,6 +25,7 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.UserDataManager;
 import com.quickblox.q_municate_db.models.Dialog;
@@ -37,9 +38,11 @@ import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.base.BaseLoggableActivity;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.others.PreviewProfileImageActivity;
 import com.ss.fun2sh.utils.DateUtils;
 import com.ss.fun2sh.utils.ToastUtils;
@@ -90,13 +93,19 @@ public class UserProfileActivity extends BaseLoggableActivity {
     private User user;
     private Observer userObserver;
     private boolean removeContactAndChatHistory;
+    User opponentUser;
 
-    public static void start(Context context, int friendId) {
+ /*   public static void start(Context context, int friendId) {
         Intent intent = new Intent(context, UserProfileActivity.class);
         intent.putExtra(QBServiceConsts.EXTRA_FRIEND_ID, friendId);
         context.startActivity(intent);
+    }*/
+    public static void start(Context context, int friendId, User opponent) {
+        Intent intent = new Intent(context, UserProfileActivity.class);
+        intent.putExtra(QBServiceConsts.EXTRA_FRIEND_ID, friendId);
+        intent.putExtra(QBServiceConsts.EXTRA_OPPONENT, opponent);
+        context.startActivity(intent);
     }
-
     @Override
     protected int getContentResId() {
         return R.layout.activity_user_profile;
@@ -113,6 +122,7 @@ public class UserProfileActivity extends BaseLoggableActivity {
     }
 
     private void initFields() {
+        opponentUser = (User) getIntent().getExtras().getSerializable(QBServiceConsts.EXTRA_OPPONENT);
         title = getString(R.string.user_profile_title);
         dataManager = DataManager.getInstance();
         canPerformLogout.set(true);
@@ -182,7 +192,9 @@ public class UserProfileActivity extends BaseLoggableActivity {
     @OnClick(R.id.audio_call_button)
     void audioCall(View view) {
         if (!dataManager.getUserDataManager().isBlocked(userId)) {
-            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+            //  callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+            callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+            CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
         } else {
             Utility.blockContactMessage(this, "Unblock " + nameTextView.getText().toString() + " to place a FunChat voice call", userId);
         }
@@ -191,11 +203,25 @@ public class UserProfileActivity extends BaseLoggableActivity {
     @OnClick(R.id.video_call_button)
     void videoCall(View view) {
         if (!dataManager.getUserDataManager().isBlocked(userId)) {
-            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+            //  callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+            callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+            CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "true");
         } else {
             Utility.blockContactMessage(this, "Unblock " + nameTextView.getText().toString() + " to place a FunChat video call", userId);
         }
     }
+
+    private void callToUser(User user, QBRTCTypes.QBConferenceType qbConferenceType) {
+        if (!isChatInitializedAndUserLoggedIn()) {
+            ToastUtils.longToast(R.string.call_chat_service_is_initializing);
+            return;
+        }
+        List<QBUser> qbUserList = new ArrayList<>(1);
+        qbUserList.add(UserFriendUtils.createQbUser(user));
+        GroupCallActivity.start(UserProfileActivity.this, qbUserList, qbConferenceType, null);
+
+    }
+
 
     @OnClick(R.id.delete_chat_history_button)
     void deleteChatHistory(View view) {

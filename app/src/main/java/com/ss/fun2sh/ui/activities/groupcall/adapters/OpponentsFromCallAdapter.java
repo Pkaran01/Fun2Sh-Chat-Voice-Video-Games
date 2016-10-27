@@ -1,24 +1,36 @@
 package com.ss.fun2sh.ui.activities.groupcall.adapters;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
+import com.quickblox.q_municate_db.managers.DataManager;
+import com.quickblox.q_municate_db.models.User;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBPeerChannel;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.groupcall.utils.QBRTCSessionUtils;
+import com.ss.fun2sh.utils.image.ImageLoaderUtils;
+import com.ss.fun2sh.utils.image.ImageUtils;
 
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,11 +64,11 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         this.inflater = LayoutInflater.from(context);
         itemWidth = width;
         if (showVideoView) {
-            itemHeight = height;
+            itemHeight = 150;
         } else {
             itemHeight = 150;
         }
-        setPadding(itemMargin);
+        //   setPadding(itemMargin);
 
         Log.e(TAG, "item width=" + itemWidth + ", item height=" + itemHeight);
     }
@@ -70,42 +82,80 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
 
     @Override
     public int getItemCount() {
-        return opponents.size();
+       /* return opponents.size();*/
+        return 4;
     }
 
     public Integer getItem(int position) {
+
         return opponents.get(position).getId();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = inflater.inflate(R.layout.group_list_item_opponent_from_call, null);
-        v.findViewById(R.id.innerLayout).setLayoutParams(new FrameLayout.LayoutParams(itemWidth, itemHeight));
-        if (paddingLeft != 0) {
-            v.setPadding(paddingLeft, v.getPaddingTop(), v.getPaddingRight(), v.getPaddingBottom());
-        }
-        SurfaceViewRenderer opponentView = (SurfaceViewRenderer) v.findViewById(R.id.opponentView);
-        updateVideoView(opponentView, false);
+        //   v.findViewById(R.id.innerLayout).setLayoutParams(new FrameLayout.LayoutParams(itemWidth, itemHeight));
+        //  if (paddingLeft != 0) {
+        //   v.setPadding(0, 0, 0, 0);
+        //   }
 
         ViewHolder vh = new ViewHolder(v);
+
+        SurfaceViewRenderer opponentView = (SurfaceViewRenderer) v.findViewById(R.id.opponentView);
+
+        //  Log.e("opponents ki values-=", opponents.toString());
+        updateVideoView(opponentView, false);
         vh.showOpponentView(showVideoView);
+
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final QBUser user = opponents.get(position);
-        holder.opponentsName.setText(user.getFullName());
-        holder.setUserId(user.getId());
-        QBPeerChannel peerChannel = qbrtcSession.getPeerChannel(user.getId());
-        Integer statusRes = QBRTCSessionUtils.getStatusDescriptionReosuurce(
-                QBRTCTypes.QBRTCConnectionState.QB_RTC_CONNECTION_CLOSED == peerChannel.getState() ?
-                        peerChannel.getDisconnectReason() : peerChannel.getState());
-        if (statusRes == null) {
-            statusRes = R.string.unDefined;
+
+        try {
+            final QBUser user = opponents.get(position);
+
+            if (!showVideoView) {
+                if (CoreSharedHelper.getInstance().getPref(Constants.USERPICAUDIOPREF).toString().equalsIgnoreCase("true")) {
+                    holder.userimagetView.setVisibility(View.VISIBLE);
+
+                    if (DataManager.getInstance().getUserDataManager().get(opponents.get(position).getId()).getAvatar().toString().trim().equalsIgnoreCase("")) {
+                        holder.userimagetView.setBackgroundResource(R.drawable.placeholder_user);
+                    } else {
+                        loadusersLogo(DataManager.getInstance().getUserDataManager().get(opponents.get(position).getId()).getAvatar(), holder.userimagetView);
+                    }
+                }
+            }
+
+            holder.opponentsName.setText(user.getFullName());
+            holder.setUserId(user.getId());
+            QBPeerChannel peerChannel = qbrtcSession.getPeerChannel(user.getId());
+            Integer statusRes = QBRTCSessionUtils.getStatusDescriptionReosuurce(
+                    QBRTCTypes.QBRTCConnectionState.QB_RTC_CONNECTION_CLOSED == peerChannel.getState() ?
+                            peerChannel.getDisconnectReason() : peerChannel.getState());
+            if (statusRes == null) {
+                statusRes = R.string.unDefined;
+            }
+            Log.e("statusRes**-", " " + statusRes);
+            holder.opponentsName.setVisibility(View.GONE);
+            holder.setStatus(context.getString(statusRes));
+        } catch (IndexOutOfBoundsException e) {
+            holder.opponentsName.setVisibility(View.VISIBLE);
+            holder.opponentsName.setText("User is Not Available");
         }
-        holder.setStatus(context.getString(statusRes));
     }
+
+    protected void loadusersLogo(String logoUrl, final ImageView userimageView) {
+        ImageLoader.getInstance().loadImage(logoUrl, ImageLoaderUtils.UIL_USER_AVATAR_DISPLAY_OPTIONS,
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedBitmap) {
+                        userimageView.setImageBitmap(loadedBitmap);
+                    }
+                });
+    }
+
 
     @Override
     public long getItemId(int position) {
@@ -123,12 +173,14 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
         TextView connectionStatus;
         SurfaceViewRenderer opponentView;
         private int userId;
+        ImageView userimagetView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             opponentsName = (TextView) itemView.findViewById(R.id.opponentName);
             connectionStatus = (TextView) itemView.findViewById(R.id.connectionStatus);
             opponentView = (SurfaceViewRenderer) itemView.findViewById(R.id.opponentView);
+            userimagetView = (ImageView) itemView.findViewById(R.id.userimagetView);
         }
 
         public void setStatus(String status) {
@@ -145,6 +197,10 @@ public class OpponentsFromCallAdapter extends RecyclerView.Adapter<OpponentsFrom
 
         public int getUserId() {
             return userId;
+        }
+
+        public TextView getOpponentsName() {
+            return opponentsName;
         }
 
         public SurfaceViewRenderer getOpponentView() {

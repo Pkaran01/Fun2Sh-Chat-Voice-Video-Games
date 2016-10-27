@@ -20,6 +20,7 @@ import com.quickblox.q_municate_core.service.QBService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.managers.FriendDataManager;
 import com.quickblox.q_municate_db.models.Dialog;
@@ -30,6 +31,7 @@ import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
 import com.ss.fun2sh.ui.adapters.chats.PrivateDialogMessagesAdapter;
@@ -130,7 +132,6 @@ public class PrivateDialogActivity extends BaseDialogActivity {
             privateChatHelper.sendPrivateMessageWithAttachImage(file, opponentUser.getUserId());
         } catch (QBResponseException exc) {
             ErrorUtils.showError(this, "Unable to send file");
-
         }
     }
 
@@ -220,6 +221,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
             case R.id.action_audio_call:
                 if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
                     callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                    CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
                 } else {
                     Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat voice call", opponentUser.getUserId());
                 }
@@ -227,6 +229,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
             case R.id.switch_camera_toggle:
                 if (!dataManager.getUserDataManager().isBlocked(opponentUser.getUserId())) {
                     callToUser(opponentUser, QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                    CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "true");
                 } else {
                     Utility.blockContactMessage(this, "Unblock " + opponentUser.getFullName() + " to place a FunChat video call", opponentUser.getUserId());
                 }
@@ -245,7 +248,7 @@ public class PrivateDialogActivity extends BaseDialogActivity {
 
     @OnClick(R.id.toolbar)
     void openProfile(View view) {
-        UserProfileActivity.start(this, opponentUser.getUserId());
+        UserProfileActivity.start(this, opponentUser.getUserId(),opponentUser);
     }
 
     private void initFields() {

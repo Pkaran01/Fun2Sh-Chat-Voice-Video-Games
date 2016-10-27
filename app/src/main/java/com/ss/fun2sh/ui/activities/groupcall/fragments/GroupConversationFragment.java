@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ss.fun2sh.R;
@@ -26,9 +27,9 @@ import org.webrtc.SurfaceViewRenderer;
 public class GroupConversationFragment extends ConversationFragment {
 
     private static final int DEFAULT_ROWS_COUNT = 2;
-    private static final int DEFAULT_COLS_COUNT = 3;
+    private static final int DEFAULT_COLS_COUNT = 2;
     private static final String TAG = GroupConversationFragment.class.getSimpleName();
-
+    RelativeLayout innerLayout;
     private RecyclerView opponentListView;
     private SparseArray<OpponentsFromCallAdapter.ViewHolder> opponentViewHolders;
 
@@ -46,6 +47,12 @@ public class GroupConversationFragment extends ConversationFragment {
     }
 
     @Override
+    protected RelativeLayout getInnerRelative() {
+        return innerLayout;
+    }
+
+
+    @Override
     protected void initRemoteView() {
 
     }
@@ -55,16 +62,19 @@ public class GroupConversationFragment extends ConversationFragment {
         opponentViewHolders = new SparseArray<>(opponents.size());
 
         opponentListView = (RecyclerView) view.findViewById(R.id.grid_opponents);
+        innerLayout= (RelativeLayout) view.findViewById(R.id.innerLayout);
         opponentListView.addItemDecoration(new DividerItemDecoration(getActivity(), R.dimen.grid_item_divider));
         opponentListView.setHasFixedSize(true);
-        final int columnsCount = defineColumnsCount();
-        final int rowsCount = defineRowCount();
-        opponentListView.setLayoutManager(new GridLayoutManager(getActivity(), columnsCount));
+/*        final int columnsCount = defineColumnsCount();
+        final int rowsCount = defineRowCount();*/
+        final int columnsCount = 2;
+        final int rowsCount = 2;
+       opponentListView.setLayoutManager(new GridLayoutManager(getActivity(), columnsCount));
         opponentListView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                setGrid(columnsCount, rowsCount);
-
+             setGrid(columnsCount, rowsCount);
+                Log.e(TAG, "columnsCount=" + columnsCount + ", rowsCount=" + rowsCount);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     opponentListView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 } else {
@@ -90,7 +100,7 @@ public class GroupConversationFragment extends ConversationFragment {
         int gridWidth = opponentListView.getMeasuredWidth();
         float itemMargin = getResources().getDimension(R.dimen.grid_item_divider);
         //int cellSize = defineMinSize(gridWidth, 600, columnsCount, rowsCount, itemMargin);
-        int cellSize = 332;
+        int cellSize = 180;
     /*    Log.e(TAG, "onGlobalLayout : cellSize=" + cellSize);
         Log.e(TAG, "onGlobalLayout : gridWidth=" + gridWidth);
         Log.e(TAG, "onGlobalLayout : gridHight=" + opponentListView.getMeasuredHeight());
@@ -138,6 +148,15 @@ public class GroupConversationFragment extends ConversationFragment {
             return null;
         }
         return itemHolder.getConnectionStatus();
+    }
+
+    @Override
+    protected TextView getStatusViewForOpponentName(int userId) {
+        OpponentsFromCallAdapter.ViewHolder itemHolder = getViewHolderForOpponent(userId);
+        if (itemHolder == null) {
+            return null;
+        }
+        return itemHolder.getOpponentsName();
     }
 
     private int defineMinSize(int measuredWidth, int measuredHeight, int columnsCount, int rowsCount, float padding) {

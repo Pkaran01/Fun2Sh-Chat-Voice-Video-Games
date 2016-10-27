@@ -8,7 +8,7 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
     dexOptions {
-        javaMaxHeapSize "4g"
+      //  javaMaxHeapSize "4g"
     }
     defaultConfig {
         applicationId "com.ss.fun2sh.Activity"

@@ -20,6 +20,7 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_core.utils.PrefsHelper;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.State;
 import com.quickblox.q_municate_db.models.User;
@@ -131,6 +132,7 @@ public class GroupDialogActivity extends BaseDialogActivity {
         checkMessageSendingPossibility();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -188,6 +190,7 @@ public class GroupDialogActivity extends BaseDialogActivity {
                 break;
             case R.id.action_audio_call:
                 callToUser();
+
                 break;
             default:
                 super.onOptionsItemSelected(item);

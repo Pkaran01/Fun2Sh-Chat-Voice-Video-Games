@@ -4,21 +4,35 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="#40000000">
+    android:background="@drawable/bg">
 
     <com.quickblox.videochat.webrtc.view.QBRTCSurfaceView
         android:id="@+id/opponentView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/linearbackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/userimageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </LinearLayout>
+
 
     <include
         android:id="@+id/local_videoview_layout"
         layout="@layout/group_local_videoview"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/connectionStatus"
@@ -29,6 +43,7 @@
         android:gravity="center_horizontal"
         android:maxLength="13"
         android:maxLines="1"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/white"
         android:textStyle="normal|italic" />

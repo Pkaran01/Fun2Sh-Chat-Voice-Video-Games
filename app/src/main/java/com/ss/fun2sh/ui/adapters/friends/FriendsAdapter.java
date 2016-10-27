@@ -26,6 +26,7 @@ import com.quickblox.q_municate_core.service.QBServiceConsts;
 import com.quickblox.q_municate_core.utils.ConnectivityUtils;
 import com.quickblox.q_municate_core.utils.OnlineStatusUtils;
 import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.DialogOccupant;
@@ -38,9 +39,11 @@ import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.NetworkUtil;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
 import com.ss.fun2sh.ui.activities.call.CallActivity;
 import com.ss.fun2sh.ui.activities.chats.PrivateDialogActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.main.MainActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
 import com.ss.fun2sh.ui.adapters.base.BaseClickListenerViewHolder;
@@ -66,7 +69,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
 
     private boolean withFirstLetter;
     private QBFriendListHelper qbFriendListHelper;
-    private  DataManager dataManager;
+    private DataManager dataManager;
     static List<User> userList;
     private boolean removeContactAndChatHistory;
 
@@ -74,7 +77,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         super(baseActivity, userslist);
         this.withFirstLetter = withFirstLetter;
         dataManager = DataManager.getInstance();
-        this.userList=userslist;
+        this.userList = userslist;
     }
 
 
@@ -163,7 +166,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
                         DateUtils.formatDateSimpleTime(user.getLastLogin())));
                 viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.dark_gray));
             }
-        }else {
+        } else {
             viewHolder.labelTextView.setText("Communication Blocked");
             viewHolder.labelTextView.setTextColor(baseActivity.getResources().getColor(R.color.dark_gray));
         }
@@ -174,7 +177,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         return currentUser.getId() == inputUser.getUserId();
     }
 
-    protected  class ViewHolder extends BaseViewHolder<User> {
+    protected class ViewHolder extends BaseViewHolder<User> {
 
         @Bind(R.id.first_latter_textview)
         TextView firstLatterTextView;
@@ -194,7 +197,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
                 @Override
                 public boolean onLongClick(View v) {
 
-                        friendOption(adapter, userList.get(getAdapterPosition()).getUserId());
+                    friendOption(adapter, userList.get(getAdapterPosition()).getUserId());
 
                     return false;
                 }
@@ -202,10 +205,10 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         }
     }
 
-    private  void friendOption(final FriendsAdapter adapter, final  int userId) {
+    private void friendOption(final FriendsAdapter adapter, final int userId) {
 
         if (dataManager.getUserDataManager().isBlocked(userId)) {
-           new MaterialDialog.Builder(adapter.baseActivity)
+            new MaterialDialog.Builder(adapter.baseActivity)
                     .title(R.string.new_message_select_option)
                     .items(R.array.new_messages_friend_unblock)
                     .itemsCallback(new MaterialDialog.ListCallback() {
@@ -214,19 +217,23 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
                             if (which == 0) {
                                 sendMessage(userId, adapter);
                             } else if (which == 1) {
-                                audioCall(userId, adapter);
-                            }else if (which == 2) {
-                                videoCall(userId, adapter);
-                            }else if (which == 3) {
-                                blockUnblock(userId, adapter,"Unblock ");
-                            }else if (which == 4) {
+                                callToUser(dataManager.getUserDataManager().get(userId), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                                CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
+                                // audioCall(userId, adapter);
+                            } else if (which == 2) {
+                                callToUser(dataManager.getUserDataManager().get(userId), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                                CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "true");
+                                // videoCall(userId, adapter);
+                            } else if (which == 3) {
+                                blockUnblock(userId, adapter, "Unblock ");
+                            } else if (which == 4) {
                                 deleteChat(adapter, userId);
-                            }else if (which == 5) {
+                            } else if (which == 5) {
                                 removeContactChat(adapter, userId);
                             }
                         }
                     }).show();
-        }else{
+        } else {
             new MaterialDialog.Builder(adapter.baseActivity)
                     .title(R.string.new_message_select_option)
                     .items(R.array.new_messages_friend)
@@ -236,14 +243,16 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
                             if (which == 0) {
                                 sendMessage(userId, adapter);
                             } else if (which == 1) {
-                                audioCall(userId, adapter);
-                            }else if (which == 2) {
-                                videoCall(userId, adapter);
-                            }else if (which == 3) {
-                                blockUnblock(userId, adapter,"Block ");
-                            }else if (which == 4) {
+                                callToUser(dataManager.getUserDataManager().get(userId), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                                CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
+                            } else if (which == 2) {
+                                callToUser(dataManager.getUserDataManager().get(userId), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                                CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "true");
+                            } else if (which == 3) {
+                                blockUnblock(userId, adapter, "Block ");
+                            } else if (which == 4) {
                                 deleteChat(adapter, userId);
-                            }else if (which == 5) {
+                            } else if (which == 5) {
                                 removeContactChat(adapter, userId);
                             }
                         }
@@ -252,10 +261,23 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
 
     }
 
+
+    private void callToUser(User user, QBRTCTypes.QBConferenceType qbConferenceType) {
+        if (!isChatInitializedAndUserLoggedIn()) {
+            ToastUtils.longToast(R.string.call_chat_service_is_initializing);
+            return;
+        }
+        List<QBUser> qbUserList = new ArrayList<>(1);
+        qbUserList.add(UserFriendUtils.createQbUser(user));
+        GroupCallActivity.start(baseActivity, qbUserList, qbConferenceType, null);
+
+    }
+
+
     private void removeContactChat(FriendsAdapter adapter, int userId) {
         if (checkNetworkAvailableWithError(adapter)) {
             removeContactAndChatHistory = true;
-            showRemoveContactAndChatHistoryDialog(adapter,userId);
+            showRemoveContactAndChatHistoryDialog(adapter, userId);
         }
     }
 
@@ -267,16 +289,16 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
     }
 
     private void blockUnblock(int userId, FriendsAdapter adapter, String status) {
-        if(status.equalsIgnoreCase("Block ")){
-            blockContactMessage(status + dataManager.getUserDataManager().get(userId).toString() + "? Blocked contacts will no longer be able to call you or send you messages",adapter,userId);
-        }else{
-            blockContactMessage(status + dataManager.getUserDataManager().get(userId).toString() + "? This contacts will be able to call you or send you messages",adapter,userId);
+        if (status.equalsIgnoreCase("Block ")) {
+            blockContactMessage(status + dataManager.getUserDataManager().get(userId).toString() + "? Blocked contacts will no longer be able to call you or send you messages", adapter, userId);
+        } else {
+            blockContactMessage(status + dataManager.getUserDataManager().get(userId).toString() + "? This contacts will be able to call you or send you messages", adapter, userId);
         }
-       }
+    }
 
     private void videoCall(int userId, FriendsAdapter adapter) {
         if (!dataManager.getUserDataManager().isBlocked(userId)) {
-            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO,adapter,userId);
+            callToUser(QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO, adapter, userId);
         } else {
             Utility.blockContactMessage(adapter.baseActivity, "Unblock " + dataManager.getUserDataManager().get(userId).toString() + " to place a FunChat video call", userId);
         }
@@ -301,7 +323,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
             if (dialogOccupant != null && dialogOccupant.getDialog() != null) {
                 PrivateDialogActivity.start(adapter.baseActivity, dataManager.getUserDataManager().get(userId), dialogOccupant.getDialog());
             } else {
-             //   showProgress();
+                //   showProgress();
                 QBCreatePrivateChatCommand.start(adapter.baseActivity, dataManager.getUserDataManager().get(userId));
             }
         } else {
@@ -333,7 +355,8 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
     protected boolean isChatInitialized() {
         return QBChatService.isInitialized() && AppSession.getSession().isSessionExist();
     }
-    private void blockContactMessage(String message,final FriendsAdapter adapter,final int userId) {
+
+    private void blockContactMessage(String message, final FriendsAdapter adapter, final int userId) {
         SweetAlertDialog sweetAlertDialog = M.dConfirem(adapter.baseActivity, message, "OK", "CANCEL");
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
@@ -341,7 +364,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
                 if (NetworkUtil.getConnectivityStatus(adapter.baseActivity)) {
                     blockContact(userId);
                 } else {
-                    M.T(adapter.baseActivity,adapter.baseActivity.getString(R.string.dlg_internet_connection_is_missing));
+                    M.T(adapter.baseActivity, adapter.baseActivity.getString(R.string.dlg_internet_connection_is_missing));
                 }
                 sweetAlertDialog.dismiss();
             }
@@ -393,7 +416,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
         } catch (XMPPException.XMPPErrorException e) {
             M.E(e.getMessage());
         } catch (SmackException.NoResponseException e) {
-        //    hideProgress();
+            //    hideProgress();
             M.E(e.getMessage());
         }
     }
@@ -417,7 +440,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
             sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                   // showProgress();
+                    // showProgress();
                     deleteChat(userId, adapter);
                     sweetAlertDialog.dismiss();
                 }
@@ -432,6 +455,7 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
             ToastUtils.longToast(R.string.user_profile_chat_does_not_exists);
         }
     }
+
     private boolean isChatExists(int userId) {
         return dataManager.getDialogOccupantDataManager().getDialogOccupantForPrivateChat(dataManager.getUserDataManager().get(userId).getUserId()) != null;
     }
@@ -447,15 +471,15 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
     }
 
     private void showRemoveContactAndChatHistoryDialog(final FriendsAdapter adapter, final int userId) {
-        SweetAlertDialog sweetAlertDialog = M.dConfirem(adapter.baseActivity, adapter.baseActivity.getString(R.string.user_profile_remove_contact_and_chat_history,  dataManager.getUserDataManager().get(userId).getFullName()), "OK", "CANCEL");
+        SweetAlertDialog sweetAlertDialog = M.dConfirem(adapter.baseActivity, adapter.baseActivity.getString(R.string.user_profile_remove_contact_and_chat_history, dataManager.getUserDataManager().get(userId).getFullName()), "OK", "CANCEL");
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-               // showProgress();
+                // showProgress();
                 if (isUserFriendOrUserRequest(userId)) {
                     QBRemoveFriendCommand.start(adapter.baseActivity, dataManager.getUserDataManager().get(userId).getUserId());
                 } else {
-                    deleteChat(userId,adapter);
+                    deleteChat(userId, adapter);
                 }
                 sweetAlertDialog.dismiss();
             }
@@ -469,8 +493,8 @@ public class FriendsAdapter extends BaseFilterAdapter<User, BaseClickListenerVie
     }
 
     private boolean isUserFriendOrUserRequest(int userId) {
-        boolean isFriend = dataManager.getFriendDataManager().existsByUserId( dataManager.getUserDataManager().get(userId).getUserId());
-        boolean isUserRequest = dataManager.getUserRequestDataManager().existsByUserId( dataManager.getUserDataManager().get(userId).getUserId());
+        boolean isFriend = dataManager.getFriendDataManager().existsByUserId(dataManager.getUserDataManager().get(userId).getUserId());
+        boolean isUserRequest = dataManager.getUserRequestDataManager().existsByUserId(dataManager.getUserDataManager().get(userId).getUserId());
         return isFriend || isUserRequest;
     }
 

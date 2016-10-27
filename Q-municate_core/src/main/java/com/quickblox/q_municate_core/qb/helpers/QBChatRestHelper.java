@@ -1,6 +1,7 @@
 package com.quickblox.q_municate_core.qb.helpers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.core.exception.QBResponseException;

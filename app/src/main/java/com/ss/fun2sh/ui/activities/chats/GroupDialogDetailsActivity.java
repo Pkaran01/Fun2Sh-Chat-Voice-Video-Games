@@ -473,7 +473,7 @@ public class GroupDialogDetailsActivity extends BaseLoggableActivity implements 
         if (currentUser.getId() == selectedFriend.getUserId()) {
             MyProfileActivity.start(GroupDialogDetailsActivity.this);
         } else {
-            UserProfileActivity.start(GroupDialogDetailsActivity.this, selectedFriend.getUserId());
+            UserProfileActivity.start(GroupDialogDetailsActivity.this, selectedFriend.getUserId(),selectedFriend);
         }
     }
 

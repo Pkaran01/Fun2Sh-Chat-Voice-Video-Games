@@ -92,7 +92,7 @@ public class CreateGroupDialogActivity extends BaseFriendsListActivity implement
 
             @Override
             public void onItemClicked(View view, User entity, int position) {
-                UserProfileActivity.start(CreateGroupDialogActivity.this, entity.getUserId());
+                UserProfileActivity.start(CreateGroupDialogActivity.this, entity.getUserId(),entity);
             }
         });
     }

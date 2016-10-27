@@ -3,43 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp"
     android:weightSum="1">
+
+    <LinearLayout
+        android:id="@+id/l1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/funchatlogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/funchatloginlogo2" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/loginAsABWithTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/timerABWithTimer1"
+            android:gravity="center_vertical|center_horizontal"
+            android:maxLines="1"
+            android:text="@string/logged_in_as"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/userNameABWithTimer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="center|right"
+            android:maxLines="2"
+            android:text="User Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
 
     <Chronometer
         android:id="@+id/timerABWithTimer"
-        android:layout_width="wrap_content"
+        android:layout_width="?actionBarSize"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/black"
-        android:textSize="30sp" />
-
-    <TextView
-        android:id="@+id/loginAsABWithTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@+id/timerABWithTimer"
-        android:gravity="center_vertical|center_horizontal"
-        android:maxLines="1"
-        android:text="@string/logged_in_as"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/userNameABWithTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_alignParentRight="true"
-        android:gravity="center_vertical|center_horizontal"
-        android:maxLines="1"
-        android:text="User Name"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:layout_below="@+id/l1"
+        android:layout_marginRight="4dp"
+        android:layout_weight="0.5"
+        android:gravity="center|right"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+
 </RelativeLayout>

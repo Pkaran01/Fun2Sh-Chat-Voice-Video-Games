@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:keepScreenOn="true"
-    android:background="@color/white">
+    android:background="@drawable/backgroundforall_screens">
 
     <FrameLayout
         android:layout_width="100dp"

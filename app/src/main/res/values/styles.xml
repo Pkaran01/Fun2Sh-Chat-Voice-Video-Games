@@ -180,6 +180,7 @@
     <style name="ToolbarTheme">
         <item name="colorControlNormal">@color/dark_gray</item>
         <item name="android:colorControlNormal" tools:ignore="NewApi">@color/dark_gray</item>
+        <item name="contentInsetStart">0dp</item>
 
         <!-- Hack! -->
         <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_material</item>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,20 @@ import com.quickblox.q_municate_core.qb.helpers.QBCallChatHelper;
 import com.quickblox.q_municate_core.utils.ChatUtils;
 import com.quickblox.q_municate_core.utils.ConnectivityUtils;
 import com.quickblox.q_municate_core.utils.DbUtils;
+import com.quickblox.q_municate_core.utils.UserFriendUtils;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.q_municate_db.managers.DataManager;
 import com.quickblox.q_municate_db.models.Call;
 import com.quickblox.q_municate_db.models.Dialog;
 import com.quickblox.q_municate_db.models.User;
+import com.quickblox.users.model.QBUser;
+import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.CRUD.Utility;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.base.BaseActivity;
+import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.profile.UserProfileActivity;
 import com.ss.fun2sh.utils.ToastUtils;
 import com.ss.fun2sh.utils.image.ImageLoaderUtils;
@@ -38,7 +45,7 @@ import java.util.List;
 public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHolder> {
     private List<Call> callList;
     BaseActivity activity;
-  //  protected QBCallChatHelper callChatHelper;
+    //  protected QBCallChatHelper callChatHelper;
     private DataManager dataManager;
 
     public class DataObjectHolder extends RecyclerView.ViewHolder {
@@ -60,7 +67,22 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
                 public void onClick(View v) {
                     boolean isFriend = DataManager.getInstance().getFriendDataManager().existsByUserId(callList.get(getAdapterPosition()).getUser().getUserId());
                     if (isFriend) {
-                        UserProfileActivity.start(activity, callList.get(getAdapterPosition()).getUser().getUserId());
+                        if (!dataManager.getUserDataManager().isBlocked(callList.get(getAdapterPosition()).getUser().getUserId())) {
+
+                            if (callList.get(getAdapterPosition()).getCallType() == 1) {
+                                callToUser(DataManager.getInstance().getUserDataManager().get(callList.get(getAdapterPosition()).getUser().getUserId()), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO);
+                                CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL, "true");
+                            } else {
+                                callToUser(DataManager.getInstance().getUserDataManager().get(callList.get(getAdapterPosition()).getUser().getUserId()), QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO);
+                                CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
+                            }
+                        }
+                        else {
+                            Utility.blockContactMessage(activity, "Unblock " + callList.get(getAdapterPosition()).getUser().getFullName().toString() + " to place a FunChat video call", callList.get(getAdapterPosition()).getUser().getUserId());
+                        }
+
+
+                      //  UserProfileActivity.start(activity, callList.get(getAdapterPosition()).getUser().getUserId(),DataManager.getInstance().getUserDataManager().get(callList.get(getAdapterPosition()).getUser().getUserId()));
                     }
                 }
             });
@@ -70,7 +92,7 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
                 public boolean onLongClick(View v) {
                     if (activity.checkNetworkAvailableWithError()) {
                         new MaterialDialog.Builder(activity)
-                                .items(R.array.deleteDilaog)
+                                .items(R.array.removeCallLog)
                                 .itemsCallback(new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
@@ -88,17 +110,28 @@ public class CallAdapter extends RecyclerView.Adapter<CallAdapter.DataObjectHold
         }
     }
 
-    private void deleteDialog(Call call) {
 
-        DataManager.getInstance().getCallDataManager().deleteByCallId(call.getCallId());
-            int position = callList.indexOf(call);
-            if (position != -1) {
-                callList.remove(call);
-                notifyItemRemoved(position);
-            }
+    private void callToUser(User user, QBRTCTypes.QBConferenceType qbConferenceType) {
+  /*      if (!activity.isChatInitializedAndUserLoggedIn()) {
+            ToastUtils.longToast(R.string.call_chat_service_is_initializing);
+            return;
+        }*/
+        List<QBUser> qbUserList = new ArrayList<>(1);
+        qbUserList.add(UserFriendUtils.createQbUser(user));
+        GroupCallActivity.start(activity, qbUserList, qbConferenceType, null);
+
     }
 
 
+    private void deleteDialog(Call call) {
+
+        DataManager.getInstance().getCallDataManager().deleteByCallId(call.getCallId());
+        int position = callList.indexOf(call);
+        if (position != -1) {
+            callList.remove(call);
+            notifyItemRemoved(position);
+        }
+    }
 
     public CallAdapter(BaseActivity activity, List<Call> callList) {
         this.activity = activity;

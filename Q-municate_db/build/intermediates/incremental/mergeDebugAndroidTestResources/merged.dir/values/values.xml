@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="db_version">8</integer>
+    <string name="app_name">db</string>
+    <string name="db_name">q_municate.db</string>
+</resources>

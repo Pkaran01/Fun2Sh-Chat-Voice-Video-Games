@@ -13,11 +13,13 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.quickblox.q_municate_core.models.AppSession;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCConfig;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.adapters.OpponentsAdapter;
 
@@ -96,7 +98,7 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
         }
 
         if (opponentsAdapter.getSelected().size() > QBRTCConfig.getMaxOpponentsCount()) {
-            M.T(getActivity(), "Max number of opponents is 6");
+            M.T(getActivity(), "Max number of opponents is 4");
             return;
         }
         QBRTCTypes.QBConferenceType qbConferenceType = null;
@@ -104,11 +106,17 @@ public class OpponentsFragment extends Fragment implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.btnAudioCall:
                 qbConferenceType = QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_AUDIO;
+                CoreSharedHelper.getInstance().savePref(Constants.AUDIOGROUPCALL, "true");
+                CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL,"false");
+                CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL,"false");
                 break;
 
             case R.id.btnVideoCall:
                 // get call type
                 qbConferenceType = QBRTCTypes.QBConferenceType.QB_CONFERENCE_TYPE_VIDEO;
+                CoreSharedHelper.getInstance().savePref(Constants.VIDEOGROUPCALL, "true");
+                CoreSharedHelper.getInstance().savePref(Constants.VIDEOONETOONECALL,"false");
+                CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL,"false");
                 break;
         }
 

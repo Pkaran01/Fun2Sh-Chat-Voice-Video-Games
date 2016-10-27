@@ -8,13 +8,13 @@ package com.quickblox.q_municate_db;
 
 public final class R {
 	public static final class integer {
-		public static final int db_version = 0x7f0a0007;
+		public static int db_version = 0x7f0a0007;
 	}
 	public static final class raw {
-		public static final int orm = 0x7f050005;
+		public static int orm = 0x7f050005;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f060037;
-		public static final int db_name = 0x7f06004c;
+		public static int app_name = 0x7f060037;
+		public static int db_name = 0x7f06004c;
 	}
 }

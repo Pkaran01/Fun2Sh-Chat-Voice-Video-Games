@@ -28,6 +28,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import com.ss.fun2sh.CRUD.Const;
 import com.ss.fun2sh.CRUD.Helper;
 import com.ss.fun2sh.CRUD.JSONParser;
@@ -138,11 +139,13 @@ public class LoginActivity extends AppCompatActivity implements WebserviceCallba
                 if (UserAccount.isEmpty(userName, password)) {
                     if (getParam() != null) {
                         M.E(getParam().toString());
+                        android.util.Log.e("getParam-**"," "+getParam().toString());
                         new JSONParser(LoginActivity.this).parseVollyJSONObject(Const.URL.login, 1, getParam(), new Helper() {
                             @Override
                             public void backResponse(String response) {
                                 try {
                                     JSONObject data = new JSONObject(response);
+                                    android.util.Log.e("responselogin-**"," "+response.toString());
 //                                Log.e("responses",response.toString());
                                     if (data.getString("MSG").equals("SUCCESS")) {
                                         PrefsHelper.getPrefsHelper().savePref(Const.App_Ver.userId, userName.getText().toString());

@@ -9,17 +9,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.quickblox.chat.QBChatService;
 import com.quickblox.q_municate_core.service.QBServiceConsts;
+import com.quickblox.q_municate_core.utils.helpers.CoreSharedHelper;
 import com.quickblox.users.model.QBUser;
 import com.quickblox.videochat.webrtc.QBRTCSession;
 import com.quickblox.videochat.webrtc.QBRTCSessionDescription;
 import com.quickblox.videochat.webrtc.QBRTCTypes;
 import com.ss.fun2sh.CRUD.M;
 import com.ss.fun2sh.R;
+import com.ss.fun2sh.oldutils.Constants;
 import com.ss.fun2sh.ui.activities.groupcall.activities.GroupCallActivity;
 import com.ss.fun2sh.ui.activities.groupcall.utils.RingtonePlayer;
 
@@ -71,14 +74,21 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         if (savedInstanceState == null) {
 
             view = inflater.inflate(R.layout.group_fragment_income_call, container, false);
-
-
             initUI(view);
             setDisplayedTypeCall(conferenceType);
             initButtonsListener();
 
         }
         ringtonePlayer = new RingtonePlayer(getActivity());
+
+        //  getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         return view;
     }
 
@@ -121,8 +131,8 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
         callerName = (TextView) view.findViewById(R.id.callerName);
         callerName.setText(getCallerName(((GroupCallActivity) getActivity()).getCurrentSession()));
-        ((GroupCallActivity) getActivity()).initGroupActionBar(getCallerName(((GroupCallActivity) getActivity()).getCurrentSession()) + "is calling");
-
+        // ((GroupCallActivity) getActivity()).initGroupActionBar(getCallerName(((GroupCallActivity) getActivity()).getCurrentSession()) + " is calling");
+        ((GroupCallActivity) getActivity()).initGroupActionBar("  ");
         otherIncUsers = (TextView) view.findViewById(R.id.otherIncUsers);
         otherIncUsers.setText(getOtherIncUsersNames(opponents));
 
@@ -150,7 +160,7 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
 
 
     private String getOtherIncUsersNames(ArrayList<Integer> opponents) {
-        M.E("getOtherIncUsersNames size" + opponents);
+        M.E("onlysize  size" + opponents);
         StringBuffer s = new StringBuffer("");
         opponents.remove(QBChatService.getInstance().getUser().getId());
 
@@ -208,16 +218,25 @@ public class IncomeCallFragment extends Fragment implements Serializable, View.O
         switch (v.getId()) {
             case R.id.rejectBtn:
                 reject();
+                CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "false");
+                CoreSharedHelper.getInstance().savePref(Constants.USERPICAUDIOPREF, "false");
+                CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "false");
                 break;
             case R.id.takeBtn:
                 accept();
+                if (opponents.size() == 0) {
+                    CoreSharedHelper.getInstance().savePref(Constants.FUULSCREENPREF, "true");
+                    CoreSharedHelper.getInstance().savePref(Constants.USERPICAUDIOPREF, "true");
+                    CoreSharedHelper.getInstance().savePref(Constants.AUDIOONETOONECALL, "true");
+                } else {
+                    CoreSharedHelper.getInstance().savePref(Constants.USERPICAUDIOPREF, "true");
+                    CoreSharedHelper.getInstance().savePref(Constants.USERORIENTATIONAUDIOPREF, "true");
+                }
                 break;
             default:
                 break;
         }
     }
-
-    ;
 
     private void accept() {
         takeBtn.setClickable(false);

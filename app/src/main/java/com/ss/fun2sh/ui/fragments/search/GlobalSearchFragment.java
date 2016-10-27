@@ -49,7 +49,7 @@ import butterknife.OnTouch;
 
 public class GlobalSearchFragment extends BaseFragment implements SearchListener, SwipyRefreshLayout.OnRefreshListener {
 
-    private static final int SEARCH_DELAY = 1000;
+    private static final int SEARCH_DELAY = 3000;
     private static final int MIN_VALUE_FOR_SEARCH = 3;
 
     @Bind(R.id.contacts_swipyrefreshlayout)
@@ -213,7 +213,7 @@ public class GlobalSearchFragment extends BaseFragment implements SearchListener
                 boolean outgoingUser = dataManager.getUserRequestDataManager()
                         .existsByUserId(user.getUserId());
                 if (isFriend || outgoingUser) {
-                    UserProfileActivity.start(baseActivity, user.getUserId());
+                    UserProfileActivity.start(baseActivity, user.getUserId(),user);
                 }
             }
         });

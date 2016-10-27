@@ -8,16 +8,16 @@ package com.quickblox.videochat.webrtc;
 
 public final class R {
 	public static final class attr {
-		public static final int mainCoords = 0x7f010059;
-		public static final int mainMirror = 0x7f010057;
-		public static final int secondCoords = 0x7f01005a;
-		public static final int secondMirror = 0x7f010058;
+		public static int mainCoords = 0x7f010059;
+		public static int mainMirror = 0x7f010057;
+		public static int secondCoords = 0x7f01005a;
+		public static int secondMirror = 0x7f010058;
 	}
 	public static final class styleable {
-		public static final int[] RTCGlView = { 0x7f010057, 0x7f010058, 0x7f010059, 0x7f01005a };
-		public static final int RTCGlView_mainCoords = 2;
-		public static final int RTCGlView_mainMirror = 0;
-		public static final int RTCGlView_secondCoords = 3;
-		public static final int RTCGlView_secondMirror = 1;
+		public static int[] RTCGlView = { 0x7f010057, 0x7f010058, 0x7f010059, 0x7f01005a };
+		public static int RTCGlView_mainCoords = 2;
+		public static int RTCGlView_mainMirror = 0;
+		public static int RTCGlView_secondCoords = 3;
+		public static int RTCGlView_secondMirror = 1;
 	}
 }

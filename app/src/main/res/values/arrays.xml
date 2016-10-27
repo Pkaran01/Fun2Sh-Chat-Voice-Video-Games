@@ -109,6 +109,11 @@
         <item>DELETE CHAT</item>
     </string-array>
 
+    <string-array name="removeCallLog">
+        <item>Remove call log</item>
+    </string-array>
+
+
 
     <!--new-->
     <string-array name="videoResolutions">

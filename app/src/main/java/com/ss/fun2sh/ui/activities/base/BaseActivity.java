@@ -138,7 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
     @Override
     public void setActionBarTitle(String title) {
         if (actionBar != null) {
-            actionBar.setTitle(title);
+            actionBar.setTitle("  "+title);
 
         }
     }
@@ -155,7 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ActionBa
                 if (subtitle.equals(getString(R.string.frl_online))) {
                     actionBar.setSubtitle(Html.fromHtml("<font color='#89A749'>" + subtitle + "</font>"));
                 } else {
-                    actionBar.setSubtitle(subtitle);
+                    actionBar.setSubtitle("  "+subtitle);
                 }
             }
         }

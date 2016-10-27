@@ -5,5 +5,5 @@
             android:drawable="@drawable/ic_dynamic_on" />
         <item
             android:state_checked="true"
-            android:drawable="@drawable/ic_dynamic_off" />
+            android:drawable="@drawable/callingspeaker" />
 </selector>

@@ -22,9 +22,9 @@
         android:id="@+id/handUpVideoCall"
         android:layout_width="@dimen/call_buttons_diameter"
         android:layout_height="@dimen/call_buttons_diameter"
+        android:background="@drawable/selector_call_end"
         android:padding="@dimen/call_buttons_padding"
         android:layout_marginLeft="@dimen/call_buttons_margin"
-        android:background="@drawable/selector_call_end"
         android:src="@drawable/ic_call_end"
         android:scaleType="centerCrop"
         />

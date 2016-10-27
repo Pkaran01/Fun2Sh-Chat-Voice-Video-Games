@@ -132,7 +132,7 @@ public class QBCallChatHelper extends BaseHelper {
         });
 
 
-        QBRTCConfig.setMaxOpponentsCount(6);
+        QBRTCConfig.setMaxOpponentsCount(4);
         QBRTCConfig.setDisconnectTime(30);
         QBRTCConfig.setAnswerTimeInterval(30l);
         QBRTCConfig.setStatsReportInterval(60);

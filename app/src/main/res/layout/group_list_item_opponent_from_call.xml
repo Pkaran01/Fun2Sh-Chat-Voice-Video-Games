@@ -1,46 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:background="@drawable/rectanguler_bg">
 
     <RelativeLayout
         android:id="@+id/innerLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
         android:layout_gravity="center"
         android:background="@color/black_transparent_50">
 
         <com.quickblox.videochat.webrtc.view.QBRTCSurfaceView
             android:id="@+id/opponentView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
+        <ImageView
+            android:id="@+id/userimagetView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+        <!--  android:background="@drawable/rectanguler_bg"-->
         <TextView
             android:id="@+id/connectionStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="3dp"
-            android:gravity="center_horizontal"
+            android:gravity="center|top"
             android:maxLength="13"
             android:maxLines="1"
-            android:text="karan"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
-            android:textStyle="normal|italic" />
+            android:textStyle="normal" />
 
         <TextView
             android:id="@+id/opponentName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="2dp"
-            android:text="karan2"
-            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center|bottom"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:layout_below="@+id/userimagetView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 
